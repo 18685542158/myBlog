@@ -230,13 +230,10 @@ const router = useRouter()
 const route = useRoute()
 // 解构pinia里的方法
 const { changeSettingCookie, getSongData, setSongmid, addSongList, getSongPlayList } = useMusic.music
-const { changePlay, changePlayModel, changeNext } = useMusic.musicPlay
+const { changePlay, changePlayModel } = useMusic.musicPlay
 // 响应式解构pinia里面的参数
 const { num, playModel, isplay, toNext } = storeToRefs(useMusic.musicPlay)
 const { uin, songmid, nextSongmid } = storeToRefs(useMusic.music)
-
-
-
 
 // 被选中的菜单
 let isActiveNav = ref(1)
@@ -750,20 +747,27 @@ watch(useMusic.music.songPlayList, () => {
 
 // 挂载的时候
 onMounted(async () => {
+    // 目前为止，播放器挂载的时候需要进行的操作有：
+    // 将路由跳转到推荐页面
     router.push('/music')
-    // 从本地获取songData
+    // 验证一下是否是登录状态
+    getCookie().then((data) => {
+        if (Object.keys(data).length === 0) {
+            console.log('啦啦啦，请输入cookie');
+            useMusic.music.hasCookie = false
+        }
+    })
+    // 获取本地歌曲
     getSongData()
-    // 从本地获取播放列表
+    // 获取播放器近10条播放记录
     getSongPlayList()
-    // 妈的，别整响应式啊 
     hisList = [...useMusic.music.songPlayList.list]
     hisIndex = hisList.findIndex(item => item == songmid.value)
-
-    // 获取当前播放器的歌曲
+    // 加载当前播放器的歌曲
     loadSong(songmid.value)
     // 获取我的歌单
     SongList(uin.value)
-    // 根据当前歌单得dissid获取他的歌曲列表，便于播放器的下一首播放
+    // 获取当前播放器的所对应的歌单
     await getData()
     // 根据播放模式决定下一首歌是什么
     nextSongSel()
