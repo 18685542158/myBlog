@@ -218,7 +218,7 @@ import {
     search,                         // 搜索，我设置了三个参数，第一个是key关键词，第二个是type类型，第三个是pageNum第几页
 } from '../api/request';
 
-import { ref, reactive, onMounted, computed, watch } from 'vue';
+import { ref, reactive, onMounted, computed, watch, onUnmounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import useStore from '../store/index';
 import { storeToRefs } from "pinia"
@@ -233,7 +233,7 @@ const { changeSettingCookie, getSongData, setSongmid, addSongList, getSongPlayLi
 const { changePlay, changePlayModel } = useMusic.musicPlay
 // 响应式解构pinia里面的参数
 const { num, playModel, isplay, toNext } = storeToRefs(useMusic.musicPlay)
-const { uin, songmid, nextSongmid } = storeToRefs(useMusic.music)
+const { uin, songmid, nextSongmid, thedissid } = storeToRefs(useMusic.music)
 
 // 被选中的菜单
 let isActiveNav = ref(1)
@@ -342,7 +342,8 @@ const navData = ref([
 const songListData = reactive([])
 // 根据当前dissid获取列表
 const getData = async () => {
-    const detail = await getSongListDel(useMusic.music.songPlayList.thedissid)
+    console.log('触发getData');
+    const detail = await getSongListDel(thedissid.value)
     songListData.value = detail.songlist
 }
 // 输入框
@@ -365,7 +366,7 @@ const blurSearch = () => {
 }
 // 历史搜索的逻辑
 const handleHistoryItemClick = () => {      //==============================
-    console.log('111111111');
+    console.log('触发历史搜索');
 }
 // 移动到顶部头像之后的展出
 let imageActive = ref(false)
@@ -391,7 +392,8 @@ const toQQmusic = () => {
 // 测试
 const fanhui = () => {
     // router.push('/home')
-    console.log(useMusic.music.songPlayList.list);
+    console.log(thedissid.value);
+    console.log(useMusic.music.songPlayList);
     console.log(hisList);
     console.log('hisIndex:' + hisIndex);
     console.log(nextSongmid.value);
@@ -473,6 +475,7 @@ const getSongDataInfo = async (id) => {
 
 // 创建一个方法，作用是在页面刚加载的时候加载一首歌曲       ======================================
 const loadSong = async (songmid) => {
+    console.log('触发加载歌曲');
     // 获取当前歌曲信息
     await getSongDataInfo(songmid)
     // 添加一个歌曲到播放列表
@@ -501,12 +504,10 @@ const lastSong = debounce(async () => {
     isplay.value = false
     // 更新hisIndex
     hisIndex = hisList.findIndex(item => item == songmid.value)
-    console.log(hisIndex);
     let lastSongmid = ''
     if (hisIndex == 0) {
         // 处理历史播放的上一曲，假如列表里面没有上一曲，就需要随机一首歌单里面的歌曲=========
         if (playModel.value == 'loop') {
-            console.log(songListData);
             lastSongmid = songListData.value[songListData.value.length - 1].songmid
         } else {
             lastSongmid = nextSongmid.value
@@ -529,10 +530,8 @@ const lastSong = debounce(async () => {
 
 // 创建一个历史播放列表的添加方法
 const addHisList = (songMid) => {
-    console.log(hisIndex);
     // 这个时候的songmid是已经添加之后的新歌曲，但是hisIndex还是之前的，判断历史列表是否存在这个新的歌曲，如果已经存在过了，则判断是在hisIndex的前面还是后面
     const index = hisList.findIndex(item => item == songMid)
-    console.log(index);
     // 如果是历史列表里面的歌曲，并且历史列表里的歌曲是旧的在前，添加的在后，为了防止修改后index变化导致增加删除出现问题，所以
     // 当index>hisIndex的时候，先删除，再增加
     if (index != -1 && index > hisIndex) {
@@ -563,19 +562,17 @@ const addHisList = (songMid) => {
 
 // 创建一个方法，作用是加载下一首歌曲，需要防抖（单纯的接收到来的数据播放下一首歌曲，不包含下一首的播放逻辑）
 const nextSong = debounce(async () => {
-    console.log(toNext.value);
     isplay.value = false
     // 更新hisIndex的值
-    console.log('长度：' + hisList.length);
     hisIndex = hisList.findIndex(item => item == songmid.value)
     let nextSongMid = ''
     if (hisIndex == hisList.length - 1 || toNext.value) {               // 匪夷所思啊这里
-        console.log('按下一首歌曲播放');
         nextSongMid = nextSongmid.value
         // 然后添加歌曲到历史记录里面
         addHisList(nextSongMid)                                                 //=====
+        // 把播放下一首的信号给关闭
+        toNext.value = false
     } else {
-        console.log('按播放器顺序播放');
         nextSongMid = hisList[hisIndex + 1]
     }
     // 同步pinia里面songmid的数据
@@ -594,6 +591,7 @@ const nextSong = debounce(async () => {
 
 // 创建方法，展示下一个需要播放的歌曲，这里需要联系随机播放，顺序播放还是单曲循环
 const nextSongSel = () => {
+    console.log('触发下一首歌曲的选择');
     const index = songListData.value.findIndex(item => item.songmid == songmid.value)
     if (playModel.value == 'loop') {
         if (index == songListData.value.length - 1) {
@@ -680,6 +678,7 @@ const leaveProgress = () => {
 // 以下是音乐方法======================================
 // 这个方法是为了获取我的歌单和收藏歌单的数据
 const SongList = async (uin) => {
+    console.log('触发获取我的歌单数据');
     // 获取的是我创建的歌单
     // const resSongList = await getSongList(uin)
     const resSongList = await getUserDetail(uin)
@@ -704,11 +703,9 @@ const SongList = async (uin) => {
 }
 
 // 监听toNext的变化
-watch(toNext, async (newValue) => {
+watch(toNext, (newValue) => {
     if (newValue) {
-        await nextSong()
-        // 把播放下一首的信号给关闭
-        toNext.value = false
+        nextSong()
     }
 })
 
@@ -741,7 +738,9 @@ watch(playModel, () => {
 })
 
 // 监听目前播放歌单的变化
-watch(useMusic.music.songPlayList, () => {
+watch(thedissid, async () => {
+    console.log('触发歌单切换');
+    await getData()
     nextSongSel()
 })
 
@@ -761,7 +760,7 @@ onMounted(async () => {
     getSongData()
     // 获取播放器近10条播放记录
     getSongPlayList()
-    hisList = [...useMusic.music.songPlayList.list]
+    hisList = [...useMusic.music.songPlayList]
     hisIndex = hisList.findIndex(item => item == songmid.value)
     // 加载当前播放器的歌曲
     loadSong(songmid.value)
@@ -771,6 +770,12 @@ onMounted(async () => {
     await getData()
     // 根据播放模式决定下一首歌是什么
     nextSongSel()
+})
+
+// 组件销毁的时候
+onUnmounted(() => {
+    console.log('触发组件销毁时');
+    localStorage.setItem('123', '123')
 })
 
 </script>

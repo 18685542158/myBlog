@@ -44,8 +44,8 @@ import { useRoute } from 'vue-router';
 import useStore from '../../store/index';
 import { storeToRefs } from "pinia"
 const useMusic = useStore()
-const { uin, songmid, nextSongmid } = storeToRefs(useMusic.music)
-const { isplay,toNext } = storeToRefs(useMusic.musicPlay)
+const { uin, songmid, nextSongmid, thedissid } = storeToRefs(useMusic.music)
+const { isplay, toNext } = storeToRefs(useMusic.musicPlay)
 import {
     // 获取单个歌曲的信息
     getSongDetail,
@@ -91,11 +91,12 @@ const playSong = async (item) => {
         // 先把之前那个歌曲的暂停咯
         isplay.value = false
     }
-    if (useMusic.music.songPlayList.thedissid != id) {
-        useMusic.music.songPlayList.thedissid = id
+    if (thedissid.value != id) {
+        thedissid.value = id
+        console.log('?????');
     }
     nextSongmid.value = item.songmid
-    toNext.value=true
+    toNext.value = true
 }
 
 // 获取歌单详细描述
