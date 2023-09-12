@@ -65,6 +65,7 @@ export default defineStore('music', {
                 this.songPlayList = data.songPlayList
                 this.thedissid = data.thedissid
             }
+            this.getSongURL()
         },
 
         // 添加一首歌曲到播放列表   最多15首吧
@@ -77,7 +78,6 @@ export default defineStore('music', {
             }
             // 如果这个列表的歌曲数量大于15首，那么将尾部的删除
             if (this.songPlayList.length > 15) {
-                console.log('删除第一个元素');
                 this.songPlayList.splice(0, 1)
             }
             // 是，就在尾部添加
@@ -92,12 +92,17 @@ export default defineStore('music', {
         // 需要六个参数：
         addSongURL(name, artist, url, cover, lyc) {
             // 以对象的形式存放信息
-            this.songURL.push({
-                name, artist, url, cover, lyc
-            })
+            if (this.songURL.findIndex(item => item.url == url) != -1) {
+                return
+            } else {
+                this.songURL.push({
+                    name, artist, url, cover, lyc
+                })
+            }
             if (this.songURL.length > 15) {
                 this.songURL.splice(0, 1)
             }
+            this.setSongURL()
         },
 
         // 将保留的15个歌曲的url信息等存在浏览器，建议在页面销毁的时候调用这个方法
@@ -109,7 +114,7 @@ export default defineStore('music', {
         // 对应上面，将保存在浏览器里面的歌曲url取出来
         getSongURL() {
             const data = localStorage.getItem('songURL')
-            this.songURL = JSON.parse(data)
+            this.songURL = JSON.parse(data)||[]
         }
     }
 });

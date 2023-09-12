@@ -75,8 +75,6 @@
                                     <span>历史搜索</span><span class="iconfont icon-shanchu"></span>
                                 </div>
                             </div>
-
-
                         </div>
                     </div>
                     <div class="head-right" style="flex:1;">
@@ -437,8 +435,6 @@ const text2 = async () => {
     musicPlayer.pause()
 }
 
-
-
 // 之前的音乐播放器控制逻辑
 // 使用reactive创建一个可相应的对象
 const songData = reactive({
@@ -579,8 +575,6 @@ const nextSong = debounce(async () => {
     songmid.value = nextSongMid
     // 播放器加载歌曲
     await loadSong(nextSongMid)
-    // // 然后把歌曲添加到歌曲列表
-    // addSongList(nextSongMid)
     // 加载时候播放
     hisIndex = hisList.findIndex(item => item == songmid.value)
     isplay.value = true
@@ -750,10 +744,11 @@ onMounted(async () => {
     // 将路由跳转到推荐页面
     router.push('/music')
     // 验证一下是否是登录状态
-    getCookie().then((data) => {
+    getuin().then((data) => {
         if (Object.keys(data).length === 0) {
             console.log('啦啦啦，请输入cookie');
             useMusic.music.hasCookie = false
+            uin.value = data
         }
     })
     // 获取本地歌曲
@@ -775,7 +770,7 @@ onMounted(async () => {
 // 组件销毁的时候
 onUnmounted(() => {
     console.log('触发组件销毁时');
-    localStorage.setItem('123', '123')
+
 })
 
 </script>
