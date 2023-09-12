@@ -69,7 +69,7 @@ export default defineStore('music', {
         },
 
         // 添加一首歌曲到播放列表   最多15首吧
-        addSongList(name, artist, url, cover, lyc) {
+        addSongList(name, artist, url, cover, lyc, songmid) {
             // 判断是否是新加入的歌曲，
             const index = this.songPlayList.findIndex(item => item == this.songmid)
             // 不是的话，就把列表里面旧的数据先删除，然后再在尾部添加
@@ -85,18 +85,18 @@ export default defineStore('music', {
                 this.songmid
             )
             this.setSongPlayList()
-            this.addSongURL(name, artist, url, cover, lyc)
+            this.addSongURL(name, artist, url, cover, lyc, songmid)
         },
 
         // 添加一首歌的基本信息，这里就不用管顺序了，不一样的就加
         // 需要六个参数：
-        addSongURL(name, artist, url, cover, lyc) {
+        addSongURL(name, artist, url, cover, lyc, songmid) {
             // 以对象的形式存放信息
             if (this.songURL.findIndex(item => item.url == url) != -1) {
                 return
             } else {
                 this.songURL.push({
-                    name, artist, url, cover, lyc
+                    name, artist, url, cover, lyc, songmid
                 })
             }
             if (this.songURL.length > 15) {
@@ -114,7 +114,7 @@ export default defineStore('music', {
         // 对应上面，将保存在浏览器里面的歌曲url取出来
         getSongURL() {
             const data = localStorage.getItem('songURL')
-            this.songURL = JSON.parse(data)||[]
+            this.songURL = JSON.parse(data) || []
         }
     }
 });

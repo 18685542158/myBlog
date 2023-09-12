@@ -443,6 +443,7 @@ const songData = reactive({
     url: '',
     cover: '',
     lyc: '',
+    songmid: '',
 })
 
 // 创建一个方法，可以将pinia里面的songmid转换成歌曲信息
@@ -468,11 +469,23 @@ const getSongDataInfo = async (id) => {
 // 创建一个方法，作用是在页面刚加载的时候加载一首歌曲       ======================================
 const loadSong = async (songmid) => {
     console.log('触发加载歌曲');
-    // 获取当前歌曲信息
-    // 获取播放地址
-    const playInfo = await getSong(songmid)
-    songData.url = playInfo[songmid]
-
+    // 如果出现本地缓存的歌曲，则使用缓存的歌曲信息
+    const index = songURL.value.findIndex(item => item.songmid == songmid)
+    if (index != -1) {
+        songData.name = songURL.value[index].name
+        songData.artist = songURL.value[index].artist
+        songData.cover = songURL.value[index].cover
+        songData.url = songURL.value[index].url
+        songData.lyc = songURL.value[index].lyc
+        console.log('走的是缓存');
+    } else {
+        // 获取当前歌曲信息
+        // 获取播放地址
+        const playInfo = await getSong(songmid)
+        songData.url = playInfo[songmid]
+        console.log('走的是网络');
+    }
+    console.log(songData);
     // // lastIndex严格来说就是当前正在播放的的历史播放index
     // lastIndex = hisIndex
     // 初始化音乐播放器
@@ -486,7 +499,7 @@ const loadSong = async (songmid) => {
     })
     await getSongDataInfo(songmid)
     // 添加一个歌曲到播放列表
-    addSongList(songData.name, songData.artist, songData.url, songData.cover, songData.lyc)
+    addSongList(songData.name, songData.artist, songData.url, songData.cover, songData.lyc, songmid)
 }
 
 // 创建一个历史列表，用于播放器的上一曲下一曲的历史记录=============未完成==============
@@ -745,11 +758,11 @@ onMounted(async () => {
     router.push('/music')
     // 验证一下是否是登录状态
     getuin().then((data) => {
-        if (Object.keys(data).length === 0) {
+        if (!data) {
             console.log('啦啦啦，请输入cookie');
             useMusic.music.hasCookie = false
-            uin.value = data
         }
+        uin.value = data
     })
     // 获取本地歌曲
     getSongData()
