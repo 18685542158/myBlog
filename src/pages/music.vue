@@ -233,7 +233,7 @@ const { changeSettingCookie, getSongData, setSongmid, addSongList, getSongPlayLi
 const { changePlay, changePlayModel } = useMusic.musicPlay
 // 响应式解构pinia里面的参数
 const { num, playModel, isplay, toNext } = storeToRefs(useMusic.musicPlay)
-const { uin, songmid, nextSongmid, thedissid } = storeToRefs(useMusic.music)
+const { uin, songmid, nextSongmid, thedissid, songURL } = storeToRefs(useMusic.music)
 
 // 被选中的菜单
 let isActiveNav = ref(1)
@@ -392,7 +392,7 @@ const toQQmusic = () => {
 // 测试
 const fanhui = () => {
     // router.push('/home')
-    console.log(thedissid.value);
+    console.log(songURL.value);
     console.log(useMusic.music.songPlayList);
     console.log(hisList);
     console.log('hisIndex:' + hisIndex);
@@ -451,11 +451,8 @@ const songData = reactive({
 
 // 创建一个方法，可以将pinia里面的songmid转换成歌曲信息
 const getSongDataInfo = async (id) => {
-    const thesongmid = id
-    // 获取播放地址
-    const playInfo = await getSong(thesongmid)
     // 获取songData数据
-    const detail = await getSongDetail(thesongmid)
+    const detail = await getSongDetail(id)
     let cover = ''
     if (detail.track_info.album.mid) {
         // 这个获取的是封面图片
@@ -468,7 +465,6 @@ const getSongDataInfo = async (id) => {
         cover = `https://y.qq.com/music/photo_new/T001R300x300M000${detail.track_info.singer[0].mid}.jpg?max_age=2592000`
     }
     songData.name = detail.extras.transname ? detail.extras.name + "(" + detail.extras.transname + ")" : detail.extras.name
-    songData.url = playInfo[thesongmid]
     songData.artist = detail.track_info.singer[0].title
     songData.cover = cover
 }
@@ -477,9 +473,10 @@ const getSongDataInfo = async (id) => {
 const loadSong = async (songmid) => {
     console.log('触发加载歌曲');
     // 获取当前歌曲信息
-    await getSongDataInfo(songmid)
-    // 添加一个歌曲到播放列表
-    addSongList()
+    // 获取播放地址
+    const playInfo = await getSong(songmid)
+    songData.url = playInfo[songmid]
+
     // // lastIndex严格来说就是当前正在播放的的历史播放index
     // lastIndex = hisIndex
     // 初始化音乐播放器
@@ -491,6 +488,9 @@ const loadSong = async (songmid) => {
     }).catch(err => {
         console.log('歌曲加载失败');
     })
+    await getSongDataInfo(songmid)
+    // 添加一个歌曲到播放列表
+    addSongList(songData.name, songData.artist, songData.url, songData.cover, songData.lyc)
 }
 
 // 创建一个历史列表，用于播放器的上一曲下一曲的历史记录=============未完成==============
@@ -526,7 +526,7 @@ const lastSong = debounce(async () => {
     hisIndex = hisList.findIndex(item => item == songmid.value)
     setSongmid()
     nextSongSel()
-}, 200); // 设置防抖延迟时间，单位为毫秒
+}, 500); // 设置防抖延迟时间，单位为毫秒
 
 // 创建一个历史播放列表的添加方法
 const addHisList = (songMid) => {
@@ -587,7 +587,7 @@ const nextSong = debounce(async () => {
     // 保证只要使用了nextsong加载歌曲，那么在本地的songmid就一定与当前播放器的歌曲一致
     setSongmid()
     nextSongSel()
-}, 200)
+}, 500)
 
 // 创建方法，展示下一个需要播放的歌曲，这里需要联系随机播放，顺序播放还是单曲循环
 const nextSongSel = () => {

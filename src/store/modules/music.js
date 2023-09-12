@@ -68,7 +68,7 @@ export default defineStore('music', {
         },
 
         // 添加一首歌曲到播放列表   最多15首吧
-        addSongList() {
+        addSongList(name, artist, url, cover, lyc) {
             // 判断是否是新加入的歌曲，
             const index = this.songPlayList.findIndex(item => item == this.songmid)
             // 不是的话，就把列表里面旧的数据先删除，然后再在尾部添加
@@ -85,6 +85,7 @@ export default defineStore('music', {
                 this.songmid
             )
             this.setSongPlayList()
+            this.addSongURL(name, artist, url, cover, lyc)
         },
 
         // 添加一首歌的基本信息，这里就不用管顺序了，不一样的就加

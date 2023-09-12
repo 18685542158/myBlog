@@ -40,12 +40,13 @@
 
 <script setup>
 import { ref, reactive, onMounted, watch } from 'vue';
+import { debounce } from 'lodash';
 import { useRoute } from 'vue-router';
 import useStore from '../../store/index';
 import { storeToRefs } from "pinia"
 const useMusic = useStore()
-const { uin, songmid, nextSongmid } = storeToRefs(useMusic.music)
-const { isplay,toNext } = storeToRefs(useMusic.musicPlay)
+const { uin, songmid, nextSongmid, thedissid } = storeToRefs(useMusic.music)
+const { isplay, toNext } = storeToRefs(useMusic.musicPlay)
 import {
     // 获取单个歌曲的信息
     getSongDetail,
@@ -86,17 +87,17 @@ const timeFormat = (time) => {
 let songData = reactive([])
 
 // 播放
-const playSong = async (item) => {
+const playSong = debounce(async (item) => {
     if (isplay.value) {
         // 先把之前那个歌曲的暂停咯
         isplay.value = false
     }
-    if (useMusic.music.songPlayList.thedissid != id) {
-        useMusic.music.songPlayList.thedissid = id
+    if (thedissid.value != id) {
+        thedissid.value = id
     }
     nextSongmid.value = item.songmid
-    toNext.value=true
-}
+    toNext.value = true
+}, 500)
 
 // 获取歌单详细描述
 const getData = async () => {
