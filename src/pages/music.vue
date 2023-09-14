@@ -123,7 +123,7 @@
                 <!-- 主要内容 -->
                 <div class="content">
                     <div class="hisList" :class="{ 'open': isOpen }">
-                        <HisList></HisList>
+                        <HisList :isOpen="isOpen"></HisList>
                     </div>
                     <index id="index"></index>
                 </div>
@@ -187,11 +187,10 @@
 </template>
 
 <script setup>
-
 import Snow from '../components/Snow.vue';
 import SetCookie from '../components/SetCookie.vue';
 import index from '../components/Mindex.vue';
-import HisList from '../components/hisList.vue';
+import HisList from '../components/HisList.vue';
 import { musicPlayer } from '../music/musicPlayer';
 
 import {
@@ -757,12 +756,12 @@ onMounted(async () => {
     // 将路由跳转到推荐页面
     router.push('/music')
     // 验证一下是否是登录状态
-    getuin().then((data) => {
-        if (!data) {
+    getCookie().then((data) => {
+        if (Object.keys(data).length == 0) {
             console.log('啦啦啦，请输入cookie');
             useMusic.music.hasCookie = false
         }
-        uin.value = data
+        uin.value = data.uin
     })
     // 获取本地歌曲
     getSongData()
@@ -1236,12 +1235,10 @@ onUnmounted(() => {
                     bottom: 0px;
                     box-sizing: border-box;
                     z-index: 1;
-                    opacity: 0;
                 }
 
                 .open {
                     width: 300px;
-                    opacity: 1;
                 }
             }
 
