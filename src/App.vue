@@ -2,7 +2,7 @@
 </script>
 
 <template>
-    <router-view></router-view>
+  <router-view></router-view>
 </template>
 
 <style>
@@ -65,7 +65,7 @@
 /* fade-transform */
 
 /* 有页面刚进来的时候 */
-.fade-transform-enter-active{
+.fade-transform-enter-active {
   transform: translateX(30px);
   opacity: 0;
   transition: all .5s;
@@ -90,24 +90,44 @@
 
 /* fade */
 /* 页面出现与消失 */
-.fade-enter-active{
+.fade-enter-active {
   transform: translateY(-30px);
   opacity: 0;
   transition: all .5s;
 }
 
-.fade-enter-to{
+.fade-enter-to {
   opacity: 1;
   transform: translateY(0px);
 }
 
-.fade-leave-active{
+.fade-leave-active {
   transition: all .5s;
 }
 
-.fade-leave-to{
+.fade-leave-to {
   opacity: 0;
   transform: translateY(-30px);
 }
 
+
+/* detali */
+/* 歌曲播放的展示与收起 */
+.detail-enter-active {
+  transition: 0.3s;
+  transform: translateY(100%);
+}
+
+.detail-enter-to {
+  transform: translateY(0);
+}
+
+.detail-leave-active {
+  transition: 0.3s;
+  transform: translateY(0);
+}
+
+.detail-leave-to {
+  transform: translateY(100%);
+}
 </style>

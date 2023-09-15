@@ -37,6 +37,7 @@ import useStore from '../store/index';
 import { storeToRefs } from 'pinia';
 const useMusic = useStore()
 const { songmid, nextSongmid, thedissid, songURL, songPlayList } = storeToRefs(useMusic.music)
+// 接收父组件的方法
 const emits = defineEmits(["FatherClick"]);
 // 解构里面的方法
 const { setSongPlayList, setSongURL } = useMusic.music

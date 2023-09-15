@@ -20,6 +20,14 @@
         </div>
     </transition>
 
+    <!-- 整个歌曲详情 -->
+    <transition name="detail">
+        <div style="width: 100%;height: 100vh;position: fixed;z-index: 99;"
+            v-show="detailShow">
+            <detail @close="closeDetailShow" :songData="songData"></detail>
+        </div>
+    </transition>
+
     <!-- 大盒子 -->
     <div class="bg">
         <!-- 盒子布局 -->
@@ -137,7 +145,7 @@
                     </div>
                     <div class="foot-body">
                         <div class="f-left">
-                            <div class="f-image">
+                            <div class="f-image" @click="detailShow = true">
                                 <img :src="songData.cover" alt="">
                             </div>
                             <div class="f-info">
@@ -190,6 +198,7 @@
 import Snow from '../components/Snow.vue';
 import SetCookie from '../components/SetCookie.vue';
 import index from '../components/Mindex.vue';
+import detail from '../components/Detail.vue';
 import HisList from '../components/HisList.vue';
 import { musicPlayer } from '../music/musicPlayer';
 
@@ -351,6 +360,12 @@ const inputValue = ref('')
 let isSearchKuang = false
 // 是否开启历史播放列表
 const isOpen = ref(false)
+// 是否开启detail界面的展出
+const detailShow = ref(false)
+// 关闭detailShow
+const closeDetailShow = () => {
+    detailShow.value = false
+}
 // 聚焦时，搜索框占位文字消失
 const focusSearch = () => {
     isSearchKuang = true
@@ -398,7 +413,6 @@ const fanhui = () => {
 }
 
 const text1 = () => {
-    musicPlayer.play()
     console.log('我点了');
 }
 
@@ -431,7 +445,6 @@ const text2 = async () => {
     // const li = await getUserDetail(1538518479)
     console.log('结束');
     console.log(li);
-    musicPlayer.pause()
 }
 
 // 之前的音乐播放器控制逻辑
