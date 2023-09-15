@@ -123,7 +123,7 @@
                 <!-- 主要内容 -->
                 <div class="content">
                     <div class="hisList" :class="{ 'open': isOpen }">
-                        <HisList :isOpen="isOpen"></HisList>
+                        <HisList :isOpen="isOpen" @nextSong="nextSong"></HisList>
                     </div>
                     <index id="index"></index>
                 </div>
@@ -574,7 +574,7 @@ const nextSong = debounce(async () => {
     // 更新hisIndex的值
     hisIndex = hisList.findIndex(item => item == songmid.value)
     let nextSongMid = ''
-    if (hisIndex == hisList.length - 1 || toNext.value) {               // 匪夷所思啊这里
+    if (hisIndex == hisList.length - 1 || toNext.value) {
         nextSongMid = nextSongmid.value
         // 然后添加歌曲到历史记录里面
         addHisList(nextSongMid)                                                 //=====

@@ -129,6 +129,14 @@ watch(route, (to, from) => {
 </script>
 
 <style scoped lang="scss">
+%ellipsis-style {
+    display: inline-block;
+    max-width: 100%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
 .box {
     width: 100%;
     height: 100%;
@@ -266,11 +274,7 @@ watch(route, (to, from) => {
                     max-width: 250px;
 
                     span {
-                        display: inline-block;
-                        max-width: 100%;
-                        text-overflow: ellipsis;
-                        white-space: nowrap;
-                        overflow: hidden;
+                        @extend %ellipsis-style;
                     }
                 }
 
@@ -279,11 +283,7 @@ watch(route, (to, from) => {
                     max-width: 200px;
 
                     span {
-                        display: inline-block;
-                        max-width: 100%;
-                        text-overflow: ellipsis;
-                        white-space: nowrap;
-                        overflow: hidden;
+                        @extend %ellipsis-style;
                     }
                 }
 
@@ -292,11 +292,7 @@ watch(route, (to, from) => {
                     max-width: 50px;
 
                     span {
-                        display: inline-block;
-                        max-width: 100%;
-                        text-overflow: ellipsis;
-                        white-space: nowrap;
-                        overflow: hidden;
+                        @extend %ellipsis-style;
                     }
                 }
 
@@ -305,11 +301,7 @@ watch(route, (to, from) => {
                     max-width: 200px;
 
                     span {
-                        display: inline-block;
-                        max-width: 100%;
-                        text-overflow: ellipsis;
-                        white-space: nowrap;
-                        overflow: hidden;
+                        @extend %ellipsis-style;
                     }
                 }
 
