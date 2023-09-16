@@ -22,9 +22,9 @@
 
     <!-- 整个歌曲详情 -->
     <transition name="detail">
-        <div style="width: 100%;height: 100vh;position: fixed;z-index: 99;"
-            v-show="detailShow">
-            <detail @close="closeDetailShow" :songData="songData"></detail>
+        <div style="width: 100%;height: 100vh;position: fixed;z-index: 99;" v-show="detailShow">
+            <detail @close="closeDetailShow" :songData="songData" :detailShow="detailShow" :songmid="songmid"
+                :currentTime="currentTime"></detail>
         </div>
     </transition>
 
@@ -48,9 +48,10 @@
                         </ul>
                     </div>
                     <div class="nav-item" v-for="(item, index) in navData" :index="index" :key="item.id">
-                        <h2>{{ item.title }}<span
-                                :class="!item.isClose ? 'iconfont icon-xiangshang' : 'iconfont icon-xiangxia'"
-                                @click="navClose(item)"></span></h2>
+                        <h2>{{ item.title }}
+                            <span :class="!item.isClose ? 'iconfont icon-xiangshang' : 'iconfont icon-xiangxia'"
+                                @click="navClose(item)"></span>
+                        </h2>
                         <ul :class="item.isClose ? 'nav-close' : ''">
                             <li v-for="(childItem, index) in item.child"
                                 :class="childItem.cid == isActiveNav ? 'nav-Active' : ''" @click="navSel(childItem)">{{
@@ -208,6 +209,7 @@ import {
     getuin,                         // 获取qq号                                                           无
     getCookie,                      // 查看cookie                                                         无
     getSong,                        // 获取一首歌的播放地址                                                songmid
+    getLyric,                       // 获取歌曲歌词                                                        songmid
     getSongList,                    // 获取我创建的歌单                                                    uin
     getSongDetail,                  // 获取单个歌曲详情                                                    songmid
     getSongColist,                  // 获取我收藏的歌单                                                    uin
@@ -630,9 +632,9 @@ const nextSongSel = () => {
 }
 
 // 歌曲总时长
-let duration = ref(0)
-// 歌曲播放事件
-let currentTime = ref(0)
+const duration = ref(0)
+// 歌曲播放时间
+const currentTime = ref(0)
 // 进度条是否可拖动        
 const isMove = ref(false)
 
@@ -773,8 +775,10 @@ onMounted(async () => {
         if (Object.keys(data).length == 0) {
             console.log('啦啦啦，请输入cookie');
             useMusic.music.hasCookie = false
+        } else {
+            uin.value = data.uin
+            console.log('cookie验证成功');
         }
-        uin.value = data.uin
     })
     // 获取本地歌曲
     getSongData()

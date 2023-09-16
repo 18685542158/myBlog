@@ -114,18 +114,28 @@ app.get('/song', (req, res) => {
 app.get('/song/urls', (req, res) => {
     qqMusic.api('song/urls', {
         id: req.query.songmid
+    }).then((result) => {
+        console.log('获取播放成功');
+        res.json(result)
     })
-        .then((result) => {
-            console.log('获取播放成功');
-            res.json(result)
-        })
         .catch(err => {
             res.status(500).json({ error: '获取播放失败' })
             console.log(err);
         })
 })
 
-
+// 通过歌曲songmid获取歌曲歌词
+app.get('/lyric', (req, res) => {
+    qqMusic.api('lyric', {
+        songmid: req.query.songmid
+    }).then((result) => {
+        console.log('获取歌词成功');
+        res.json(result)
+    }).catch((err) => {
+        res.status(500).json({ error: '获取歌词失败' })
+        console.log(err);
+    })
+})
 
 
 
