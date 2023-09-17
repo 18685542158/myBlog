@@ -15,14 +15,16 @@
             </div>
         </div>
         <div class="right">
-            <div class="head">
+            <div class="head" @click="console.log(lyricsObjArr)">
                 <h1>{{ songData.name }}</h1>
                 <span>{{ songData.artist }}</span>
             </div>
             <div class="body">
-                <ul ref="lyricUL">
-                    <li v-for="(item, i) in lyricsObjArr" :style="{ color: lyricIndex === i ? 'skyblue' : '#ded9d9' }"
-                        :key="item.uid" :data-index='i' ref="lyric">{{ item.lyric }}</li>
+                <ul ref="lyricUL" style="transition: 0.3s;" @wheel="handleMouseWheel">
+                    <li v-for="(item, i) in lyricsObjArr" :style="{
+                        color: lyricIndex === i ? 'skyblue' : '#ded9d9',
+                        fontSize: lyricIndex === i ? '24px' : '18px',
+                    }" :key="item.uid" :data-index='i' ref="lyric" style="transition: 0.3s;">{{ item.lyric }}</li>
                 </ul>
             </div>
         </div>
@@ -47,15 +49,20 @@ const emits = defineEmits(["close"]);
 // 存放歌词数据
 const lyricsObjArr = ref([])
 
+// 为了获取标签元素
+const lyricUL = ref([])
+const lyric = ref([])
+const lyricIndex = ref(0)
+// const 
 // 关闭页面
 const close = () => {
     emits('close')
-    console.log(lyricsObjArr.value);
 }
 
+// 获取歌词
 const getData = async () => {
-    console.log('获取歌词');
     const data = await getLyric(songmid.value)
+    console.log(data);
     songData.lyc = data.lyric
     formatLyc(songData.lyc)
 }
@@ -98,21 +105,35 @@ const formatLyricTime = (time) => { // 格式化歌词的时间 转换成 sss:ms
 }
 
 // 匹配歌词
-const test = () => {
+const moveLyric = () => {
     for (let i = 0; i < lyricsObjArr.value.length; i++) {
-        if (this.currentTime > (parseInt(this.lyricsObjArr[i].time))) {
-            const index = this.$refs.lyric[i].dataset.index
+        if (currentTime.value > (parseInt(lyricsObjArr.value[i].time))) {
+            const index = lyric.value[i].dataset.index
             if (i === parseInt(index)) {
-                this.lyricIndex = i
-                this.$refs.lyricUL.style.transform = `translateY(${170 - (30 * (i + 1))}px)`
+                lyricIndex.value = i
+                lyricUL.value.style.transform = `translateY(${160 - (50 * (i + 1))}px)`
             }
         }
     }
 }
 
+const handleMouseWheel = (e) => {
+    console.log('鼠标滑动');
+    console.log(e);
+}
+
+// 将子组件的方法传递给父组件
+defineExpose({
+    moveLyric,
+});
+
+// 监听展开和收起
 watch(detailShow, () => {
     if (detailShow.value == true) {
+        console.log('获取歌词');
         getData()
+    } else {
+        lyricsObjArr.value = []
     }
 })
 
@@ -211,9 +232,20 @@ watch(detailShow, () => {
 
         .body {
             width: 80%;
-            flex: 1;
+            height: 80%;
+            padding-right: 20px;
             margin: 2% 0 15% 0;
-            border: 1px solid red;
+            overflow: hidden;
+            font-size: 18px;
+            line-height: 50px;
+
+            ul {
+                margin-left: 15%;
+
+                li {
+                    cursor: pointer;
+                }
+            }
         }
     }
 

@@ -24,7 +24,7 @@
     <transition name="detail">
         <div style="width: 100%;height: 100vh;position: fixed;z-index: 99;" v-show="detailShow">
             <detail @close="closeDetailShow" :songData="songData" :detailShow="detailShow" :songmid="songmid"
-                :currentTime="currentTime"></detail>
+                :currentTime="currentTime" ref="childsDom"></detail>
         </div>
     </transition>
 
@@ -463,6 +463,7 @@ const songData = reactive({
 // 创建一个方法，可以将pinia里面的songmid转换成歌曲信息
 const getSongDataInfo = async (id) => {
     // 获取songData数据
+    songData.lyc=''
     const detail = await getSongDetail(id)
     let cover = ''
     if (detail.track_info.album.mid) {
@@ -638,6 +639,8 @@ const currentTime = ref(0)
 // 进度条是否可拖动        
 const isMove = ref(false)
 
+// 歌词滚动
+const childsDom = ref(null)
 // 处理 timeupdate 事件 当歌曲播放时，更新currentTime数据
 const onTimeUpdate = () => {
     // 在这里执行与播放进度相关的操作
@@ -645,6 +648,10 @@ const onTimeUpdate = () => {
         currentTime.value = musicPlayer.getCurrentTime();
         num.value = currentTime.value / duration.value * 100
     }
+    if(detailShow){
+        childsDom.value.moveLyric()
+    }
+    
 }
 
 // 处理ended事件，当歌曲播放完毕之后的操作逻辑              需要随机播放，顺序播放，单曲循环
