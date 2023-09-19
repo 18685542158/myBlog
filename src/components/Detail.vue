@@ -34,6 +34,9 @@
 <script setup>
 import { getLyric } from '../api/request';
 import { toRefs, defineProps, watch, ref } from 'vue';
+// 记得添加节流函数=========================================================
+import { throttle } from 'lodash';
+
 // 接收父组件传过来的参数
 const props = defineProps({
     songData: Object,
@@ -46,6 +49,8 @@ const { songData, detailShow, songmid, currentTime } = toRefs(props)
 // 接收父组件传递过来的的关闭方法
 const emits = defineEmits(["close"]);
 
+// 歌词是否处于滚动状态
+const MouseWheel = ref(false)
 // 存放歌词数据
 const lyricsObjArr = ref([])
 
@@ -120,6 +125,12 @@ const moveLyric = () => {
 const handleMouseWheel = (e) => {
     console.log('鼠标滑动');
     console.log(e);
+    console.log(MouseWheel.value);
+    MouseWheel.value = true; // 滚动时将 isMouseWheel 设置为 true
+    setTimeout(() => {
+        MouseWheel.value = false; // 3 秒后将 isMouseWheel 设置为 false
+        console.log(MouseWheel.value);
+    }, 3000);
 }
 
 // 将子组件的方法传递给父组件
