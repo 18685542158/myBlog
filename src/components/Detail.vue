@@ -20,11 +20,12 @@
                 <span>{{ songData.artist }}</span>
             </div>
             <div class="body">
-                <ul ref="lyricUL" style="transition: 0.3s;" @wheel="handleMouseWheel">
+                <ul ref="lyricUL" style="transition: 0.6s;transform:translateY(160px)" @wheel="handleMouseWheel">
                     <li v-for="(item, i) in lyricsObjArr" :style="{
                         color: lyricIndex === i ? 'skyblue' : '#ded9d9',
                         fontSize: lyricIndex === i ? '24px' : '18px',
-                    }" :key="item.uid" :data-index='i' ref="lyric" style="transition: 0.3s;">{{ item.lyric }}</li>
+                    }" :key="item.uid" :data-index='i' ref="lyric" @click="toLyc(item, i)" style="transition: 0.3s;">{{
+    item.lyric }}</li>
                 </ul>
             </div>
         </div>
@@ -33,9 +34,9 @@
 
 <script setup>
 import { getLyric } from '../api/request';
-import { toRefs, defineProps, watch, ref } from 'vue';
-// 记得添加节流函数=========================================================
-import { throttle } from 'lodash';
+import { toRefs, defineProps, watch, ref, onMounted, onUnmounted } from 'vue';
+// 记得添加防抖函数
+import { debounce } from 'lodash';
 
 // 接收父组件传过来的参数
 const props = defineProps({
@@ -51,6 +52,10 @@ const emits = defineEmits(["close"]);
 
 // 歌词是否处于滚动状态
 const MouseWheel = ref(false)
+// 记录歌词的滚动距离
+const distance = ref(160)
+// 记录鼠标滚轮距离
+const MouseWheelDis = ref(0)
 // 存放歌词数据
 const lyricsObjArr = ref([])
 
@@ -116,23 +121,46 @@ const moveLyric = () => {
             const index = lyric.value[i].dataset.index
             if (i === parseInt(index)) {
                 lyricIndex.value = i
-                lyricUL.value.style.transform = `translateY(${160 - (50 * (i + 1))}px)`
+                const dis = 160 - (50 * (i + 1))
+                if (MouseWheel.value == false) {
+                    lyricUL.value.style.transform = `translateY(${160 - (50 * (i + 1))}px)`
+                }
+                // 记录歌词滚动距离
+                distance.value = dis
             }
         }
     }
 }
 
-const handleMouseWheel = (e) => {
-    console.log('鼠标滑动');
-    console.log(e);
-    console.log(MouseWheel.value);
-    MouseWheel.value = true; // 滚动时将 isMouseWheel 设置为 true
-    setTimeout(() => {
-        MouseWheel.value = false; // 3 秒后将 isMouseWheel 设置为 false
-        console.log(MouseWheel.value);
-    }, 3000);
+// 以下实现歌词的鼠标滚动操作
+const handleMouseWheel = (event) => {
+    if (MouseWheel.value == false) {
+        MouseWheel.value = true
+    } else if (MouseWheel.value == true) {
+        if ((distance.value - MouseWheelDis.value) > 160) {
+            MouseWheelDis.value = MouseWheelDis.value
+        } else if ((distance.value - MouseWheelDis.value) <= 160 - (50 * (lyricsObjArr.value.length))) {
+            MouseWheelDis.value = MouseWheelDis.value
+        } else {
+            MouseWheelDis.value = event.deltaY + MouseWheelDis.value
+        }
+        lyricUL.value.style.transform = `translateY(${distance.value - MouseWheelDis.value}px)`
+    }
+    deMouse()
 }
+const deMouse = debounce(() => {
+    setTimeout(() => {
+        MouseWheel.value = false
+        MouseWheelDis.value = 0
+        lyricUL.value.style.transform = `translateY(${distance.value}px)`
+    }, 1000);
+}, 2000)
 
+// 以下实现点击歌词跳转对应进度
+const toLyc = (item, i) => {
+    console.log(item);
+    console.log(i);
+}
 // 将子组件的方法传递给父组件
 defineExpose({
     moveLyric,
