@@ -74,16 +74,11 @@
                                 title="前进" @click="router.forward()"></span>
                         </div>
                         <div class="search"
-                            style="flex:1;height: 100%;display: flex;justify-content: center;align-items: center;">
+                            style="position: relative;;flex:1;height: 100%;display: flex;justify-content: center;align-items: center;">
                             <input type="text" class="searchContent" autocomplete="off" v-model="inputValue"
-                                :placeholder="placeholder" @focus="focusSearch" @blur="blurSearch">
-                            <span class="iconfont icon-sousuo"></span>
-                            <div class="search-kuang" :class="{ 'isSearchKuang': isSearchKuang }"
-                                @click="handleHistoryItemClick()">
-                                <div class="hisSearch">
-                                    <span>历史搜索</span><span class="iconfont icon-shanchu"></span>
-                                </div>
-                            </div>
+                                :placeholder="placeholder" @focus="focusSearch" @blur="blurSearch" @input="QSearch">
+                            <span class="iconfont icon-sousuo" @click="handleHistoryItemClick"></span>
+                            <HisSearch :isSearchKuang="isSearchKuang" :inputValue="inputValue"></HisSearch>
                         </div>
                     </div>
                     <div class="head-right" style="flex:1;">
@@ -201,6 +196,7 @@ import SetCookie from '../components/SetCookie.vue';
 import index from '../components/Mindex.vue';
 import detail from '../components/Detail.vue';
 import HisList from '../components/HisList.vue';
+import HisSearch from '../components/HisSearch.vue';
 import { musicPlayer } from '../music/musicPlayer';
 
 import {
@@ -224,6 +220,7 @@ import {
     getNewAlbum,                    // 获取最新专辑 0: 最新 1：内地，2：港台，3：欧美，4：韩国，5：日本     type
     getNewMV,                       // 获取最新MV   0: 最新 1：内地，2：港台，3：欧美，4：韩国，5：日本     type
     search,                         // 搜索，我设置了三个参数，第一个是key关键词，第二个是type类型，第三个是pageNum第几页
+    quickSearch,                    // 快速搜索，输入一个key就行了
 } from '../api/request';
 
 import { ref, reactive, onMounted, computed, watch, onUnmounted } from 'vue';
@@ -231,7 +228,6 @@ import { useRouter, useRoute } from 'vue-router';
 import useStore from '../store/index';
 import { storeToRefs } from "pinia"
 import { debounce } from 'lodash';          // 防抖
-import songlist from 'qq-music-api/routes/songlist';
 
 const useMusic = useStore()
 const router = useRouter()
@@ -378,9 +374,22 @@ const blurSearch = () => {
     isSearchKuang = false
     placeholder.value = '搜索'
 }
+// 快速搜索的逻辑
+const QSearch = debounce(async () => {
+    console.log('执行一次快速搜索');
+    const data = await quickSearch('周杰伦')
+    console.log(data);
+}, 700)
 // 历史搜索的逻辑
-const handleHistoryItemClick = () => {      //==============================
+const handleHistoryItemClick = async () => {      //==============================
+    if(!inputValue.value)return
     console.log('触发历史搜索');
+    router.push({
+        name: 'Search',
+        params: {
+            key: inputValue.value
+        }
+    })
 }
 // 移动到顶部头像之后的展出
 let imageActive = ref(false)
@@ -463,7 +472,7 @@ const songData = reactive({
 // 创建一个方法，可以将pinia里面的songmid转换成歌曲信息
 const getSongDataInfo = async (id) => {
     // 获取songData数据
-    songData.lyc=''
+    songData.lyc = ''
     const detail = await getSongDetail(id)
     let cover = ''
     if (detail.track_info.album.mid) {
@@ -500,7 +509,7 @@ const loadSong = async (songmid) => {
         songData.url = playInfo[songmid]
         console.log('走的是网络');
     }
-    console.log(songData);
+    // console.log(songData);
     // // lastIndex严格来说就是当前正在播放的的历史播放index
     // lastIndex = hisIndex
     // 初始化音乐播放器
@@ -648,10 +657,10 @@ const onTimeUpdate = () => {
         currentTime.value = musicPlayer.getCurrentTime();
         num.value = currentTime.value / duration.value * 100
     }
-    if(detailShow){
+    if (detailShow) {
         childsDom.value.moveLyric()
     }
-    
+
 }
 
 // 处理ended事件，当歌曲播放完毕之后的操作逻辑              需要随机播放，顺序播放，单曲循环
@@ -779,6 +788,7 @@ onMounted(async () => {
     router.push('/music')
     // 验证一下是否是登录状态
     getCookie().then((data) => {
+        console.log(data);
         if (Object.keys(data).length == 0) {
             console.log('啦啦啦，请输入cookie');
             useMusic.music.hasCookie = false
@@ -786,6 +796,9 @@ onMounted(async () => {
             uin.value = data.uin
             console.log('cookie验证成功');
         }
+    }).catch((err) => {
+        useMusic.music.hasCookie = false
+        console.log(err);
     })
     // 获取本地歌曲
     getSongData()
@@ -1027,48 +1040,6 @@ onUnmounted(() => {
                             &:hover {
                                 color: rgb(0, 0, 0)
                             }
-                        }
-
-
-                        .search-kuang {
-                            transition: 0.3s;
-                            box-sizing: border-box;
-                            position: fixed;
-                            width: 300px;
-                            height: 0;
-                            top: 60px;
-                            border-radius: 0 0 10px 10px;
-                            background-color: #ffffffe7;
-                            backdrop-filter: blur(10px);
-                            overflow: hidden;
-                            z-index: 100;
-
-                            .hisSearch {
-                                position: relative;
-                                left: 15px;
-                                width: 90%;
-                                padding: 12px;
-                                box-sizing: border-box;
-                                display: flex;
-                                justify-content: space-between;
-                                border-bottom: 1px solid rgba(0, 0, 0, 0.707);
-
-                                span {
-                                    font-size: 14px;
-                                    color: #33333398
-                                }
-
-                                .icon-shanchu {
-                                    cursor: pointer;
-                                }
-                            }
-                        }
-
-                        .isSearchKuang {
-                            width: 300px;
-                            height: 100px;
-                            box-shadow: 1px 1px 2px 1px rgba(0, 0, 0, 0.538);
-                            display: inline-block;
                         }
                     }
                 }

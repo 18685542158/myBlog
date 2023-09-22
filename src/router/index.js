@@ -111,6 +111,11 @@ const router = createRouter({
                     path: 'about',
                     name: 'About',
                     component: () => import('../views/musicIndex/about.vue')
+                },
+                {
+                    path: 'search/:key',
+                    name: 'Search',
+                    component: () => import('../views/musicIndex/searchList.vue')
                 }
             ]
         }

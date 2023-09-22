@@ -11,7 +11,7 @@
     <div class="box">
         <div class="left">
             <div class="cover">
-                <img :src="songData.cover" alt="">
+                <img :src="songData.cover" alt="" style="cursor: pointer;" @click="changePlay">
             </div>
         </div>
         <div class="right">
@@ -20,12 +20,15 @@
                 <span>{{ songData.artist }}</span>
             </div>
             <div class="body">
-                <ul ref="lyricUL" style="transition: 0.6s;transform:translateY(160px)" @wheel="handleMouseWheel">
+                <ul v-if="lyricsObjArr.length == 0" style="transform: translateY(160px);">
+                    <li style="color:skyblue;font-size: 24px;text-align: center;margin-left: -18%;">请欣赏纯音乐</li>
+                </ul>
+                <ul ref="lyricUL" style="transition: 0.6s;transform:translateY(160px)" @wheel="handleMouseWheel" v-else>
                     <li v-for="(item, i) in lyricsObjArr" :style="{
                         color: lyricIndex === i ? 'skyblue' : '#ded9d9',
                         fontSize: lyricIndex === i ? '24px' : '18px',
-                    }" :key="item.uid" :data-index='i' ref="lyric" @click="toLyc(item, i)" style="transition: 0.3s;">{{
-    item.lyric }}</li>
+                    }" :key="item.uid" :data-index='i' ref="lyric" @click="toLyc(item, i)" style="transition: 0.3s;">
+                        {{ item.lyric }}</li>
                 </ul>
             </div>
         </div>
@@ -37,6 +40,9 @@ import { getLyric } from '../api/request';
 import { toRefs, defineProps, watch, ref, onMounted, onUnmounted } from 'vue';
 // 记得添加防抖函数
 import { debounce } from 'lodash';
+import useStore from '../store/index';
+const useMusic = useStore()
+const { changePlay } = useMusic.musicPlay
 
 // 接收父组件传过来的参数
 const props = defineProps({
@@ -72,13 +78,14 @@ const close = () => {
 // 获取歌词
 const getData = async () => {
     const data = await getLyric(songmid.value)
-    console.log(data);
+    // console.log(data);
     songData.lyc = data.lyric
     formatLyc(songData.lyc)
 }
 
 // 将字符串转换为数组形式的歌词
 const formatLyc = (lyc) => {
+    if (lyc == '[00:00:00]此歌曲为没有填词的纯音乐，请您欣赏') return
     // 开始转换歌词
     const regNewLine = /\n/
     const lineArr = lyc.split(regNewLine) // 每行歌词的数组
@@ -93,7 +100,7 @@ const formatLyc = (lyc) => {
         obj.time = time ? formatLyricTime(time[0].slice(1, time[0].length - 1)) : 0
         obj.uid = Math.random().toString().slice(-6)
         if (obj.lyric === '') {
-            console.log('这一行没有歌词')
+            // console.log('这一行没有歌词')
         } else {
             lyricsObjArr.value.push(obj)
         }
@@ -167,13 +174,19 @@ defineExpose({
 });
 
 // 监听展开和收起
-watch(detailShow, () => {
-    if (detailShow.value == true) {
-        console.log('获取歌词');
-        getData()
-    } else {
-        lyricsObjArr.value = []
-    }
+// watch(detailShow, () => {
+//     if (detailShow.value == true) {
+//         console.log('获取歌词');
+//         getData()
+//     } else {
+//         lyricsObjArr.value = []
+//     }
+// })
+
+// 监听当前歌曲，获取对应的歌词
+watch(songmid, () => {
+    lyricsObjArr.value = []
+    getData()
 })
 
 </script>

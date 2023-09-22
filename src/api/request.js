@@ -4,9 +4,14 @@ import axios from './axios';
 
 
 
-
-
-
+// 快速搜索，通过关键词返回少量关键信息
+export function quickSearch(key) {
+    return axios.get('/search/quick', {
+        params: {
+            key
+        }
+    })
+}
 
 // 目前搜索只支持搜索歌曲
 // 搜索  查询的字符串 key:'周杰伦', 第几页 pageNo:1 , 一页最大数量 pageSize:10 , 查询类型  type:0 （0:单曲，2:歌单，4：MV，3:歌单，8:用户，7:歌词）

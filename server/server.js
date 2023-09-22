@@ -94,6 +94,19 @@ app.get('/search', (req, res) => {
         })
 })
 
+// 快速搜索
+app.get('/search/quick', (req, res) => {
+    qqMusic.api('/search/quick', {
+        key: req.query.key
+    }).then((result) => {
+        console.log('快速搜索');
+        res.json(result)
+    }).catch((err) => {
+        res.status(500).json({ error: '快速搜索失败' })
+        console.log(err);
+    })
+})
+
 // 获取单个歌曲详情
 app.get('/song', (req, res) => {
     qqMusic.api('/song', ({

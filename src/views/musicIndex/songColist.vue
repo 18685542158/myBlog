@@ -21,19 +21,7 @@
             </div>
         </div>
         <div class="body">
-            <ul>
-                <li v-for="(item, index) in songData" :key="index">
-                    <div class="songName"><span :title="item.songname">{{ item.songname }}</span></div>
-                    <div class="songArtist"><span :title="item.singer[0].name">{{ item.singer[0].name }}</span></div>
-                    <div class="songTime"><span>{{ timeFormat(item.interval) }}</span></div>
-                    <div class="songAlbum"><span :title="item.albumname">{{ item.albumname }}</span></div>
-                    <div class="play" @click="playSong(item)">
-                        <div class="middle">
-                            <div class="continue"></div>
-                        </div>
-                    </div>
-                </li>
-            </ul>
+            <list @play="playSong" :songData="songData"></list>
         </div>
     </div>
 </template>
@@ -56,6 +44,8 @@ import {
     getSong
 } from '../../api/request';
 
+import list from '../../components/List.vue';
+
 const route = useRoute()
 // 页面是否加载完毕
 const isColLoading = ref(false)
@@ -69,19 +59,6 @@ const songColist = reactive({
     songColistCover: '',
     userCover: '',
 })
-// 创建一个方法，用于把获取到的歌曲总时长和当前时长换算为60进制的时分秒形式
-const timeFormat = (time) => {
-    const hours = Math.floor(time / 3600);
-    const mins = Math.floor((time % 3600) / 60);
-    const secs = Math.floor(time % 60);
-    const formattedHours = String(hours).padStart(2, '0');
-    const formattedMins = String(mins).padStart(2, '0');
-    const formattedSecs = String(secs).padStart(2, '0');
-    if (hours > 0) {
-        return `${formattedHours}:${formattedMins}:${formattedSecs}`;
-    }
-    return `${formattedMins}:${formattedSecs}`;
-}
 
 // 新建一个歌曲列表
 let songData = reactive([])
