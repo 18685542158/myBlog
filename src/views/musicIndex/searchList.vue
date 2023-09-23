@@ -3,7 +3,8 @@
         <div class="head">
             <div class="nav">
                 <ul>
-                    <li v-for="(item, index) in navData" :class="selItem == index ? 'active' : ''" @click="chose(item,index)">
+                    <li v-for="(item, index) in navData" :class="selItem == index ? 'active' : ''"
+                        @click="chose(item, index)">
                         <div class="item">
                             {{ item.title }}
                         </div>
@@ -22,12 +23,12 @@
             </div>
         </div>
         <div class="body">
-            <searchforsong v-if="selItem == 0"></searchforsong>
-            <searchforsonglist v-else-if="selItem == 1"></searchforsonglist>
-            <searchforsinger v-else-if="selItem == 2"></searchforsinger>
-            <searchforalbum v-else-if="selItem == 3"></searchforalbum>
-            <searchformv v-else-if="selItem == 4"></searchformv>
-            <searchforlyric v-else-if="selItem == 5"></searchforlyric>
+            <searchforsong v-if="selItem == 0" :songData="songData"></searchforsong>
+            <searchforsonglist v-else-if="selItem == 1" :songlistData="songlistData"></searchforsonglist>
+            <searchforsinger v-else-if="selItem == 2" :singerData="singerData"></searchforsinger>
+            <searchforalbum v-else-if="selItem == 3" :albumData="albumData"></searchforalbum>
+            <searchformv v-else-if="selItem == 4" :mvData="mvData"></searchformv>
+            <searchforlyric v-else-if="selItem == 5" :lyricData="lyricData"></searchforlyric>
         </div>
     </div>
 </template>
@@ -44,7 +45,6 @@ import searchforsonglist from '../../components/SearchForSongList.vue';
 const route = useRoute()
 import {
     search,   // 搜索，我设置了三个参数，第一个是key关键词，第二个是type类型，第三个是pageNum第几页，
-    //0：单曲，2：专辑，7：歌词，8：用户，9：歌手，12：mv
 } from '../../api/request';
 
 const key = ref('')
@@ -54,7 +54,7 @@ const pageNum = ref(1)
 const selItem = ref(0)
 
 // 给这几个组件创建数据
-const songData = reactive([])
+let songData = []
 const songlistData = reactive([])
 const singerData = reactive([])
 const albumData = reactive([])
@@ -90,21 +90,29 @@ const navData = [
 ]
 
 // 菜单切换，对应高亮显示
-const chose = (item,index) => {
+const chose = (item, index) => {
     selItem.value = index
-    type.value=item.type
+    type.value = item.type
     getData()
 }
+
+// 获取数据
 const getData = async () => {
-    console.log(key.value,type.value);
+    if(!key.value)return
+    console.log('获取数据？？？');
+    console.log(key.value, type.value);
     const data = await search(key.value, type.value, pageNum.value)
     console.log(data);
+    if (type.value == 7) {
+        lyricData.value = data.req_1.data.body.song.list
+    } else if (type.value == 0) {
+        songData = data.req_1.data.body.song.list
+        songlistData.value = data.req_1.data.body.songlist
+        singerData.value = data.req_1.data.body.singer
+        mvData.value = data.req_1.data.body.mv
+        albumData.value = data.req_1.data.body.album
+    }
 }
-
-// 当type发生变化时，重新获取数据
-// watch(type, () => {
-//     getData()
-// })
 
 // 当key发生变化时，重新获取数据
 watch(route, (to, from, next) => {

@@ -85,22 +85,23 @@ const getData = async () => {
     songColist.songColistCover = detail.logo
     songColist.userCover = detail.headurl
     songData = detail.songlist
-    isColLoading.value = true
 }
 
 // 这个歌单页面刚开始加载会需要onMOunted，挂载完毕之后，后面的页面更新靠的就是下面的watch了
-onMounted(() => {
-    // isColLoading.value = true
+onMounted(async () => {
     id.value = route.params.dissid
     getData()
+    isColLoading.value = true
+
 })
 
 // 监听路由的参数，随时更新这个页面
-watch(route, (to, from) => {
+watch(route, async (to, from) => {
     if (to.name == 'SongColist') {
         isColLoading.value = false
         id.value = to.params.dissid || id.value
-        getData()
+        await getData()
+        isColLoading.value = true
     }
 })
 </script>

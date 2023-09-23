@@ -76,7 +76,7 @@
                         <div class="search"
                             style="position: relative;;flex:1;height: 100%;display: flex;justify-content: center;align-items: center;">
                             <input type="text" class="searchContent" autocomplete="off" v-model="inputValue"
-                                :placeholder="placeholder" @focus="focusSearch" @blur="blurSearch" @input="QSearch">
+                                :placeholder="placeholder" @focus="focusSearch" @blur="blurSearch" @input="QSearch" @keyup.enter="handleHistoryItemClick">
                             <span class="iconfont icon-sousuo" @click="handleHistoryItemClick"></span>
                             <HisSearch :isSearchKuang="isSearchKuang" :inputValue="inputValue"></HisSearch>
                         </div>
@@ -383,6 +383,7 @@ const QSearch = debounce(async () => {
 // 历史搜索的逻辑
 const handleHistoryItemClick = async () => {      //==============================
     if(!inputValue.value)return
+    isSearchKuang = false
     console.log('触发历史搜索');
     router.push({
         name: 'Search',

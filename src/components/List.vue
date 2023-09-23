@@ -1,8 +1,10 @@
 <template>
     <div>
+        <button @click="console.log(songData)" style="position: fixed; z-index: 99;">我是按钮</button>
         <ul>
             <li v-for="(item, index) in songData" :key="index">
-                <div class="songName"><span :title="item.songname">{{ item.songname }}</span></div>
+                <div class="songName"><span :title="item.songname || item.title">{{ item.songname || item.title }}</span>
+                </div>
                 <div class="songArtist"><span :title="item.singer[0].name">{{ item.singer[0].name }}</span></div>
                 <div class="songTime"><span>{{ timeFormat(item.interval) }}</span></div>
                 <div class="songAlbum"><span :title="item.albumname">{{ item.albumname }}</span></div>
@@ -21,13 +23,13 @@ import { defineProps, toRefs } from 'vue';
 // 接收父组件传过来的参数
 const props = defineProps({
     songData: {
-        type: Object
+        type: Array
     }
 })
 // 然后解构出来
 const { songData } = toRefs(props)
 
-// 接收父组件传递过来的的关闭方法
+// 接收父组件传递过来的的方法
 const emits = defineEmits(["play"]);
 
 
@@ -47,13 +49,13 @@ const timeFormat = (time) => {
 
 
 const playSong = (item) => {
-    play(item)
+    // 父组件方法的使用
+    emits('play', item)
 }
 
 </script>
 
 <style scoped lang="scss">
-
 %ellipsis-style {
     display: inline-block;
     max-width: 100%;
