@@ -21,14 +21,13 @@
             </div>
         </div>
         <div class="body">
-            <list @play="playSong" :songData="songData"></list>
+            <list :songData="songData" :dissid:="String(id)"></list>
         </div>
     </div>
 </template>
 
 <script setup>
 import { ref, reactive, onMounted, watch } from 'vue';
-import { debounce } from 'lodash';
 import { useRoute } from 'vue-router';
 import useStore from '../../store/index';
 import { storeToRefs } from "pinia"
@@ -62,19 +61,6 @@ const songColist = reactive({
 
 // 新建一个歌曲列表
 let songData = reactive([])
-
-// 播放
-const playSong = debounce(async (item) => {
-    if (isplay.value) {
-        // 先把之前那个歌曲的暂停咯
-        isplay.value = false
-    }
-    if (thedissid.value != id) {
-        thedissid.value = id
-    }
-    nextSongmid.value = item.songmid
-    toNext.value = true
-}, 500)
 
 // 获取歌单详细描述
 const getData = async () => {
@@ -220,96 +206,10 @@ watch(route, async (to, from) => {
     }
 
     .body {
-        display: inline-block;
+        // display: inline-block;
         // min-height: calc(100% - 220px);
         width: 98%;
         margin: 10px;
-
-        ul {
-            width: 100%;
-
-            li {
-                width: 100%;
-                height: 50px;
-                // background-color: #ffffff19;
-                // backdrop-filter: blur(5px);
-                backdrop-filter: blur(6px);
-                background-color: #2e294e25;
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                border-bottom: 1px solid #ffffff94;
-                font-size: 15px;
-
-                span {
-                    cursor: pointer;
-                    text-align: center;
-                }
-
-                .songName {
-                    flex: 1;
-                    margin-left: 20px;
-                    max-width: 250px;
-
-                    span {
-                        @extend %ellipsis-style;
-                    }
-                }
-
-                .songArtist {
-                    flex: 1;
-                    max-width: 200px;
-
-                    span {
-                        @extend %ellipsis-style;
-                    }
-                }
-
-                .songTime {
-                    flex: 1;
-                    max-width: 50px;
-
-                    span {
-                        @extend %ellipsis-style;
-                    }
-                }
-
-                .songAlbum {
-                    flex: 1;
-                    max-width: 200px;
-
-                    span {
-                        @extend %ellipsis-style;
-                    }
-                }
-
-                .play {
-                    cursor: pointer;
-                    margin-right: 20px;
-
-                    .middle {
-                        width: 25px;
-                        height: 25px;
-                        box-shadow: inset 0px 0px 2px 1px #ffffff;
-                        border-radius: 50%;
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-
-                        .continue {
-                            transition-duration: 0.3s;
-                            width: 0;
-                            height: 0;
-                            border-top: 7px solid transparent;
-                            border-bottom: 7px solid transparent;
-                            border-left: 11px solid #ffffffc7;
-                            display: inline-block;
-                            margin-left: 2px;
-                        }
-                    }
-                }
-            }
-        }
     }
 }
 </style>

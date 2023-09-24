@@ -1,7 +1,7 @@
 <template>
-    <div>
+    <div class="box">
         <div class="body">
-            <list @play="playSong" :songData="songData"></list>
+            <list :songData="forData(songData)" :isMainSong="true"></list>
         </div>
     </div>
 </template>
@@ -10,38 +10,36 @@
 import { ref, reactive, toRefs, defineProps } from 'vue';
 import list from './List.vue';
 import { debounce } from 'lodash';
+import useStore from '../store/index';
+import { storeToRefs } from "pinia"
+const useMusic = useStore()
+const { isplay, toNext } = storeToRefs(useMusic.musicPlay)
 
 const props = defineProps({
     songData: {
-        type: Array
+        type: Array,
+        default:[]
     }
 })
 
-const { songData } = toRefs(props)
-
-const data={
-    
+const forData = (data) => {
+    const forData=data.map(obj=>{
+        const newObj={...obj}
+        newObj.songmid=obj.mid
+        newObj.albumname=obj.album.name
+        newObj.songname=obj.title
+        return newObj
+    })
+    return forData
 }
 
-// 播放
-const playSong = debounce(async (item) => {
-    if (isplay.value) {
-        // 先把之前那个歌曲的暂停咯
-        isplay.value = false
-    }
-    // if (thedissid.value != id) {
-    //     thedissid.value = id
-    // }
-    nextSongmid.value = item.songmid
-    toNext.value = true
-}, 500)
+const { songData } = toRefs(props)
 
 </script>
 
 <style scoped lang="scss">
-.body{
+.box {
     width: 100%;
     height: 100%;
-    overflow: hidden;
 }
 </style>

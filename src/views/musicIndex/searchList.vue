@@ -23,18 +23,24 @@
             </div>
         </div>
         <div class="body">
-            <searchforsong v-if="selItem == 0" :songData="songData"></searchforsong>
-            <searchforsonglist v-else-if="selItem == 1" :songlistData="songlistData"></searchforsonglist>
-            <searchforsinger v-else-if="selItem == 2" :singerData="singerData"></searchforsinger>
-            <searchforalbum v-else-if="selItem == 3" :albumData="albumData"></searchforalbum>
-            <searchformv v-else-if="selItem == 4" :mvData="mvData"></searchformv>
-            <searchforlyric v-else-if="selItem == 5" :lyricData="lyricData"></searchforlyric>
+            <transition name="loading" mode="out-in" style="width: 100%;height: 100%;">
+                <div style=" position: fixed;width: 100%;height: 100%;background-color: #ffffff71;" v-show="isLoading">
+                    <loading></loading>
+                </div>
+            </transition>
+            <searchforsong v-if="selItem == 0 && !isLoading" :songData="songData.value"></searchforsong>
+            <searchforsonglist v-else-if="selItem == 1 && !isLoading" :songlistData="songlistData.value">
+            </searchforsonglist>
+            <searchforsinger v-else-if="selItem == 2 && !isLoading" :singerData="singerData.value"></searchforsinger>
+            <searchforalbum v-else-if="selItem == 3 && !isLoading" :albumData="albumData.value"></searchforalbum>
+            <searchformv v-else-if="selItem == 4 && !isLoading" :mvData="mvData.value"></searchformv>
+            <searchforlyric v-else-if="selItem == 5 && !isLoading" :lyricData="lyricData.value"></searchforlyric>
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, defineExpose, watch } from 'vue';
+import { ref, reactive, onMounted, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import searchforalbum from '../../components/SearchForAlbum.vue';
 import searchforlyric from '../../components/SearchForLyric.vue';
@@ -42,10 +48,13 @@ import searchformv from '../../components/SearchForMv.vue';
 import searchforsinger from '../../components/SearchForSinger.vue';
 import searchforsong from '../../components/SearchForSong.vue';
 import searchforsonglist from '../../components/SearchForSongList.vue';
+import loading from '../../components/Loading.vue';
 const route = useRoute()
 import {
     search,   // 搜索，我设置了三个参数，第一个是key关键词，第二个是type类型，第三个是pageNum第几页，
 } from '../../api/request';
+
+const isLoading = ref(true)
 
 const key = ref('')
 const type = ref(0)
@@ -54,7 +63,7 @@ const pageNum = ref(1)
 const selItem = ref(0)
 
 // 给这几个组件创建数据
-let songData = []
+const songData = reactive([])
 const songlistData = reactive([])
 const singerData = reactive([])
 const albumData = reactive([])
@@ -90,15 +99,17 @@ const navData = [
 ]
 
 // 菜单切换，对应高亮显示
-const chose = (item, index) => {
+const chose = async (item, index) => {
+    isLoading.value = true
     selItem.value = index
     type.value = item.type
-    getData()
+    await getData()
+    isLoading.value = false
 }
 
 // 获取数据
 const getData = async () => {
-    if(!key.value)return
+    if (!key.value) return
     console.log('获取数据？？？');
     console.log(key.value, type.value);
     const data = await search(key.value, type.value, pageNum.value)
@@ -106,7 +117,7 @@ const getData = async () => {
     if (type.value == 7) {
         lyricData.value = data.req_1.data.body.song.list
     } else if (type.value == 0) {
-        songData = data.req_1.data.body.song.list
+        songData.value = data.req_1.data.body.song.list
         songlistData.value = data.req_1.data.body.songlist
         singerData.value = data.req_1.data.body.singer
         mvData.value = data.req_1.data.body.mv
@@ -115,9 +126,11 @@ const getData = async () => {
 }
 
 // 当key发生变化时，重新获取数据
-watch(route, (to, from, next) => {
+watch(route, async (to, from, next) => {
+    isLoading.value = true
     key.value = route.params.key
-    getData()
+    await getData()
+    isLoading.value = false
 })
 
 // 当pageNum发生变化时，接着获取数据，添加到尾部
@@ -125,9 +138,10 @@ watch(pageNum, () => {
     // 这里处理获取接下来的内容
 })
 
-onMounted(() => {
+onMounted(async () => {
     key.value = route.params.key
-    getData()
+    await getData()
+    isLoading.value = false
 })
 
 </script>
@@ -136,6 +150,9 @@ onMounted(() => {
 .box {
     width: 100%;
     height: 100%;
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
 
     .head {
         display: flex;
@@ -189,6 +206,11 @@ onMounted(() => {
         .info {
             flex: 1;
         }
+    }
+
+    .body {
+        position: relative;
+        flex: 1;
     }
 }
 </style>

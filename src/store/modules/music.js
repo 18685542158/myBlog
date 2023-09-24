@@ -10,7 +10,8 @@ export default defineStore('music', {
             nextSongmid: '002UJg1T3tbCsK',
             songPlayList: [],               // 播放列表，大概率要存进localStorage 
             thedissid: '3580408357',
-            songURL: []                  // 还是得缓存歌曲的url等信息，不然每次打开页面都是从网上获取，太慢了
+            songURL: [],                  // 还是得缓存歌曲的url等信息，不然每次打开页面都是从网上获取，太慢了
+            searchSong:'',
         };
     },
     getters: {

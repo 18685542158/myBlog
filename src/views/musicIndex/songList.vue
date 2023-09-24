@@ -21,14 +21,13 @@
             </div>
         </div>
         <div class="body">
-            <list @play="playSong" :songData="songData"></list>
+            <list :songData="songData" :dissid="String(id)"></list>
         </div>
     </div>
 </template>
 
 <script setup>
 import { ref, reactive, onMounted, watch } from 'vue';
-import { debounce } from 'lodash';
 import { useRoute } from 'vue-router';
 import useStore from '../../store/index';
 import { storeToRefs } from "pinia"
@@ -62,19 +61,6 @@ const songList = reactive({
 
 // 新建一个歌曲列表
 let songData = reactive([])
-
-// 播放
-const playSong = debounce(async (item) => {
-    if (isplay.value) {
-        // 先把之前那个歌曲的暂停咯
-        isplay.value = false
-    }
-    if (thedissid.value != id) {
-        thedissid.value = id
-    }
-    nextSongmid.value = item.songmid
-    toNext.value = true
-}, 500)
 
 // 获取歌单详细描述
 const getData = async () => {
@@ -219,7 +205,7 @@ watch(route, async (to, from) => {
     }
 
     .body {
-        display: inline-block;
+        // display: inline-block;
         // min-height: calc(100% - 220px);
         width: 98%;
         margin: 10px;

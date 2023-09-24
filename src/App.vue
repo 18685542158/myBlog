@@ -130,4 +130,23 @@
 .detail-leave-to {
   transform: translateY(100%);
 }
+
+/* loading加载的淡入淡出样式 */
+.loading-enter-active {
+  opacity: 0;
+  transition: 0.3s;
+}
+
+.loading-enter-to {
+  opacity: 1;
+}
+
+.loading-leave-active {
+  opacity: 1;
+  transition: 0.3s;
+}
+
+.loading-leave-to {
+  opacity: 0;
+}
 </style>

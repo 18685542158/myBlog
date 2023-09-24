@@ -76,7 +76,8 @@
                         <div class="search"
                             style="position: relative;;flex:1;height: 100%;display: flex;justify-content: center;align-items: center;">
                             <input type="text" class="searchContent" autocomplete="off" v-model="inputValue"
-                                :placeholder="placeholder" @focus="focusSearch" @blur="blurSearch" @input="QSearch" @keyup.enter="handleHistoryItemClick">
+                                :placeholder="placeholder" @focus="focusSearch" @blur="blurSearch" @input="QSearch"
+                                @keyup.enter="handleHistoryItemClick">
                             <span class="iconfont icon-sousuo" @click="handleHistoryItemClick"></span>
                             <HisSearch :isSearchKuang="isSearchKuang" :inputValue="inputValue"></HisSearch>
                         </div>
@@ -86,8 +87,8 @@
                             <span class="iconfont icon-cloud"></span>
                             <span class="iconfont icon-tongzhi"></span>
                         </div>
-                        <div class="image" :class="{ imageActive: imageActive }" @mouseleave="hidden">
-                            <div class="imgOuter" @mouseenter="show" :class="{ 'nocookie': !useMusic.music.hasCookie }">
+                        <div class="image" :class="{ 'imageActive': imageActive }" @mouseleave="hidden">
+                            <div class="imgOuter" @mouseenter="show" :class="{ 'nocookie': !hasCookie }">
                                 <img src="../assets/images/1.jpg" alt="">
                             </div>
                             <div class="imgInfo" @mouseenter="show">
@@ -96,8 +97,8 @@
                                 </div>
                                 <div class="imginfo-content">
                                     <div class="imginfo-contentnav" @click="changeSettingCookie">
-                                        <div class="setting" :class="!useMusic.music.hasCookie ? 'noCookie' : ''"
-                                            :title="!useMusic.music.hasCookie ? '记得设置cookie' : ''"><span
+                                        <div class="setting" :class="!hasCookie ? 'noCookie' : ''"
+                                            :title="!hasCookie ? '记得设置cookie' : ''"><span
                                                 class="iconfont icon-shouzhi imginfo-contentnav-font"></span>Cookie
                                         </div>
                                     </div>
@@ -237,7 +238,7 @@ const { changeSettingCookie, getSongData, setSongmid, addSongList, getSongPlayLi
 const { changePlay, changePlayModel } = useMusic.musicPlay
 // 响应式解构pinia里面的参数
 const { num, playModel, isplay, toNext } = storeToRefs(useMusic.musicPlay)
-const { uin, songmid, nextSongmid, thedissid, songURL } = storeToRefs(useMusic.music)
+const { uin, songmid, nextSongmid, thedissid, songURL, searchSong, hasCookie } = storeToRefs(useMusic.music)
 
 // 被选中的菜单
 let isActiveNav = ref(1)
@@ -380,11 +381,16 @@ const QSearch = debounce(async () => {
     const data = await quickSearch('周杰伦')
     console.log(data);
 }, 700)
-// 历史搜索的逻辑
+// 搜索的逻辑
 const handleHistoryItemClick = async () => {      //==============================
-    if(!inputValue.value)return
+    if (!inputValue.value) return
+    if (!hasCookie.value) {
+        // 请输出cookie
+        imageActive.value=true
+        return
+    }
     isSearchKuang = false
-    console.log('触发历史搜索');
+    console.log('触发搜索');
     router.push({
         name: 'Search',
         params: {
@@ -421,6 +427,7 @@ const fanhui = () => {
     console.log(hisList);
     console.log('hisIndex:' + hisIndex);
     console.log(nextSongmid.value);
+    console.log(thedissid.value);
     console.log('=============');
 }
 
@@ -472,6 +479,7 @@ const songData = reactive({
 
 // 创建一个方法，可以将pinia里面的songmid转换成歌曲信息
 const getSongDataInfo = async (id) => {
+    if (!id) return
     // 获取songData数据
     songData.lyc = ''
     const detail = await getSongDetail(id)
@@ -625,20 +633,24 @@ const nextSong = debounce(async () => {
 const nextSongSel = () => {
     console.log('触发下一首歌曲的选择');
     const index = songListData.value.findIndex(item => item.songmid == songmid.value)
-    if (playModel.value == 'loop') {
-        if (index == songListData.value.length - 1) {
-            nextSongmid.value = songListData.value[0].songmid
-        } else {
-            nextSongmid.value = songListData.value[index + 1].songmid
+    if (index == -1) {
+        nextSongmid.value = searchSong.value
+    } else {
+        if (playModel.value == 'loop') {
+            if (index == songListData.value.length - 1) {
+                nextSongmid.value = songListData.value[0].songmid
+            } else {
+                nextSongmid.value = songListData.value[index + 1].songmid
+            }
+        } else if (playModel.value == 'random') {
+            let num = Math.floor(Math.random() * songListData.value.length)
+            if (num == index) {
+                num = Math.floor(Math.random() * songListData.value.length)
+            }
+            nextSongmid.value = songListData.value[num].songmid
+        } else if (playModel.value == 'singLoop') {
+            nextSongmid.value = songmid.value
         }
-    } else if (playModel.value == 'random') {
-        let num = Math.floor(Math.random() * songListData.value.length)
-        if (num == index) {
-            num = Math.floor(Math.random() * songListData.value.length)
-        }
-        nextSongmid.value = songListData.value[num].songmid
-    } else if (playModel.value == 'singLoop') {
-        nextSongmid.value = songmid.value
     }
 }
 
@@ -792,13 +804,13 @@ onMounted(async () => {
         console.log(data);
         if (Object.keys(data).length == 0) {
             console.log('啦啦啦，请输入cookie');
-            useMusic.music.hasCookie = false
+            hasCookie.value = false
         } else {
             uin.value = data.uin
             console.log('cookie验证成功');
         }
     }).catch((err) => {
-        useMusic.music.hasCookie = false
+        hasCookie.value = false
         console.log(err);
     })
     // 获取本地歌曲
