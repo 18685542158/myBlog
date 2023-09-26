@@ -245,7 +245,7 @@ li {
 
             .mainSongName {
                 width: 100%;
-                margin-left: 0px;
+                margin-left: -5%;
                 max-width: 200px;
 
                 span {

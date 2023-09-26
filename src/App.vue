@@ -133,7 +133,7 @@
 
 /* loading加载的淡入淡出样式 */
 .loading-enter-active {
-  opacity: 0;
+  opacity: 1;
   transition: 0.3s;
 }
 
@@ -143,7 +143,7 @@
 
 .loading-leave-active {
   opacity: 1;
-  transition: 0.3s;
+  transition: 0.3s 0.3s;
 }
 
 .loading-leave-to {

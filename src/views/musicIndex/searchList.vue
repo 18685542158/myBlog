@@ -1,4 +1,9 @@
 <template>
+    <transition name="loading" mode="out-in">
+        <div class="loading" v-show="isLoading">
+            <loading></loading>
+        </div>
+    </transition>
     <div class="box">
         <div class="head">
             <div class="nav">
@@ -23,18 +28,13 @@
             </div>
         </div>
         <div class="body">
-            <transition name="loading" mode="out-in" style="width: 100%;height: 100%;">
-                <div style=" position: fixed;width: 100%;height: 100%;background-color: #ffffff71;" v-show="isLoading">
-                    <loading></loading>
-                </div>
-            </transition>
-            <searchforsong v-if="selItem == 0 && !isLoading" :songData="songData.value"></searchforsong>
-            <searchforsonglist v-else-if="selItem == 1 && !isLoading" :songlistData="songlistData.value">
-            </searchforsonglist>
-            <searchforsinger v-else-if="selItem == 2 && !isLoading" :singerData="singerData.value"></searchforsinger>
-            <searchforalbum v-else-if="selItem == 3 && !isLoading" :albumData="albumData.value"></searchforalbum>
-            <searchformv v-else-if="selItem == 4 && !isLoading" :mvData="mvData.value"></searchformv>
-            <searchforlyric v-else-if="selItem == 5 && !isLoading" :lyricData="lyricData.value"></searchforlyric>
+            <!-- <searchforsong v-if="selItem == 0 && !isLoading" :songData="songData.value"></searchforsong>
+                <searchforsonglist v-else-if="selItem == 1 && !isLoading" :songlistData="songlistData.value">
+                </searchforsonglist>
+                <searchforsinger v-else-if="selItem == 2 && !isLoading" :singerData="singerData.value"></searchforsinger>
+                <searchforalbum v-else-if="selItem == 3 && !isLoading" :albumData="albumData.value"></searchforalbum>
+                <searchformv v-else-if="selItem == 4 && !isLoading" :mvData="mvData.value"></searchformv>
+                <searchforlyric v-else-if="selItem == 5 && !isLoading" :lyricData="lyricData.value"></searchforlyric> -->
         </div>
     </div>
 </template>
@@ -147,6 +147,16 @@ onMounted(async () => {
 </script>
 
 <style scoped lang="scss">
+.loading {
+    width: 66%;
+    height: 74%;
+    position: fixed;
+    background-color: #7fe5ff31;
+    // backdrop-filter: opacity(1);
+    backdrop-filter: blur(1000px);
+    z-index: 99;
+}
+
 .box {
     width: 100%;
     height: 100%;

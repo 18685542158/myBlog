@@ -67,7 +67,8 @@
         </div>
 
         <div class="text">
-            LOOKING OUTSIDE FOR YOU... ONE SEC
+            <!-- LOOKING OUTSIDE FOR YOU... ONE SEC -->
+            Loading.....
         </div>
     </div>
 </template>
