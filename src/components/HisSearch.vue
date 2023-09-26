@@ -1,8 +1,17 @@
 <template>
     <div>
         <div class="search-kuang" :class="{ 'isSearchKuang': isSearchKuang }">
-            <div class="hisSearch" v-if="!inputValue.length">
-                <span>历史搜索</span><span class="iconfont icon-shanchu"></span>
+            <div v-if="!inputValue.length">
+                <div class="hisSearch">
+                    <span>历史搜索</span><span class="iconfont icon-shanchu"></span>
+                </div>
+                <div class="item">
+                    <ul>
+                        <li v-for="(item, index) in inputValueArr">
+                            <span>{{ item }}</span>
+                        </li>
+                    </ul>
+                </div>
             </div>
             <div v-else class="content">
 
@@ -12,7 +21,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, defineProps, toRefs } from 'vue';
+import { ref, reactive, defineProps, toRefs, watch } from 'vue';
 
 const props = defineProps({
     isSearchKuang: {
@@ -22,7 +31,16 @@ const props = defineProps({
         type: String
     }
 })
-const { isSearchKuang } = toRefs(props)
+const { isSearchKuang, inputValue } = toRefs(props)
+
+const inputValueArr = reactive([])
+
+watch(inputValue, (newValue) => {
+    if (newValue) {
+        inputValueArr.push(newValue)
+        console.log(newValue);
+    }
+})
 </script>
 
 <style scoped lang="scss">
@@ -72,7 +90,5 @@ const { isSearchKuang } = toRefs(props)
     display: inline-block;
 }
 
-.content{
-    
-}
+.content {}
 </style>

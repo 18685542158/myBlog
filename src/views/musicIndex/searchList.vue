@@ -1,40 +1,42 @@
 <template>
-    <transition name="loading" mode="out-in">
-        <div class="loading" v-show="isLoading">
-            <loading></loading>
-        </div>
-    </transition>
-    <div class="box">
-        <div class="head">
-            <div class="nav">
-                <ul>
-                    <li v-for="(item, index) in navData" :class="selItem == index ? 'active' : ''"
-                        @click="chose(item, index)">
-                        <div class="item">
-                            {{ item.title }}
-                        </div>
-                    </li>
-                </ul>
-                <div class="seek" :style="`transform: translateX(${-300 + selItem * 120}px); `"></div>
+    <div style="width:100%;height: 100%;">
+        <transition name="loading" mode="out-in">
+            <div class="loading" v-show="isLoading">
+                <loading></loading>
             </div>
-            <div class="info" @click="{ console.log(key); }"
-                style="display: flex;flex-direction: column;justify-content: space-evenly;align-items: center;">
-                <!-- <div>
+        </transition>
+        <div class="box">
+            <div class="head">
+                <div class="nav">
+                    <ul>
+                        <li v-for="(item, index) in navData" :class="selItem == index ? 'active' : ''"
+                            @click="chose(item, index)">
+                            <div class="item">
+                                {{ item.title }}
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="seek" :style="`transform: translateX(${-300 + selItem * 120}px); `"></div>
+                </div>
+                <div class="info" @click="{ console.log(key); }"
+                    style="display: flex;flex-direction: column;justify-content: space-evenly;align-items: center;">
+                    <!-- <div>
                     搜索：<span>"{{ key }}""</span>
                 </div>
                 <div>
                     结果：{{ 200 }}条
                 </div> -->
+                </div>
             </div>
-        </div>
-        <div class="body">
-            <!-- <searchforsong v-if="selItem == 0 && !isLoading" :songData="songData.value"></searchforsong>
+            <div class="body" @scroll="loadMoreData">
+                <searchforsong v-if="selItem == 0 && !isLoading" :songData="songData.value"></searchforsong>
                 <searchforsonglist v-else-if="selItem == 1 && !isLoading" :songlistData="songlistData.value">
                 </searchforsonglist>
                 <searchforsinger v-else-if="selItem == 2 && !isLoading" :singerData="singerData.value"></searchforsinger>
                 <searchforalbum v-else-if="selItem == 3 && !isLoading" :albumData="albumData.value"></searchforalbum>
                 <searchformv v-else-if="selItem == 4 && !isLoading" :mvData="mvData.value"></searchformv>
-                <searchforlyric v-else-if="selItem == 5 && !isLoading" :lyricData="lyricData.value"></searchforlyric> -->
+                <searchforlyric v-else-if="selItem == 5 && !isLoading" :lyricData="lyricData.value"></searchforlyric>
+            </div>
         </div>
     </div>
 </template>
@@ -117,6 +119,7 @@ const getData = async () => {
     if (type.value == 7) {
         lyricData.value = data.req_1.data.body.song.list
     } else if (type.value == 0) {
+
         songData.value = data.req_1.data.body.song.list
         songlistData.value = data.req_1.data.body.songlist
         singerData.value = data.req_1.data.body.singer
@@ -125,6 +128,10 @@ const getData = async () => {
     }
 }
 
+//获取更多数据
+const loadMoreData = async () => {
+    console.log('到底');
+}
 // 当key发生变化时，重新获取数据
 watch(route, async (to, from, next) => {
     isLoading.value = true
@@ -147,15 +154,15 @@ onMounted(async () => {
 </script>
 
 <style scoped lang="scss">
-.loading {
-    width: 66%;
-    height: 74%;
-    position: fixed;
-    background-color: #7fe5ff31;
-    // backdrop-filter: opacity(1);
-    backdrop-filter: blur(1000px);
-    z-index: 99;
-}
+// .loading {
+//     position: fixed;
+//     // width: 66%;
+//     // height: 74%;
+//     background-color: #7f9dff00;
+//     // backdrop-filter: opacity(1);
+//     // backdrop-filter: blur(1000px);
+//     z-index: 99;
+// }
 
 .box {
     width: 100%;

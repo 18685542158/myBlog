@@ -143,7 +143,7 @@
 
 .loading-leave-active {
   opacity: 1;
-  transition: 0.3s 0.3s;
+  transition: 0.3s;
 }
 
 .loading-leave-to {
