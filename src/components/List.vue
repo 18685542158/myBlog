@@ -112,7 +112,7 @@ const playSong = debounce(async (item) => {
 
 <style scoped lang="scss">
 %ellipsis-style {
-    // display: inline-block;
+    display: inline-block;
     max-width: 100%;
     text-overflow: ellipsis;
     white-space: nowrap;

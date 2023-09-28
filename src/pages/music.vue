@@ -174,7 +174,9 @@
                                 <div class="leftline"></div>
                             </div>
                             <!-- 音量控制 -->
-                            <span class="iconfont icon-sound" title="音量"></span>
+                            <span class="iconfont icon-sound" title="音量">
+                                <div class="sound">你好</div>
+                            </span>
                         </div>
                         <div class="f-right">
                             <div class="f-control">
@@ -1505,6 +1507,15 @@ onUnmounted(() => {
                             &:hover {
                                 color: #000
                             }
+                        }
+
+                        .sound{
+                            position: fixed;
+                            top: 50%;
+                            left: 62%;
+                            width: 150px;
+                            height: 20px;
+                            background-color: #fff;
                         }
                     }
 

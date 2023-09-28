@@ -119,7 +119,6 @@ const getData = async () => {
     if (type.value == 7) {
         lyricData.value = data.req_1.data.body.song.list
     } else if (type.value == 0) {
-
         songData.value = data.req_1.data.body.song.list
         songlistData.value = data.req_1.data.body.songlist
         singerData.value = data.req_1.data.body.singer
