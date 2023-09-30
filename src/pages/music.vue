@@ -174,9 +174,15 @@
                                 <div class="leftline"></div>
                             </div>
                             <!-- 音量控制 -->
-                            <span class="iconfont icon-sound" title="音量">
-                                <div class="sound">你好</div>
-                            </span>
+                            <div class="soundCtr">
+                                <span class="iconfont icon-sound" title="音量" @click="isVolume = !isVolume">
+                                </span>
+                                <div class="sound" :class="{ 'isVolume': isVolume }" @mouseleave="leaveSoundProgress">
+                                    <div class="sound-main" @mousedown="downSoundProgress">
+                                        <div class="sound-pro" :style="`width: ${volume}%;`"></div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="f-right">
                             <div class="f-control">
@@ -363,6 +369,12 @@ let isSearchKuang = false
 const isOpen = ref(false)
 // 是否开启detail界面的展出
 const detailShow = ref(false)
+// 设置音量
+const volume = ref(40)
+// 是否调节音量
+const isVolume = ref(false)
+// 音量条是否可拖动
+const isVolumeMove = ref(false)
 // 关闭detailShow
 const closeDetailShow = () => {
     detailShow.value = false
@@ -388,7 +400,7 @@ const handleHistoryItemClick = async () => {      //============================
     if (!inputValue.value) return
     if (!hasCookie.value) {
         // 请输出cookie
-        imageActive.value=true
+        imageActive.value = true
         return
     }
     isSearchKuang = false
@@ -718,6 +730,10 @@ const moveProgress = (e) => {
         const newTime = getPer(e)
         num.value = newTime
     }
+    if (isVolumeMove.value) {
+        const newTime = getvolume(e)
+        volume.value = newTime
+    }
 }
 // 鼠标松开后，进度条不可拖动
 const leaveProgress = () => {
@@ -725,6 +741,36 @@ const leaveProgress = () => {
         musicPlayer.setCurrentTime(num.value * duration.value / 100)
         isMove.value = false
     }
+    if (isVolumeMove.value) {
+        // musicPlayer.setCurrentTime(num.value * duration.value / 100)
+        isVolumeMove.value = false
+    }
+}
+
+// 音量条的拖动========================================
+const getvolume = (e) => {
+    const left = document.querySelector('.sound-main')
+    // 获取进度条宽度
+    const pwidth = left.getBoundingClientRect().right - left.getBoundingClientRect().left
+    const newTime = Math.floor((e.clientX - left.getBoundingClientRect().left) / pwidth * 100)
+    if (newTime > 100) {
+        return 100
+    } else if (newTime <= 0) {
+        return 0
+    } else {
+        return newTime
+    }
+}
+const downSoundProgress = (e) => {
+    const newTime = getvolume(e)
+    console.log(newTime);
+    volume.value = newTime
+    isVolumeMove.value = true
+}
+const leaveSoundProgress = () => {
+    setTimeout(() => {
+        isVolume.value = false
+    }, 1000)
 }
 
 // 以下是音乐方法======================================
@@ -794,6 +840,13 @@ watch(thedissid, async () => {
     console.log('触发歌单切换');
     await getData()
     nextSongSel()
+})
+
+// 监听音量的变化
+watch(volume, (newValue) => {
+    console.log('设置音量');
+    console.log(newValue);
+    musicPlayer.setVolume(newValue / 100)
 })
 
 // 挂载的时候
@@ -1509,13 +1562,44 @@ onUnmounted(() => {
                             }
                         }
 
-                        .sound{
-                            position: fixed;
-                            top: 50%;
-                            left: 62%;
-                            width: 150px;
-                            height: 20px;
-                            background-color: #fff;
+                        .soundCtr {
+                            position: relative;
+                            display: flex;
+
+                            .sound {
+                                transition: 0.3s;
+                                overflow: hidden;
+                                position: fixed;
+                                margin-left: 3%;
+                                // transform: translate(20%,-100%);
+                                width: 0px;
+                                height: 10px;
+                                border-radius: 0 5px 5px 5px;
+                                background-color: #ffffffe7;
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+
+                                .sound-main {
+                                    width: 90%;
+                                    height: 5px;
+                                    background-color: #fff;
+                                    cursor: pointer;
+                                    border-radius: 2px;
+                                    overflow: hidden;
+
+                                    .sound-pro {
+                                        height: 100%;
+                                        background-color: #333;
+                                    }
+                                }
+                            }
+
+                            .isVolume {
+                                transition: 0.3s;
+                                width: 150px;
+                                height: 30px;
+                            }
                         }
                     }
 

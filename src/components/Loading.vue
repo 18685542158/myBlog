@@ -69,7 +69,6 @@
             </div>
 
             <div class="text">
-                <!-- LOOKING OUTSIDE FOR YOU... ONE SEC -->
                 Loading.....
             </div>
         </div>
@@ -83,17 +82,28 @@ import { ref, reactive } from 'vue';
 
 <style scoped lang="scss">
 body {
-    background: #efefef;
+    background: #efefefb2;
+}
+
+.box {
+    position:relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #efefef0d;
+    z-index:99;
 }
 
 .preloader {
     position: absolute;
-    margin-left: -55px;
-    margin-top: -100px;
+    // margin-left: -55px;
+    // margin-top: -100px;
     height: 110px;
     width: 110px;
-    left: 50%;
-    top: 50%;
+    // left: 50%;
+    // top: 50%;
 }
 
 svg {

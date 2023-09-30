@@ -28,14 +28,20 @@
                 </div> -->
                 </div>
             </div>
-            <div class="body" @scroll="loadMoreData">
-                <searchforsong v-if="selItem == 0 && !isLoading" :songData="songData.value"></searchforsong>
-                <searchforsonglist v-else-if="selItem == 1 && !isLoading" :songlistData="songlistData.value">
+            <div class="body">
+                <searchforsong v-if="selItem == 0" :songData="songData.value" @scroll="loadMoreData"
+                    class="searchPage"></searchforsong>
+                <searchforsonglist v-else-if="selItem == 1" :songlistData="songlistData.value"
+                    @scroll="loadMoreData" class="searchPage">
                 </searchforsonglist>
-                <searchforsinger v-else-if="selItem == 2 && !isLoading" :singerData="singerData.value"></searchforsinger>
-                <searchforalbum v-else-if="selItem == 3 && !isLoading" :albumData="albumData.value"></searchforalbum>
-                <searchformv v-else-if="selItem == 4 && !isLoading" :mvData="mvData.value"></searchformv>
-                <searchforlyric v-else-if="selItem == 5 && !isLoading" :lyricData="lyricData.value"></searchforlyric>
+                <searchforsinger v-else-if="selItem == 2" :singerData="singerData.value"
+                    @scroll="loadMoreData" class="searchPage"></searchforsinger>
+                <searchforalbum v-else-if="selItem == 3" :albumData="albumData.value" @scroll="loadMoreData"
+                    class="searchPage"></searchforalbum>
+                <searchformv v-else-if="selItem == 4" :mvData="mvData.value" @scroll="loadMoreData"
+                    class="searchPage"></searchformv>
+                <searchforlyric v-else-if="selItem == 5" :lyricData="lyricData.value" @scroll="loadMoreData"
+                    class="searchPage"></searchforlyric>
             </div>
         </div>
     </div>
@@ -44,6 +50,8 @@
 <script setup>
 import { ref, reactive, onMounted, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
+import { debounce } from 'lodash';          // 防抖
+
 import searchforalbum from '../../components/SearchForAlbum.vue';
 import searchforlyric from '../../components/SearchForLyric.vue';
 import searchformv from '../../components/SearchForMv.vue';
@@ -57,6 +65,7 @@ import {
 } from '../../api/request';
 
 const isLoading = ref(true)
+const more = ref(false)
 
 const key = ref('')
 const type = ref(0)
@@ -105,11 +114,12 @@ const chose = async (item, index) => {
     isLoading.value = true
     selItem.value = index
     type.value = item.type
+    pageNum.value = 1
     await getData()
     isLoading.value = false
 }
 
-// 获取数据
+// 第一次打开搜索获取数据
 const getData = async () => {
     if (!key.value) return
     console.log('获取数据？？？');
@@ -120,17 +130,48 @@ const getData = async () => {
         lyricData.value = data.req_1.data.body.song.list
     } else if (type.value == 0) {
         songData.value = data.req_1.data.body.song.list
+    } else if (type.value == 3) {
         songlistData.value = data.req_1.data.body.songlist
+    } else if (type.value == 1) {
         singerData.value = data.req_1.data.body.singer
+    } else if (type.value == 4) {
         mvData.value = data.req_1.data.body.mv
+    } else if (type.value == 2) {
         albumData.value = data.req_1.data.body.album
     }
 }
 
 //获取更多数据
-const loadMoreData = async () => {
-    console.log('到底');
-}
+const loadMoreData = debounce((e) => {
+    const page = document.querySelector('.searchPage')
+    if (Math.floor(page.scrollHeight - page.scrollTop) <= page.clientHeight) {
+        isLoading.value = true
+        console.log('到底');
+        pageNum.value++
+        // const data = search(key.value, type.value, pageNum.value)
+        search(key.value, type.value, pageNum.value).then((data) => {
+            console.log(data);
+            if (type.value == 7) {
+                lyricData.value = [...lyricData.value, ...data.req_1.data.body.song.list]
+            } else if (type.value == 0) {
+                songData.value = [...songData.value, ...data.req_1.data.body.song.list]
+            } else if (type.value == 3) {
+                songlistData.value = [...songlistData.value, ...data.req_1.data.body.songlist]
+            } else if (type.value == 1) {
+                singerData.value = [...singerData.value, ...data.req_1.data.body.singer]
+            } else if (type.value == 4) {
+                mvData.value = [...singerData.value, ...data.req_1.data.body.mv]
+            } else if (type.value == 2) {
+                albumData.value = [...albumData.value, ...data.req_1.data.body.album]
+            }
+            isLoading.value = false
+        }).catch(err=>{
+            isLoading.value = false
+            console.log(err);
+        })
+    }
+}, 300)
+
 // 当key发生变化时，重新获取数据
 watch(route, async (to, from, next) => {
     isLoading.value = true
@@ -153,15 +194,15 @@ onMounted(async () => {
 </script>
 
 <style scoped lang="scss">
-// .loading {
-//     position: fixed;
-//     // width: 66%;
-//     // height: 74%;
-//     background-color: #7f9dff00;
-//     // backdrop-filter: opacity(1);
-//     // backdrop-filter: blur(1000px);
-//     z-index: 99;
-// }
+.loading {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    // background-color: #7f9dff00;
+    // backdrop-filter: opacity(1);
+    // backdrop-filter: blur(1000px);
+    // z-index: 100;
+}
 
 .box {
     width: 100%;
@@ -226,7 +267,8 @@ onMounted(async () => {
 
     .body {
         position: relative;
-        flex: 1;
+        height: calc(100% - 101px);
+        // flex: 1;
     }
 }
 </style>

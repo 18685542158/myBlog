@@ -4,7 +4,6 @@
             <li v-for="(item, index) in songData" :key="index">
                 <div class="item main" v-if="isMainSong && index == 0">
                     <div class="img">
-                        <img :src="getSingerImg(item.singer[0].mid)" :title="item.singer[0].name">
                     </div>
                     <div class="theInfo">
                         <div class="mainSongName">

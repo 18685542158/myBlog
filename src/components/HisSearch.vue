@@ -6,11 +6,11 @@
                     <span>历史搜索</span><span class="iconfont icon-shanchu"></span>
                 </div>
                 <div class="item">
-                    <ul>
+                    <!-- <ul>
                         <li v-for="(item, index) in inputValueArr">
                             <span>{{ item }}</span>
                         </li>
-                    </ul>
+                    </ul> -->
                 </div>
             </div>
             <div v-else class="content">
