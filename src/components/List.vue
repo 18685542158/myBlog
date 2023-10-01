@@ -4,6 +4,7 @@
             <li v-for="(item, index) in songData" :key="index">
                 <div class="item main" v-if="isMainSong && index == 0">
                     <div class="img">
+                        <img :src="getSingerImg(item.singer[0].mid)" :title="item.singer[0].name">
                     </div>
                     <div class="theInfo">
                         <div class="mainSongName">
@@ -116,6 +117,9 @@ const playSong = debounce(async (item) => {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+    font-size: 15px;
+    cursor: pointer;
+    text-align: center;
 }
 
 li {
@@ -130,12 +134,6 @@ li {
         align-items: center;
         justify-content: space-between;
         border-bottom: 1px solid #ffffff94;
-        font-size: 15px;
-
-        span {
-            cursor: pointer;
-            text-align: center;
-        }
 
         .songName {
             flex: 1;

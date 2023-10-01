@@ -29,17 +29,16 @@
                 </div>
             </div>
             <div class="body">
-                <searchforsong v-if="selItem == 0" :songData="songData.value" @scroll="loadMoreData"
-                    class="searchPage"></searchforsong>
-                <searchforsonglist v-else-if="selItem == 1" :songlistData="songlistData.value"
-                    @scroll="loadMoreData" class="searchPage">
-                </searchforsonglist>
-                <searchforsinger v-else-if="selItem == 2" :singerData="singerData.value"
-                    @scroll="loadMoreData" class="searchPage"></searchforsinger>
+                <searchforsong v-if="selItem == 0" :songData="songData.value" @scroll="loadMoreData" class="searchPage">
+                </searchforsong>
+                <searchforsonglist v-else-if="selItem == 1" :songlistData="songlistData.value" @scroll="loadMoreData"
+                    class="searchPage"></searchforsonglist>
+                <searchforsinger v-else-if="selItem == 2" :singerData="singerData.value" @scroll="loadMoreData"
+                    class="searchPage"></searchforsinger>
                 <searchforalbum v-else-if="selItem == 3" :albumData="albumData.value" @scroll="loadMoreData"
                     class="searchPage"></searchforalbum>
-                <searchformv v-else-if="selItem == 4" :mvData="mvData.value" @scroll="loadMoreData"
-                    class="searchPage"></searchformv>
+                <searchformv v-else-if="selItem == 4" :mvData="mvData.value" @scroll="loadMoreData" class="searchPage">
+                </searchformv>
                 <searchforlyric v-else-if="selItem == 5" :lyricData="lyricData.value" @scroll="loadMoreData"
                     class="searchPage"></searchforlyric>
             </div>
@@ -65,7 +64,7 @@ import {
 } from '../../api/request';
 
 const isLoading = ref(true)
-const more = ref(false)
+const hasMore = ref(true)
 
 const key = ref('')
 const type = ref(0)
@@ -131,13 +130,13 @@ const getData = async () => {
     } else if (type.value == 0) {
         songData.value = data.req_1.data.body.song.list
     } else if (type.value == 3) {
-        songlistData.value = data.req_1.data.body.songlist
+        songlistData.value = data.req_1.data.body.songlist.list
     } else if (type.value == 1) {
-        singerData.value = data.req_1.data.body.singer
+        singerData.value = data.req_1.data.body.singer.list
     } else if (type.value == 4) {
-        mvData.value = data.req_1.data.body.mv
+        mvData.value = data.req_1.data.body.mv.list
     } else if (type.value == 2) {
-        albumData.value = data.req_1.data.body.album
+        albumData.value = data.req_1.data.body.album.list
     }
 }
 
@@ -156,16 +155,16 @@ const loadMoreData = debounce((e) => {
             } else if (type.value == 0) {
                 songData.value = [...songData.value, ...data.req_1.data.body.song.list]
             } else if (type.value == 3) {
-                songlistData.value = [...songlistData.value, ...data.req_1.data.body.songlist]
+                songlistData.value = [...songlistData.value, ...data.req_1.data.body.songlist.list]
             } else if (type.value == 1) {
-                singerData.value = [...singerData.value, ...data.req_1.data.body.singer]
+                singerData.value = [...singerData.value, ...data.req_1.data.body.singer.list]
             } else if (type.value == 4) {
-                mvData.value = [...singerData.value, ...data.req_1.data.body.mv]
+                mvData.value = [...mvData.value, ...data.req_1.data.body.mv.list]
             } else if (type.value == 2) {
-                albumData.value = [...albumData.value, ...data.req_1.data.body.album]
+                albumData.value = [...albumData.value, ...data.req_1.data.body.album.list]
             }
             isLoading.value = false
-        }).catch(err=>{
+        }).catch(err => {
             isLoading.value = false
             console.log(err);
         })
