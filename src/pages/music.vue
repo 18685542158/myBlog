@@ -242,11 +242,11 @@ const useMusic = useStore()
 const router = useRouter()
 const route = useRoute()
 // 解构pinia里的方法
-const { changeSettingCookie, getSongData, setSongmid, addSongList, getSongPlayList } = useMusic.music
+const { changeSettingCookie, getSongData, setSongmid, addSongList, getSongPlayList, addHisSearch, getHisSearch } = useMusic.music
 const { changePlay, changePlayModel } = useMusic.musicPlay
 // 响应式解构pinia里面的参数
 const { num, playModel, isplay, toNext } = storeToRefs(useMusic.musicPlay)
-const { uin, songmid, nextSongmid, thedissid, songURL, searchSong, hasCookie } = storeToRefs(useMusic.music)
+const { uin, songmid, nextSongmid, thedissid, songURL, searchSong, hasCookie, hisSearch } = storeToRefs(useMusic.music)
 
 // 被选中的菜单
 let isActiveNav = ref(1)
@@ -405,12 +405,14 @@ const handleHistoryItemClick = async () => {      //============================
     }
     isSearchKuang = false
     console.log('触发搜索');
+    addHisSearch(inputValue.value)
     router.push({
         name: 'Search',
         params: {
             key: inputValue.value
         }
     })
+    inputValue.value = ''
 }
 // 移动到顶部头像之后的展出
 let imageActive = ref(false)
@@ -436,6 +438,7 @@ const toQQmusic = () => {
 // 测试
 const fanhui = () => {
     // router.push('/home')
+    console.log(hisSearch.value);
     console.log(songURL.value);
     console.log(useMusic.music.songPlayList);
     console.log(hisList);
@@ -874,6 +877,8 @@ onMounted(async () => {
     getSongPlayList()
     hisList = [...useMusic.music.songPlayList]
     hisIndex = hisList.findIndex(item => item == songmid.value)
+    // 获取搜索记录
+    getHisSearch()
     // 加载当前播放器的歌曲
     loadSong(songmid.value)
     // 获取我的歌单

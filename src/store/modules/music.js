@@ -11,7 +11,8 @@ export default defineStore('music', {
             songPlayList: [],               // 播放列表，大概率要存进localStorage 
             thedissid: '3580408357',
             songURL: [],                  // 还是得缓存歌曲的url等信息，不然每次打开页面都是从网上获取，太慢了
-            searchSong:'',
+            searchSong: '',
+            hisSearch: [],                  // 搜索记录
         };
     },
     getters: {
@@ -116,6 +117,31 @@ export default defineStore('music', {
         getSongURL() {
             const data = localStorage.getItem('songURL')
             this.songURL = JSON.parse(data) || []
-        }
+        },
+
+
+        // 添加搜素记录
+        addHisSearch(search) {
+            const index = this.hisSearch.findIndex(item => item == search)
+            if (index == -1) {
+                this.hisSearch.push(search)
+            } else {
+                this.hisSearch.splice(index, 1)
+                this.hisSearch.push(search)
+            }
+            this.setHisSearch()
+            console.log(this.hisSearch);
+        },
+        // 将搜索记录存入local
+        setHisSearch() {
+            const data = JSON.stringify(this.hisSearch)
+            localStorage.setItem('hisSearch', data)
+        },
+        // 从本地获取搜索记录
+        getHisSearch() {
+            const data = JSON.parse(localStorage.getItem('hisSearch'))
+            this.hisSearch = data
+        },
+
     }
 });

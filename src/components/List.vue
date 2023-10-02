@@ -10,7 +10,7 @@
                         <div class="mainSongName">
                             <span :title="item.songname || item.title">{{ item.songname || item.title }}</span>
                         </div>
-                        <div class="mainSongArtist"><span :title="item.singer[0].name">{{ item.singer[0].name }}</span>
+                        <div class="mainSongArtist"><span :title="item.singer[0].name">{{ singerFormat(item.singer) }}</span>
                         </div>
                     </div>
                     <div class="songTime"><span>{{ timeFormat(item.interval) }}</span></div>
@@ -25,7 +25,7 @@
                     <div class="songName"><span :title="item.songname || item.title">{{ item.songname || item.title
                     }}</span>
                     </div>
-                    <div class="songArtist"><span :title="item.singer[0].name">{{ item.singer[0].name }}</span></div>
+                    <div class="songArtist"><span :title="item.singer[0].name">{{ singerFormat(item.singer) }}</span></div>
                     <div class="songTime"><span>{{ timeFormat(item.interval) }}</span></div>
                     <div class="songAlbum"><span :title="item.albumname">{{ item.albumname }}</span></div>
                     <div class="play" @click="playSong(item.songmid)">
@@ -79,6 +79,20 @@ const timeFormat = (time) => {
     }
     return `${formattedMins}:${formattedSecs}`;
 }
+
+// 创建一个方法，接收歌手数组（因为歌手可能不止一个），返回一个歌手字符串
+const singerFormat = (array) => {
+    let str = ''
+    for (let i = 0; i <= array.length - 1; i++) {
+        if (i == 0) {
+            str = array[i].name
+        } else {
+            str = str + '/' + array[i].name
+        }
+    }
+    return str
+}
+
 
 // 返回歌手图片地址
 const getSingerImg = (item) => {
@@ -241,9 +255,10 @@ li {
             align-items: center;
 
             .mainSongName {
-                width: 100%;
-                margin-left: -5%;
-                max-width: 200px;
+                // background-color: #fff;
+                width: 140%;
+                margin-left: 30%;
+                max-width: 300px;
 
                 span {
                     @extend %ellipsis-style;
