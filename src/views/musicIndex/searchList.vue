@@ -190,6 +190,11 @@ onMounted(async () => {
     isLoading.value = false
 })
 
+watch(type, (newValue) => {
+    if (navData[selItem.value] != newValue) {
+        selItem.value = navData.findIndex(item => item.type == newValue)
+    }
+})
 </script>
 
 <style scoped lang="scss">

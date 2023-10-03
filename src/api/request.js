@@ -43,7 +43,7 @@ export function getSong(songmid) {
     })
 }
 
-//获取歌曲歌词
+// 获取歌曲歌词
 export function getLyric(songmid) {
     return axios.get('/lyric', {
         params: {
@@ -51,6 +51,26 @@ export function getLyric(songmid) {
         }
     })
 }
+
+// 获取歌曲mv
+export function getSongMV(songmid) {
+    return axios.get('/singer/mv', {
+        params: {
+            songmid
+        }
+    })
+}
+
+// 获取mv的信息
+export function getMvInfo(id) {
+    return axios.get('/mv', {
+        params: {
+            id
+        }
+    })
+}
+
+
 
 // 新建歌单
 export function createSongList(name) {

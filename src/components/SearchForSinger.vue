@@ -1,21 +1,28 @@
 <template>
     <div class="box">
-        <div style="width: 100%;height: 300px;background-color: #fff;">
-            {{ singerData }}
+        <div class="main">
+            <div class="img">
+                <img :src="mainSinger.singerPic" alt="">
+            </div>
+            <div class="info">
+                <h1>{{ mainSinger.singerName }}</h1>
+                <div class="songInfo"><span>单曲：{{ mainSinger.songNum }}</span><span>专辑：{{ mainSinger.albumNum }}</span>
+                </div>
+            </div>
+            <div class="song">
+
+            </div>
         </div>
         <div class="body">
             <ul>
                 <li v-for="(item, index) in singerData">
-                    <div class="main" v-if="index == 0">
+                    <div class="item" v-if="index != 0">
                         <div class="img">
-                            <img :src="singerData[0].singerPic" alt="">
+                            <img :src="item.singerPic" alt="">
                         </div>
                         <div>
-                            <span>{{ singerData[0].singerName }}</span>
+                            <span>{{ item.singerName }}</span>
                         </div>
-                    </div>
-                    <div class="item">
-                        {{ item.singerName }}
                     </div>
                 </li>
             </ul>
@@ -37,9 +44,7 @@ const { singerData } = toRefs(props)
 const mainSinger = ref([])
 
 watch(singerData, (newValue) => {
-    console.log(newValue);
-    // mainSinger.value.push()
-    console.log(mainSinger.value);
+    mainSinger.value = newValue[0]
 })
 
 </script>
@@ -51,8 +56,60 @@ watch(singerData, (newValue) => {
     height: 100%;
     backdrop-filter: blur(6px);
     background-color: #2e294e25;
+    display: flex;
+    flex-direction: column;
+
+    .main {
+        width: 100%;
+        height: 220px;
+        // background-color: #fff;
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid #ffffff5b;
+
+        .img {
+            height: 95%;
+            aspect-ratio: 1/1;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-left: 2%;
+
+            img {
+                width: 100%;
+            }
+        }
+
+        .info {
+            flex: 1;
+            height: 90%;
+            margin-left: 5%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+
+            h1 {
+                cursor: pointer;
+                font-size: 50px;
+            }
+
+            .songInfo {
+                span {
+                    cursor: pointer;
+                    color: #111;
+                    &:nth-of-type(2) {
+                        margin-left: 5%;
+                    }
+                }
+            }
+        }
+
+        .song {
+            flex: 1;
+        }
+    }
 
     .body {
+        flex: 1;
 
         ul {
             display: flex;
@@ -64,12 +121,6 @@ watch(singerData, (newValue) => {
                 width: 200px;
                 height: 200px;
                 border: 1px solid #333;
-            }
-
-            .main {
-                width: 100%;
-                height: 200px;
-                border: 1px solid #fff;
             }
         }
     }

@@ -79,7 +79,8 @@
                                 :placeholder="placeholder" @focus="focusSearch" @blur="blurSearch" @input="QSearch"
                                 @keyup.enter="handleHistoryItemClick">
                             <span class="iconfont icon-sousuo" @click="handleHistoryItemClick"></span>
-                            <HisSearch :isSearchKuang="isSearchKuang" :inputValue="inputValue"></HisSearch>
+                            <HisSearch :isSearchKuang="isSearchKuang" :inputValue="inputValue" :qSearchData="qSearchData">
+                            </HisSearch>
                         </div>
                     </div>
                     <div class="head-right" style="flex:1;">
@@ -390,9 +391,13 @@ const blurSearch = () => {
     placeholder.value = '搜索'
 }
 // 快速搜索的逻辑
+const qSearchData = ref({})
+
 const QSearch = debounce(async () => {
+    if(!inputValue.value)return
     console.log('执行一次快速搜索');
-    const data = await quickSearch('周杰伦')
+    const data = await quickSearch(inputValue.value)
+    qSearchData.value = data
     console.log(data);
 }, 700)
 // 搜索的逻辑

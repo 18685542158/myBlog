@@ -150,6 +150,31 @@ app.get('/lyric', (req, res) => {
     })
 })
 
+// 获取歌曲mv
+app.get('/singer/mv', (req, res) => {
+    qqMusic.api('/singer/mv', {
+        songmid: req.query.songmid
+    }).then((result) => {
+        console.log('获取mv成功');
+        res.json(result)
+    }).catch((err) => {
+        res.status(500).json({ error: '获取mv失败' })
+        console.log(err);
+    })
+})
+
+// 获取mv的信息
+app.get('/mv', (req, res) => {
+    qqMusic.api('/mv', {
+        id: req.query.id
+    }).then((result) => {
+        console.log('获取mv信息成功');
+        res.json(result)
+    }).catch((err) => {
+        res.status(500).json({ err: '获取mv信息失败' })
+        console.log(err);
+    })
+})
 
 
 
