@@ -25,6 +25,15 @@ export function search(key, type, pageNo) {
     })
 }
 
+// 获取歌手信息
+export function getSingerInfo(singermid) {
+    return axios.get('/singer/desc', {
+        params: {
+            singermid
+        }
+    })
+}
+
 // 获取单个歌曲详情
 export function getSongDetail(songmid) {
     return axios.get('/song', {

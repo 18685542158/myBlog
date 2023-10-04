@@ -4,10 +4,10 @@
             <ul>
                 <li v-for="(item, index) in songlistData">
                     <div class="item">
-                        <div class="img">
+                        <div class="img" @click="toDetail(item)">
                             <img :src="item.imgurl">
                         </div>
-                        <div class="desc">
+                        <div class="desc" @click="toDetail(item)">
                             <span>
                                 {{ item.dissname }}
                             </span>
@@ -36,6 +36,8 @@
     
 <script setup>
 import { ref, reactive, toRefs, defineProps } from 'vue';
+import { useRouter } from 'vue-router';
+const router = useRouter()
 
 const props = defineProps({
     songlistData: {
@@ -44,6 +46,17 @@ const props = defineProps({
 })
 
 const { songListData } = toRefs(props)
+
+// 跳转到歌单详情
+const toDetail = (item) => {
+    console.log(item);
+    router.push({
+        name:'SongColist',
+        params: {
+            dissid: item.dissid
+        }
+    })
+}
 
 // 歌曲播放次数格式转换成万
 const format = (num) => {
@@ -94,6 +107,7 @@ const format = (num) => {
                     margin-left: 20px;
                     max-width: 250px;
                     height: 80%;
+                    cursor: pointer;
 
                     img {
                         // border-radius:10px;

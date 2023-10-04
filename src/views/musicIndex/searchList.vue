@@ -95,12 +95,12 @@ const navData = [
         type: 1,
     },
     {
-        title: 'mv',
-        type: 4,
-    },
-    {
         title: '专辑',
         type: 2,
+    },
+    {
+        title: 'mv',
+        type: 4,
     },
     {
         title: '歌词',

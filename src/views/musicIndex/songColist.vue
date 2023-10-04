@@ -31,6 +31,7 @@ import { ref, reactive, onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import useStore from '../../store/index';
 import { storeToRefs } from "pinia"
+import ColorThief from "colorthief";
 const useMusic = useStore()
 const { uin, songmid, nextSongmid, thedissid } = storeToRefs(useMusic.music)
 const { isplay, toNext } = storeToRefs(useMusic.musicPlay)
@@ -72,6 +73,7 @@ const getData = async () => {
     songColist.userCover = detail.headurl
     songData = detail.songlist
 }
+
 
 // 这个歌单页面刚开始加载会需要onMOunted，挂载完毕之后，后面的页面更新靠的就是下面的watch了
 onMounted(async () => {
@@ -159,6 +161,7 @@ watch(route, async (to, from) => {
                 font-size: 28px;
                 margin: 20px;
                 margin-bottom: 6px;
+                color: azure;
             }
 
             .artistbox {
@@ -184,6 +187,7 @@ watch(route, async (to, from) => {
 
                 .artistname {
                     margin-left: 10px;
+                    color: azure;
                 }
             }
 
@@ -197,6 +201,8 @@ watch(route, async (to, from) => {
                 span {
 
                     line-height: 20px;
+                    color: azure;
+
                     // background-color: #fff;
                 }
             }

@@ -75,6 +75,17 @@ app.get('/getUserDetail', (req, res) => {
         })
 })
 
+// 歌手介绍
+app.get('/singer/desc', (req, res) => {
+    qqMusic.api('/singer/desc', { singermid: req.query.singermid })
+        .then((result) => {
+            console.log('获取了歌手介绍');
+            res.json(result)
+        }).catch(err => {
+            console.log(err);
+            res.status(500).json({ error: '获取歌手介绍失败' })
+        })
+})
 
 // 搜索歌曲                 
 app.get('/search', (req, res) => {
