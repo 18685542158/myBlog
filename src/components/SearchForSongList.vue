@@ -2,7 +2,7 @@
     <div class="box">
         <div class="body">
             <ul>
-                <li v-for="(item, index) in songlistData">
+                <li v-for="(item, index) in songlistData" :key="index">
                     <div class="item">
                         <div class="img" @click="toDetail(item)">
                             <img :src="item.imgurl">

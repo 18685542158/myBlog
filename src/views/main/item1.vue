@@ -22,7 +22,7 @@
                 <div class="content2">
                     <div class="title">我的技能：</div>
                     <div class="body">
-                        <div class="skill1" v-for="(item, index) in skillList">
+                        <div class="skill1" v-for="(item, index) in skillList" :key="index">
                             <div class="desc">
                                 <span>{{ item.item }}</span><span>{{ item.percent }}%</span>
                             </div>

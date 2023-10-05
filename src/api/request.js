@@ -122,6 +122,15 @@ export function getSongMap(dirid) {
     })
 }
 
+// 获取专辑详情
+export function getAlbumInfo(albummid) {
+    return axios.get('/album', {
+        params: {
+            albummid
+        }
+    })
+}
+
 // 获取歌单详情
 export function getSongListDel(id) {
     return axios.get('/getSongListDel', {

@@ -1,7 +1,7 @@
 <template>
     <div class="box">
         <ul>
-            <li v-for="(item, index) in mvData">
+            <li v-for="(item, index) in mvData" :key="index">
                 <div class="item">
                     <div class="img">
                         <img :src="item.mv_pic_url" alt="">
@@ -14,7 +14,12 @@
                         </div>
                     </div>
                     <div class="info">
-
+                        <span>{{ item.mv_name }}</span>
+                        <div class="singArr">
+                            <span v-for="(childItem, childIndex) in item.singer_list" :key="childIndex">
+                                {{ childIndex != 0 ? '/' : '' }}{{ childItem.name }}
+                            </span>
+                        </div>
                     </div>
                 </div>
             </li>
@@ -65,9 +70,11 @@ const { mvData } = toRefs(props)
 
                 .img {
                     width: 100%;
+                    height: auto;
                     position: relative;
                     border-radius: 5px;
                     overflow: hidden;
+                    background-color: #9e9e9e;
 
                     img {
                         width: 100%;
@@ -111,6 +118,7 @@ const { mvData } = toRefs(props)
 
                                 &:hover {
                                     box-shadow: inset 0px 0px 2px 2px #ffffff;
+
                                     .continue {
                                         transition: 0s;
                                         border-left: 20px solid #ffffff;
@@ -131,9 +139,36 @@ const { mvData } = toRefs(props)
                     }
                 }
 
-                .info{
-                    flex:1;
-                    background-color: #fff;
+                .info {
+                    margin-top: 2%;
+                    flex: 1;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+
+                    span {
+                        color: rgb(0, 0, 0);
+                        font-size: 18px;
+                        cursor: pointer;
+                    }
+
+                    .singArr {
+                        margin-top: 2%;
+                        overflow: hidden;
+                        height: 15px;
+
+                        span {
+                            // display: inline-block;
+                            max-width: 100%;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            font-size: 15px;
+                            cursor: pointer;
+                            text-align: center;
+                            color: #333
+                        }
+                    }
                 }
             }
         }

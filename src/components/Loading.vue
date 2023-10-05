@@ -82,7 +82,8 @@ import { ref, reactive } from 'vue';
 
 <style scoped lang="scss">
 body {
-    background: #efefefb2;
+    background: #efefef;
+    // backdrop-filter: blur(10px);
 }
 
 .box {
@@ -93,6 +94,7 @@ body {
     justify-content: center;
     align-items: center;
     background: #efefef0d;
+    backdrop-filter: blur(5px);
     z-index:99;
 }
 

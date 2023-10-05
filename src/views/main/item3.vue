@@ -10,7 +10,7 @@
             </div>
         </div>
         <div class="header">
-            <div class="item" v-for="item in 3">
+            <div class="item" v-for="(item, index) in 3" :key="index">
                 <div class="desc">
                     <h1>在听的音乐：</h1>
                     <h2>Wonderful U</h2>
@@ -31,7 +31,6 @@ const useLight = useStore()
 </script>
     
 <style scoped lang="scss">
-
 .box {
     transition: 0.5s;
     width: 80%;

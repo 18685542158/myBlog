@@ -11,7 +11,7 @@
             </div>
             <div class="body">
                 <ul>
-                    <li v-for="item in songURL" :class="item.songmid == songmid ? 'active' : ''">
+                    <li v-for="(item, index) in songURL" :key="index" :class="item.songmid == songmid ? 'active' : ''">
                         <div class="item" style="width: 100%;height: 60px;display: flex;">
                             <div
                                 style="width: calc(100% - 60px);display: flex;flex-direction: column;justify-content: space-evenly;">

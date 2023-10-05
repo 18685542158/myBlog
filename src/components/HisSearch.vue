@@ -7,7 +7,7 @@
                 </div>
                 <div class="hisSearchBody">
                     <ul>
-                        <li v-for="(item, index) in array">
+                        <li v-for="(item, index) in array" :key="index">
                             <div class="item" @click="toSearch(item)" :title="item">
                                 <span>{{ item }}</span>
                             </div>
@@ -20,7 +20,7 @@
                     <div class="title"><span>单曲</span></div>
                     <div class="body">
                         <ul>
-                            <li v-for="(item, index) in songData.itemlist">
+                            <li v-for="(item, index) in songData.itemlist" :key="index">
                                 <div class="songItem" @click="toSearch(item.name)">
                                     <span>{{ item.name }}-{{ item.singer }}</span>
                                 </div>
@@ -32,7 +32,7 @@
                     <div class="title"><span>歌手</span></div>
                     <div class="body">
                         <ul>
-                            <li v-for="(item, index) in singerData.itemlist">
+                            <li v-for="(item, index) in singerData.itemlist" :key="index">
                                 <div class="singerItem" @click="toSearch(item.name)">
                                     <div class="img">
                                         <img :src="item.pic" alt="">
@@ -47,7 +47,7 @@
                     <div class="title"><span>专辑</span></div>
                     <div class="body">
                         <ul>
-                            <li v-for="(item, index) in albumData.itemlist">
+                            <li v-for="(item, index) in albumData.itemlist" :key="index">
                                 <div class="albumItem" @click="toSearch(item.name)">
                                     <div class="img">
                                         <img :src="item.pic" alt="">

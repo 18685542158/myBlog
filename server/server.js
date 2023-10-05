@@ -187,7 +187,18 @@ app.get('/mv', (req, res) => {
     })
 })
 
-
+// 获取专辑详情
+app.get('/album', (req, res) => {
+    qqMusic.api('/album', {
+        albummid: req.query.albummid
+    }).then((result) => {
+        console.log('获取专辑详情成功');
+        res.json(result)
+    }).catch(err => {
+        console.log(err);
+        res.status(500).json({ err: '获取专辑详情失败' })
+    })
+})
 
 
 

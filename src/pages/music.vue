@@ -53,7 +53,7 @@
                                 @click="navClose(item)"></span>
                         </h2>
                         <ul :class="item.isClose ? 'nav-close' : ''">
-                            <li v-for="(childItem, index) in item.child"
+                            <li v-for="(childItem, index) in item.child" :key="index"
                                 :class="childItem.cid == isActiveNav ? 'nav-Active' : ''" @click="navSel(childItem)">{{
                                     childItem.title || childItem.dissname }}</li>
                         </ul>
@@ -394,7 +394,7 @@ const blurSearch = () => {
 const qSearchData = ref({})
 
 const QSearch = debounce(async () => {
-    if(!inputValue.value)return
+    if (!inputValue.value) return
     console.log('执行一次快速搜索');
     const data = await quickSearch(inputValue.value)
     qSearchData.value = data
@@ -855,7 +855,7 @@ watch(volume, (newValue) => {
     console.log('设置音量');
     console.log(newValue);
     musicPlayer.setVolume(newValue / 100)
-})
+}, { immediate: true })
 
 // 挂载的时候
 onMounted(async () => {

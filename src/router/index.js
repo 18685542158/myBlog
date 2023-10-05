@@ -116,6 +116,26 @@ const router = createRouter({
                     path: 'search/:key',
                     name: 'Search',
                     component: () => import('../views/musicIndex/searchList.vue')
+                },
+                {
+                    path: 'songDetail/:songmid',
+                    name: 'SongDetail',
+                    component: () => import('../views/musicIndex/detailSong.vue')
+                },
+                {
+                    path: 'singerDetail/:singermid',
+                    name: 'SingerDetail',
+                    component: () => import('../views/musicIndex/detailSinger.vue')
+                },
+                {
+                    path: 'albumDetail/:albummid',
+                    name: 'AlbumDetail',
+                    component: () => import('../views/musicIndex/detailAlbum.vue')
+                },
+                {
+                    path: 'mvDetail/:id',
+                    name: 'MvDetail',
+                    component: () => import('../views/musicIndex/detailMv.vue')
                 }
             ]
         }

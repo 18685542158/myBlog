@@ -44,7 +44,7 @@
                                 :class="!item.isClose ? 'iconfont icon-xiangshang' : 'iconfont icon-xiangxia'"
                                 @click="navClose(item)"></span></h2>
                         <ul :class="item.isClose ? 'nav-close' : ''">
-                            <li v-for="(childItem, index) in item.child"
+                            <li v-for="(childItem, index) in item.child" :key="index"
                                 :class="childItem.cid == isActiveNav ? 'nav-Active' : ''" @click="navSel(childItem)">{{
                                     childItem.title || childItem.dissname }}</li>
                         </ul>

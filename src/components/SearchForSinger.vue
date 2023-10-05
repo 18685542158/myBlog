@@ -6,8 +6,9 @@
                 <div v-else style="width: 100%;height: 300px;background-color: #ffffff0a;"></div>
             </div>
             <div class="info">
-                <h1>{{ mainSinger.singerName }}</h1>
-                <div class="songInfo" v-if="!loading"><span>单曲：{{ mainSinger.songNum }}</span><span>专辑：{{ mainSinger.albumNum }}</span>
+                <h1 :title="mainSinger.singerName">{{ mainSinger.singerName }}</h1>
+                <div class="songInfo" v-if="!loading"><span>单曲：{{ mainSinger.songNum }}</span><span>专辑：{{
+                    mainSinger.albumNum }}</span>
                 </div>
             </div>
             <div class="song">
@@ -17,7 +18,7 @@
         </div>
         <div class="body" v-if="!loading">
             <ul>
-                <li v-for="(item, index) in singerData">
+                <li v-for="(item, index) in singerData" :key="index">
                     <div class="item" v-if="index != 0">
                         <div class="img">
                             <img :src="item.singerPic" alt="">
@@ -103,8 +104,13 @@ watch(singerData, (newValue) => {
             justify-content: space-evenly;
 
             h1 {
+                display: inline-block;
+                max-width: 350px;
                 cursor: pointer;
                 font-size: 50px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
 
             .songInfo {

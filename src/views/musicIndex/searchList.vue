@@ -9,7 +9,7 @@
             <div class="head">
                 <div class="nav">
                     <ul>
-                        <li v-for="(item, index) in navData" :class="selItem == index ? 'active' : ''"
+                        <li v-for="(item, index) in navData" :class="selItem == index ? 'active' : ''" :key="index"
                             @click="chose(item, index)">
                             <div class="item">
                                 {{ item.title }}

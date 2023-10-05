@@ -10,7 +10,8 @@
                         <div class="mainSongName">
                             <span :title="item.songname || item.title">{{ item.songname || item.title }}</span>
                         </div>
-                        <div class="mainSongArtist"><span :title="item.singer[0].name">{{ singerFormat(item.singer) }}</span>
+                        <div class="mainSongArtist"><span :title="item.singer[0].name">{{ singerFormat(item.singer)
+                        }}</span>
                         </div>
                     </div>
                     <div class="songTime"><span>{{ timeFormat(item.interval) }}</span></div>
@@ -22,12 +23,18 @@
                     </div>
                 </div>
                 <div class="item" v-else>
-                    <div class="songName"><span :title="item.songname || item.title">{{ item.songname || item.title
-                    }}</span>
+                    <div class="songName" @click="router.push({ name: 'SongDetail', params: { songmid: item.songmid } })">
+                        <span :title="item.songname || item.title">{{ item.songname || item.title }}</span>
                     </div>
-                    <div class="songArtist"><span :title="item.singer[0].name">{{ singerFormat(item.singer) }}</span></div>
+                    <div class="songArtist">
+                        <span v-for="(childItem, childIndex) in item.singer" :key="childIndex" @click="router.push({name:'SingerDetail',params:{singermid:childItem.mid}})">
+                            {{ childIndex != 0 ? '/' : '' }}{{ childItem.name }}
+                        </span>
+                    </div>
                     <div class="songTime"><span>{{ timeFormat(item.interval) }}</span></div>
-                    <div class="songAlbum"><span :title="item.albumname">{{ item.albumname }}</span></div>
+                    <div class="songAlbum" @click="router.push({ name: 'AlbumDetail', params: { albummid: item.albumid } })">
+                        <span :title="item.albumname">{{ item.albumname }}</span>
+                    </div>
                     <div class="play" @click="playSong(item.songmid)">
                         <div class="middle">
                             <div class="continue"></div>
@@ -40,10 +47,12 @@
 </template>
 
 <script setup>
+import { useRouter } from 'vue-router';
 import { defineProps, toRefs } from 'vue';
 import { debounce } from 'lodash';
 import useStore from '../store/index';
 import { storeToRefs } from "pinia"
+const router = useRouter()
 const useMusic = useStore()
 const { uin, songmid, nextSongmid, thedissid, searchSong } = storeToRefs(useMusic.music)
 const { isplay, toNext } = storeToRefs(useMusic.musicPlay)
