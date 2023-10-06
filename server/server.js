@@ -87,6 +87,54 @@ app.get('/singer/desc', (req, res) => {
         })
 })
 
+// 获取歌手歌曲
+app.get('/singer/songs', (req, res) => {
+    qqMusic.api('/singer/songs', {
+        singermid: req.query.singermid,
+        num: req.query.num,
+        page: req.query.page
+    })
+        .then((result) => {
+            console.log('获取了歌手歌曲');
+            res.json(result)
+        }).catch(err => {
+            console.log(err);
+            res.status(500).json({ error: '获取歌手歌曲失败' })
+        })
+})
+
+// 获取歌手专辑
+app.get('/singer/album', (req, res) => {
+    qqMusic.api('/singer/album', {
+        singermid: req.query.singermid,
+        pageSize: req.query.num,
+        pageNo: req.query.page
+    })
+        .then((result) => {
+            console.log('获取了歌手专辑');
+            res.json(result)
+        }).catch(err => {
+            console.log(err);
+            res.status(500).json({ error: '获取歌手专辑失败' })
+        })
+})
+
+// 获取歌手mv
+app.get('/singer/mv', (req, res) => {
+    qqMusic.api('/singer/mv', {
+        singermid: req.query.singermid,
+        pageSize: req.query.num,
+        pageNo: req.query.page
+    })
+        .then((result) => {
+            console.log('获取了歌手mv');
+            res.json(result)
+        }).catch(err => {
+            console.log(err);
+            res.status(500).json({ error: '获取歌手mv失败' })
+        })
+})
+
 // 搜索歌曲                 
 app.get('/search', (req, res) => {
     qqMusic.api('/search', {

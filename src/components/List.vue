@@ -10,8 +10,11 @@
                         <div class="mainSongName">
                             <span :title="item.songname || item.title">{{ item.songname || item.title }}</span>
                         </div>
-                        <div class="mainSongArtist"><span :title="item.singer[0].name">{{ singerFormat(item.singer)
-                        }}</span>
+                        <div class="mainSongArtist">
+                            <span v-for="(childItem, childIndex) in item.singer" :key="childIndex"
+                                @click="router.push({ name: 'SingerDetail', params: { singermid: childItem.mid } })">
+                                {{ childIndex != 0 ? '/' : '' }}{{ childItem.name }}
+                            </span>
                         </div>
                     </div>
                     <div class="songTime"><span>{{ timeFormat(item.interval) }}</span></div>
@@ -26,14 +29,16 @@
                     <div class="songName" @click="router.push({ name: 'SongDetail', params: { songmid: item.songmid } })">
                         <span :title="item.songname || item.title">{{ item.songname || item.title }}</span>
                     </div>
-                    <div class="songArtist">
-                        <span v-for="(childItem, childIndex) in item.singer" :key="childIndex" @click="router.push({name:'SingerDetail',params:{singermid:childItem.mid}})">
+                    <div class="songArtist" v-if="!noSinger">
+                        <span v-for="(childItem, childIndex) in item.singer" :key="childIndex"
+                            @click="router.push({ name: 'SingerDetail', params: { singermid: childItem.mid } })">
                             {{ childIndex != 0 ? '/' : '' }}{{ childItem.name }}
                         </span>
                     </div>
                     <div class="songTime"><span>{{ timeFormat(item.interval) }}</span></div>
-                    <div class="songAlbum" @click="router.push({ name: 'AlbumDetail', params: { albummid: item.albumid } })">
-                        <span :title="item.albumname">{{ item.albumname }}</span>
+                    <div class="songAlbum"
+                        @click="router.push({ name: 'AlbumDetail', params: { albummid: item.albumid || item.album.name } })">
+                        <span :title="item.albumname">{{ item.albumname || item.album.name }}</span>
                     </div>
                     <div class="play" @click="playSong(item.songmid)">
                         <div class="middle">
@@ -67,6 +72,10 @@ const props = defineProps({
     },
     isMainSong: {
         type: Boolean
+    },
+    noSinger: {
+        type: Boolean,
+        default: false
     }
 })
 // 然后解构出来
@@ -88,20 +97,6 @@ const timeFormat = (time) => {
     }
     return `${formattedMins}:${formattedSecs}`;
 }
-
-// 创建一个方法，接收歌手数组（因为歌手可能不止一个），返回一个歌手字符串
-const singerFormat = (array) => {
-    let str = ''
-    for (let i = 0; i <= array.length - 1; i++) {
-        if (i == 0) {
-            str = array[i].name
-        } else {
-            str = str + '/' + array[i].name
-        }
-    }
-    return str
-}
-
 
 // 返回歌手图片地址
 const getSingerImg = (item) => {

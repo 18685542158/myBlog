@@ -6,7 +6,9 @@
                 <div v-else style="width: 100%;height: 300px;background-color: #ffffff0a;"></div>
             </div>
             <div class="info">
-                <h1 :title="mainSinger.singerName">{{ mainSinger.singerName }}</h1>
+                <h1 :title="mainSinger.singerName"
+                    @click="router.push({ name: 'SingerDetail', params: { singermid: mainSinger.singerMID } })">{{
+                        mainSinger.singerName }}</h1>
                 <div class="songInfo" v-if="!loading"><span>单曲：{{ mainSinger.songNum }}</span><span>专辑：{{
                     mainSinger.albumNum }}</span>
                 </div>
@@ -23,7 +25,8 @@
                         <div class="img">
                             <img :src="item.singerPic" alt="">
                         </div>
-                        <div class="info">
+                        <div class="info"
+                            @click="router.push({ name: 'SingerDetail', params: { singermid: item.singerMID } })">
                             <span>{{ item.singerName }}</span>
                         </div>
                     </div>
@@ -35,9 +38,11 @@
     
 <script setup>
 import { ref, reactive, toRefs, defineProps, watch } from 'vue';
+import { useRouter } from 'vue-router';
 import {
     getSingerInfo
 } from '../api/request';
+const router = useRouter()
 
 const props = defineProps({
     singerData: {

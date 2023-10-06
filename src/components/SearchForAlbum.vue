@@ -4,27 +4,28 @@
             <ul>
                 <li v-for="(item, index) in albumData" :key="index">
                     <div class="item">
-                        <div class="img" @click="toDetail(item)">
+                        <div class="img" @click="toDetail(item)" v-if="!noImg">
                             <img :src="item.albumPic">
                         </div>
+                        <div v-else></div>
                         <div class="albumName" @click="toDetail(item)">
                             <span>
-                                {{ item.albumName }}
+                                {{ item.albumName || item.album_name }}
                             </span>
                         </div>
                         <div class="singer">
                             <span>
-                                {{ item.singerName }}
+                                {{ item.singerName || item.singer_name }}
                             </span>
                         </div>
                         <div class="time">
                             <span>
-                                {{ item.publicTime }}
+                                {{ item.publicTime || item.pub_time }}
                             </span>
                         </div>
                         <div class="songNum">
                             <span>
-                                {{ item.song_count }}首歌曲
+                                {{ item.song_count || item.latest_song.song_count }}首歌曲
                             </span>
                         </div>
                     </div>
@@ -42,6 +43,10 @@ const router = useRouter()
 const props = defineProps({
     albumData: {
         type: Array,
+    },
+    noImg: {
+        type: Boolean,
+        default: false
     }
 })
 

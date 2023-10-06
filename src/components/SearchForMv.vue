@@ -4,7 +4,7 @@
             <li v-for="(item, index) in mvData" :key="index">
                 <div class="item">
                     <div class="img">
-                        <img :src="item.mv_pic_url" alt="">
+                        <img :src="item.mv_pic_url || item.pic" alt="">
                         <div class="cover">
                             <div class="btn">
                                 <div class="middle">
@@ -14,7 +14,7 @@
                         </div>
                     </div>
                     <div class="info">
-                        <span>{{ item.mv_name }}</span>
+                        <span>{{ item.mv_name || item.title }}</span>
                         <div class="singArr">
                             <span v-for="(childItem, childIndex) in item.singer_list" :key="childIndex">
                                 {{ childIndex != 0 ? '/' : '' }}{{ childItem.name }}

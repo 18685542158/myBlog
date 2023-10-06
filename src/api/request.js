@@ -34,6 +34,39 @@ export function getSingerInfo(singermid) {
     })
 }
 
+// 获取歌手歌曲
+export function getSingerSong(singermid, num, page) {
+    return axios.get('/singer/songs', {
+        params: {
+            singermid,
+            num,
+            page
+        }
+    })
+}
+
+// 获取歌手专辑
+export function getSingerAlbum(singermid, num, page) {
+    return axios.get('/singer/album', {
+        params: {
+            singermid,
+            num,
+            page
+        }
+    })
+}
+
+// 获取歌手mv
+export function getSingerMv(singermid, num, page) {
+    return axios.get('/singer/mv', {
+        params: {
+            singermid,
+            num,
+            page
+        }
+    })
+}
+
 // 获取单个歌曲详情
 export function getSongDetail(songmid) {
     return axios.get('/song', {

@@ -13,7 +13,10 @@
                                 style="font-size: 13px;color:#444;margin-right: 30px;" @click="chose(index)"></span>
                         </div>
                         <div class="songArtist">
-                            <span :title="singerFormat(item.singer)">{{ singerFormat(item.singer) }}</span>
+                            <span v-for="(childItem, childIndex) in item.singer" :key="childIndex"
+                                @click="router.push({ name: 'SingerDetail', params: { singermid: childItem.mid } })">
+                                {{ childIndex != 0 ? '/' : '' }}{{ childItem.name }}
+                            </span>
                         </div>
                         <div class="songAlbum"><span :title="item.album.name">{{ item.album.name }}</span></div>
                         <div class="songTime"><span>{{ timeFormat(item.interval) }}</span></div>
@@ -26,6 +29,8 @@
     
 <script setup>
 import { ref, reactive, toRefs, defineProps } from 'vue';
+import { useRouter } from 'vue-router';
+const router = useRouter()
 const props = defineProps({
     lyricData: {
         type: Array
@@ -56,19 +61,6 @@ const timeFormat = (time) => {
         return `${formattedHours}:${formattedMins}:${formattedSecs}`;
     }
     return `${formattedMins}:${formattedSecs}`;
-}
-
-// 创建一个方法，接收歌手数组（因为歌手可能不止一个），返回一个歌手字符串
-const singerFormat = (array) => {
-    let str = ''
-    for (let i = 0; i <= array.length - 1; i++) {
-        if (i == 0) {
-            str = array[i].name
-        } else {
-            str = str + '/' + array[i].name
-        }
-    }
-    return str
 }
 
 // 创建一个方法，接收歌词内容，将歌词里面的\n转换为可渲染内容
