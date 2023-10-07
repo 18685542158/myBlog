@@ -26,19 +26,30 @@
                     </div>
                 </div>
                 <div class="item" v-else>
-                    <div class="songName" @click="router.push({ name: 'SongDetail', params: { songmid: item.songmid } })">
+                    <div class="songName" @click="router.push({ name: 'SongDetail', params: { songmid: item.songmid } })" v-if="!NotClick">
                         <span :title="item.songname || item.title">{{ item.songname || item.title }}</span>
                     </div>
-                    <div class="songArtist" v-if="!noSinger">
+                    <div class="songName" v-else>
+                        <span :title="item.songname || item.title">{{ item.songname || item.title }}</span>
+                    </div>
+                    <div class="songArtist" v-if="!NotClick">
                         <span v-for="(childItem, childIndex) in item.singer" :key="childIndex"
                             @click="router.push({ name: 'SingerDetail', params: { singermid: childItem.mid } })">
                             {{ childIndex != 0 ? '/' : '' }}{{ childItem.name }}
                         </span>
                     </div>
+                    <div class="songArtist" v-else>
+                        <span v-for="(childItem, childIndex) in item.singer" :key="childIndex">
+                            {{ childIndex != 0 ? '/' : '' }}{{ childItem.name }}
+                        </span>
+                    </div>
                     <div class="songTime"><span>{{ timeFormat(item.interval) }}</span></div>
-                    <div class="songAlbum"
-                        @click="router.push({ name: 'AlbumDetail', params: { albummid: item.albumid || item.album.name } })">
-                        <span :title="item.albumname">{{ item.albumname || item.album.name }}</span>
+                    <div class="songAlbum" v-if="!NotClick"
+                        @click="router.push({ name: 'AlbumDetail', params: { albummid: item.albumid } })">
+                        <span :title="item.albumname">{{ item.albumname }}</span>
+                    </div>
+                    <div class="songAlbum" v-else>
+                        <span :title="item.albumname">{{ item.album.name }}</span>
                     </div>
                     <div class="play" @click="playSong(item.songmid)">
                         <div class="middle">
@@ -73,7 +84,7 @@ const props = defineProps({
     isMainSong: {
         type: Boolean
     },
-    noSinger: {
+    NotClick: {
         type: Boolean,
         default: false
     }

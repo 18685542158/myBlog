@@ -4,7 +4,6 @@
             <div class="img">
                 <img v-if="errImg" src="https://y.gtimg.cn/music/photo_new/T001R800x800M000002knSQ01Ts1vS_0.jpg" alt="">
                 <img v-if="!loading" :src="getSingerImg(singermid)" alt="" @error="errImg = true" @load="errImg = false">
-                <!-- <div v-else style="width: 95%;aspect-ratio: 1/1;background-color: #ffffff1b;"></div> -->
             </div>
             <div class="info">
                 <div class="name" :title="singerData.singername">
@@ -41,13 +40,16 @@
             </div>
         </div>
         <div class="song" v-else-if="!loading && selItem == 1">
-            <list :songData="songData" :noSinger="true"></list>
+            <div style="width: 100%;height: 100%;overflow-y: scroll;" class="searchPage" @scroll="loadMoreData">
+                <list :songData="songData" :NotClick="true"></list>
+            </div>
         </div>
         <div class="album" v-else-if="!loading && selItem == 2">
-            <searchforalbum :albumData="albumData" :noImg="true"></searchforalbum>
+            <searchforalbum :albumData="albumData" :NotClick="true" class="searchPage" @scroll="loadMoreData">
+            </searchforalbum>
         </div>
         <div class="mv" v-else-if="!loading && selItem == 3">
-            <searchformv :mvData="mvData"></searchformv>
+            <searchformv :mvData="mvData" class="searchPage" @scroll="loadMoreData"></searchformv>
         </div>
     </div>
 </template>
@@ -55,9 +57,13 @@
 <script setup>
 import { ref, reactive, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
+import { debounce } from 'lodash';          // 防抖
+
 import list from '../../components/List.vue';
 import searchforalbum from '../../components/SearchForAlbum.vue';
 import searchformv from '../../components/SearchForMv.vue';
+// import lloading from '../../components/Loading.vue';
+
 
 import {
     // 获取歌手详情
@@ -93,6 +99,7 @@ const selectArr = reactive([
         name: '视频'
     }
 ])
+// const isLoading = ref(false)
 
 // 存储歌曲，专辑，nv
 const songData = ref([])
@@ -102,7 +109,6 @@ const num = ref(10)
 const page = ref(1)
 // 搜索歌曲，专辑，mv
 const search = () => {
-    console.log("sousuo????");
     console.log(selItem);
     if (selItem.value == 1) {
         num.value = 20
@@ -127,6 +133,31 @@ const search = () => {
         })
     }
 }
+
+// 当滑到底部，获取更多数据
+const loadMoreData = debounce((e) => {
+    const page = document.querySelector('.searchPage')
+    if (Math.floor(page.scrollHeight - page.scrollTop) <= page.clientHeight) {
+        // isLoading.value = true
+        page.value++
+        if (selItem.value == 1) {
+            num.value = 20
+            getSingerSong(singermid.value, num.value, page).then((data) => {
+                songData.value = [...songData.value, ...data.list]
+            })
+        } else if (selItem.value == 2) {
+            num.value = 10
+            getSingerAlbum(singermid.value, num.value, page).then((data) => {
+                albumData.value = [...albumData, ...data.list]
+            })
+        } else if (selItem.value == 3) {
+            num.value = 20
+            getSingerMv(singermid.value, num.value, page).then((data) => {
+                mvData.value = [...mvData, ...data.list]
+            })
+        }
+    }
+}, 300)
 
 // 返回歌手图片地址
 const getSingerImg = (item) => {
@@ -287,14 +318,19 @@ watch(route, (to, from) => {
 
     }
 
+    .song {
+        width: 100%;
+        height: 90%;
+    }
+
     .album {
         width: 100%;
-        height: 100%;
+        height: 90%;
     }
 
     .mv {
         width: 100%;
-        height: 100%;
+        height: 90%;
     }
 }
 </style>

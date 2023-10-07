@@ -4,16 +4,20 @@
             <ul>
                 <li v-for="(item, index) in albumData" :key="index">
                     <div class="item">
-                        <div class="img" @click="toDetail(item)" v-if="!noImg">
-                            <img :src="item.albumPic">
+                        <div class="img" @click="toDetail(item)">
+                            <img :src="item.albumPic || getImg(item.album_mid)">
                         </div>
-                        <div v-else></div>
                         <div class="albumName" @click="toDetail(item)">
                             <span>
                                 {{ item.albumName || item.album_name }}
                             </span>
                         </div>
-                        <div class="singer">
+                        <div class="singer" @click="router.push({ name: 'SingerDetail', params: { singermid: item.singerMID } })" v-if="!NotClick">
+                            <span>
+                                {{ item.singerName || item.singer_name }}
+                            </span>
+                        </div>
+                        <div class="singer" v-else>
                             <span>
                                 {{ item.singerName || item.singer_name }}
                             </span>
@@ -44,21 +48,27 @@ const props = defineProps({
     albumData: {
         type: Array,
     },
-    noImg: {
+    NotClick: {
         type: Boolean,
         default: false
     }
 })
 
+// 获取专辑图片
+const getImg = (item) => {
+    const str = `http://y.gtimg.cn/music/photo_new/T002R180x180M000${item}_2.jpg`
+    return str
+}
+
 // 跳转到专辑详情
 const toDetail = (item) => {
     console.log(item);
-    // router.push({
-    //     name:'SongColist',
-    //     params: {
-    //         dissid: item.dissid
-    //     }
-    // })
+    router.push({
+        name:'AlbumDetail',
+        params: {
+            albummid: item.albumMID
+        }
+    })
 }
 
 
