@@ -1,34 +1,261 @@
 <template>
     <div class="box">
-        我是专辑详情页
+        <div class="head">
+            <div class="img">
+                <img v-if="errImg" src="https://y.gtimg.cn/music/photo_new/T001R800x800M000002knSQ01Ts1vS_0.jpg" alt="">
+                <img v-if="!loading" :src="getCover()" alt="" @error="errImg = true" @load="errImg = false">
+            </div>
+            <div class="info">
+                <div class="name" :title="AlbumData.albumName" v-if="!loading">
+                    <h1>{{ AlbumData.albumName }}</h1>
+                </div>
+                <div class="name" v-else></div>
+                <div class="baseInfo" v-if="!loading">
+                    <ul>
+                        <li v-for="(item, index) in AlbumData.ar" :key="index">
+                            <span>{{ item.name }} ：</span>
+                            <span style="line-height: 22px;margin-left: 10px;">{{ item.role }}</span>
+                        </li>
+                        <li>
+                            <span>语言 ：</span>
+                            <span style="line-height: 22px;margin-left: 10px;">{{ AlbumData.language }}</span>
+                        </li>
+                        <li>
+                            <span>专辑类型 ：</span>
+                            <span style="line-height: 22px;margin-left: 10px;">{{ AlbumData.albumType }}</span>
+                        </li>
+                        <li>
+                            <span>专辑风格 ：</span>
+                            <span style="line-height: 22px;margin-left: 10px;">{{ AlbumData.genre }}</span>
+                        </li>
+                        <li>
+                            <span>发布时间 ：</span>
+                            <span style="line-height: 22px;margin-left: 10px;">{{ AlbumData.publishTime }}</span>
+                        </li>
+                        <li>
+                            <span>发布公司 ：</span>
+                            <span style="line-height: 22px;margin-left: 10px;">{{ AlbumData.company }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="select">
+            <ul>
+                <li v-for="(item, index) in selectArr" @click="search">
+                    <div class="selItem" @click="selItem = index" :class="selItem == index ? 'active' : ''">
+                        <span>{{ item.name }}</span>
+                    </div>
+                </li>
+            </ul>
+            <div class="seek" :style="`transform: translateX(${40 + selItem * 140}px); `"></div>
+        </div>
+        <div class="body" v-if="!loading && selItem == 0">
+            <div class="detail" v-if="AlbumData.desc">
+                <span v-html="lyricFormat(AlbumData.desc)"></span>
+            </div>
+        </div>
+        <div class="song" v-else-if="!loading && selItem == 1">
+            <!-- <div style="width: 100%;height: 100%;overflow-y: scroll;" class="searchPage" @scroll="loadMoreData"> -->
+            <list :songData="albumSongData" :NotClick="true"></list>
+            <!-- </div> -->
+        </div>
     </div>
 </template>
 
 <script setup>
 import { ref, reactive, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
+
+import list from '../../components/List.vue';
+
 import {
     // 获取专辑详情
-    getAlbumInfo
+    getAlbumInfo,
+    // 获取专辑歌曲
+    getAlbumSongs
 } from '../../api/request';
 
 const router = useRouter()
 const route = useRoute()
 
+const loading = ref(true)
+const errImg = ref(false)
+
+const selItem = ref(0)
+const selectArr = reactive([
+    {
+        name: '专辑详情'
+    },
+    {
+        name: '专辑曲目'
+    },
+])
+
 const albummid = ref('')
-const data = ref({})
+const AlbumData = ref({})
+const albumSongData = ref([])
+
+const getCover = () => {
+    const str = AlbumData.value.picurl.replace('300x300', '800x800')
+    return str
+}
+
+// 创建一个方法，接收歌词内容，将歌词里面的\n转换为可渲染内容
+const lyricFormat = (content) => {
+    const newContent = content.replace(/\n/g, '<br>')
+    return newContent
+}
 
 watch(route, (to, from) => {
     if (to.name == 'AlbumDetail') {
         albummid.value = to.params.albummid
-        console.log('触发了跳转专辑');
         getAlbumInfo(albummid.value).then((data) => {
-            console.log(data);
-            data.value = data
+            AlbumData.value = data
+            loading.value = false
+        })
+        getAlbumSongs(albummid.value).then((data) => {
+            albumSongData.value = data.list
+
         })
     }
-})
+}, { immediate: true })
 
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.box {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(6px);
+    background-color: #2e294e25;
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+
+    .head {
+        // height: 50%;
+        background-color: #ffffff69;
+        border-bottom: 1px solid #fff;
+        display: flex;
+
+        .img {
+            width: 40%;
+            aspect-ratio: 1/1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            img {
+                width: 95%;
+            }
+        }
+
+        .info {
+            width: 60%;
+            display: flex;
+            flex-direction: column;
+
+            .name {
+                width: 100%;
+                min-height: 80px;
+                max-height: 100px;
+                // background-color: #fff;
+                display: flex;
+                align-items: center;
+
+                h1 {
+                    display: inline-block;
+                    width: 100%;
+                    font-size: 60px;
+                    cursor: pointer;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    margin-top: 20px;
+                }
+            }
+
+            .baseInfo {
+                flex: 1;
+                overflow: hidden;
+
+                ul {
+                    margin-left: 10px;
+                    height: 95%;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-evenly;
+
+                    li {}
+                }
+            }
+        }
+    }
+
+    .select {
+        width: 100%;
+        background-color: #ffffff43;
+
+        ul {
+            display: flex;
+
+            li {
+                .selItem {
+                    cursor: pointer;
+                    width: 100px;
+                    height: 10px;
+                    margin: 20px;
+                    text-align: center;
+
+                    span {
+                        font-size: 19px;
+                    }
+                }
+
+                .active {
+                    transition: 0.3s;
+                    color: #fff
+                }
+            }
+        }
+
+        .seek {
+            width: 60px;
+            height: 5px;
+            border-radius: 5px;
+            background-color: #fff;
+            margin-top: 8px;
+            transition: 0.3s;
+        }
+    }
+
+    .body {
+        flex: 1;
+        background-color: #ffffffbe;
+
+        .detail {
+            padding: 20px;
+            width: 100%;
+            box-sizing: border-box;
+            border-bottom: 1px solid #fff;
+
+            h2 {
+                font-size: 18px;
+                margin-bottom: 18px;
+            }
+
+            span {
+                line-height: 22px;
+            }
+        }
+
+    }
+
+    .song {
+        width: 100%;
+        height: 90%;
+    }
+}
+</style>

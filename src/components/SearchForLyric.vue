@@ -4,7 +4,7 @@
             <ul>
                 <li v-for="(item, index) in lyricData" :key="index">
                     <div class="item" :class="index == open ? 'open' : ''">
-                        <div class="songName">
+                        <div class="songName" @click="router.push({ name: 'SongDetail', params: { songmid: item.mid } })">
                             <span :title="item.title">{{ item.title }}</span>
                         </div>
                         <div class="content">
@@ -18,7 +18,9 @@
                                 {{ childIndex != 0 ? '/' : '' }}{{ childItem.name }}
                             </span>
                         </div>
-                        <div class="songAlbum"><span :title="item.album.name">{{ item.album.name }}</span></div>
+                        <div class="songAlbum" @click="router.push({ name: 'AlbumDetail', params: { albummid: item.album.mid } })">
+                            <span :title="item.album.name">{{ item.album.name }}</span>
+                        </div>
                         <div class="songTime"><span>{{ timeFormat(item.interval) }}</span></div>
                     </div>
                 </li>

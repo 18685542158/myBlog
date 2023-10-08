@@ -11,7 +11,7 @@
     <div class="box">
         <div class="left">
             <div class="cover">
-                <img :src="songData.cover" alt="" style="cursor: pointer;" @click="changePlay">
+                <img :src="getCover(songData.cover)" alt="" style="cursor: pointer;" @click="changePlay">
             </div>
         </div>
         <div class="right">
@@ -81,6 +81,12 @@ const getData = async () => {
     // console.log(data);
     songData.lyc = data.lyric
     formatLyc(songData.lyc)
+}
+
+// 改变一下封面地址，源地址太糊了
+const getCover = (url) => {
+    const str = url.replace('300x300', '800x800')
+    return str
 }
 
 // 将字符串转换为数组形式的歌词

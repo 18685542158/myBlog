@@ -164,6 +164,15 @@ export function getAlbumInfo(albummid) {
     })
 }
 
+// 获取专辑内歌曲
+export function getAlbumSongs(albummid) {
+    return axios.get('/album/songs', {
+        params: {
+            albummid
+        }
+    })
+}
+
 // 获取歌单详情
 export function getSongListDel(id) {
     return axios.get('/getSongListDel', {

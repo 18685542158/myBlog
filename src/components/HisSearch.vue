@@ -15,7 +15,7 @@
                     </ul>
                 </div>
             </div>
-            <div v-else class="content">
+            <div v-else-if="!loading" class="content">
                 <div class="song">
                     <div class="title"><span>单曲</span></div>
                     <div class="body">
@@ -59,11 +59,16 @@
                     </div>
                 </div>
             </div>
+            <div v-else style="width: 100%;height: 100%;background-color: #ffffff;">
+                <lloading></lloading>
+            </div>
         </div>
     </div>
 </template>
 
 <script setup>
+import lloading from '../components/Loading.vue';
+
 import { useRouter } from 'vue-router';
 import { ref, reactive, defineProps, toRefs, watch, computed } from 'vue';
 import useStore from '../store/index';
@@ -75,23 +80,25 @@ import {
 const router = useRouter()
 const useMusic = useStore()
 const { setHisSearch } = useMusic.music
-const { hisSearch } = storeToRefs(useMusic.music)
+const { hisSearch, inputValue } = storeToRefs(useMusic.music)
 
 
 const props = defineProps({
     isSearchKuang: {
         type: Boolean
     },
-    inputValue: {
-        type: String
-    },
+    // inputValue: {
+    //     type: String
+    // },
     qSearchData: {
         type: Object
     }
 })
 
 // 接收父组件传进来的参数
-const { isSearchKuang, inputValue, qSearchData } = toRefs(props)
+const { isSearchKuang, qSearchData } = toRefs(props)
+
+const loading = ref(true)
 
 //创建需要渲染的四个数据数组
 const songData = ref({})
@@ -110,7 +117,7 @@ const deleteAll = () => {
 
 // 通过历史搜索记录区搜索
 const toSearch = (item) => {
-    console.log(item);
+    inputValue.value = item
     router.push({
         name: 'Search',
         params: {
@@ -121,12 +128,17 @@ const toSearch = (item) => {
 
 // 实现快速搜索的赋值
 watch(qSearchData, (newValue) => {
-    console.log(newValue);
-    songData.value = newValue.song
-    singerData.value = newValue.singer
-    albumData.value = newValue.album
-    // mvData.value = newValue.mv
-})
+    if (Object.keys(qSearchData.value).length == 0) {
+        loading.value = true
+    } else {
+        console.log(newValue);
+        songData.value = newValue.song
+        singerData.value = newValue.singer
+        albumData.value = newValue.album
+        // mvData.value = newValue.mv
+        loading.value = false
+    }
+}, { immediate: true })
 </script>
 
 <style scoped lang="scss">
@@ -227,11 +239,12 @@ watch(qSearchData, (newValue) => {
         border-bottom: 1px solid #333;
 
         .title {
+            width: 15%;
             height: 150px;
         }
 
         .body {
-            flex: 1;
+            width: calc(100% - 15%);
 
             .songItem {
                 width: 100%;
@@ -262,11 +275,12 @@ watch(qSearchData, (newValue) => {
         border-bottom: 1px solid #333;
 
         .title {
+            width: 15%;
             height: 90px;
         }
 
         .body {
-            flex: 1;
+            width: calc(100% - 15%);
 
             .singerItem {
                 width: 100%;
@@ -310,11 +324,12 @@ watch(qSearchData, (newValue) => {
         width: 100%;
 
         .title {
+            width: 15%;
             height: 90px;
         }
 
         .body {
-            flex: 1;
+            width: calc(100% - 15%);
 
             .albumItem {
                 width: 100%;

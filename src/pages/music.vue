@@ -79,7 +79,7 @@
                                 :placeholder="placeholder" @focus="focusSearch" @blur="blurSearch" @input="QSearch"
                                 @keyup.enter="handleHistoryItemClick">
                             <span class="iconfont icon-sousuo" @click="handleHistoryItemClick"></span>
-                            <HisSearch :isSearchKuang="isSearchKuang" :inputValue="inputValue" :qSearchData="qSearchData">
+                            <HisSearch :isSearchKuang="isSearchKuang" :qSearchData="qSearchData">
                             </HisSearch>
                         </div>
                     </div>
@@ -247,7 +247,7 @@ const { changeSettingCookie, getSongData, setSongmid, addSongList, getSongPlayLi
 const { changePlay, changePlayModel } = useMusic.musicPlay
 // 响应式解构pinia里面的参数
 const { num, playModel, isplay, toNext } = storeToRefs(useMusic.musicPlay)
-const { uin, songmid, nextSongmid, thedissid, songURL, searchSong, hasCookie, hisSearch } = storeToRefs(useMusic.music)
+const { uin, songmid, nextSongmid, thedissid, songURL, searchSong, hasCookie, hisSearch, inputValue } = storeToRefs(useMusic.music)
 
 // 被选中的菜单
 let isActiveNav = ref(1)
@@ -363,7 +363,7 @@ const getData = async () => {
 // 输入框
 let placeholder = ref('搜索')
 // 记录输入框的文字 ======================================================
-const inputValue = ref('')
+// const inputValue = ref('')
 // 是否显示搜索框
 let isSearchKuang = false
 // 是否开启历史播放列表
@@ -417,7 +417,7 @@ const handleHistoryItemClick = async () => {      //============================
             key: inputValue.value
         }
     })
-    inputValue.value = ''
+    // inputValue.value = ''
 }
 // 移动到顶部头像之后的展出
 let imageActive = ref(false)

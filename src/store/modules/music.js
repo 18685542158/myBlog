@@ -13,6 +13,7 @@ export default defineStore('music', {
             songURL: [],                  // 还是得缓存歌曲的url等信息，不然每次打开页面都是从网上获取，太慢了
             searchSong: '',
             hisSearch: [],                  // 搜索记录
+            inputValue: ''                  // 还是决定将搜索的值放进store，会比较方便一点
         };
     },
     getters: {

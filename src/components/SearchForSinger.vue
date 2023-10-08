@@ -137,7 +137,8 @@ watch(singerData, (newValue) => {
             text-overflow: ellipsis;
 
             span {
-                font-size: 20px;
+                font-size: 16px;
+                line-height: 20px;
                 cursor: pointer;
             }
         }

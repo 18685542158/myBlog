@@ -6,17 +6,18 @@
                 <img v-if="!loading" :src="cover" alt="" @error="errImg = true" @load="errImg = false">
             </div>
             <div class="info">
-                <div class="name" :title="songData.extras.name">
+                <div class="name" :title="songData.extras.name" v-if="!loading">
                     <h1>{{ songData.extras.name }}</h1>
                 </div>
-                <!-- <div class="baseInfo" v-if="!loading && singerData.basic">
+                <div class="name" v-else></div>
+                <div class="baseInfo" v-if="!loading && songData.info">
                     <ul>
-                        <li v-for="(item, index) in singerData.basic.item" :key="index">
-                            <span>{{ item.key }} </span>
-                            <span style="line-height: 22px;">：{{ item.value }}</span>
+                        <li v-for="(value, key, index) in songData.info" :key="index">
+                            <span>{{ value.title }} ：</span>
+                            <span style="line-height: 22px;margin-left: 10px;">{{ value.content[0].value }}</span>
                         </li>
                     </ul>
-                </div> -->
+                </div>
             </div>
         </div>
     </div>

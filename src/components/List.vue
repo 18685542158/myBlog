@@ -3,11 +3,12 @@
         <ul>
             <li v-for="(item, index) in songData" :key="index">
                 <div class="item main" v-if="isMainSong && index == 0">
-                    <div class="img">
+                    <div class="img" @click="router.push({ name: 'SongDetail', params: { songmid: item.songmid } })">
                         <img :src="getSingerImg(item.singer[0].mid)" :title="item.singer[0].name">
                     </div>
                     <div class="theInfo">
-                        <div class="mainSongName">
+                        <div class="mainSongName"
+                            @click="router.push({ name: 'SongDetail', params: { songmid: item.songmid } })">
                             <span :title="item.songname || item.title">{{ item.songname || item.title }}</span>
                         </div>
                         <div class="mainSongArtist">
@@ -18,7 +19,10 @@
                         </div>
                     </div>
                     <div class="songTime"><span>{{ timeFormat(item.interval) }}</span></div>
-                    <div class="songAlbum"><span :title="item.albumname">{{ item.albumname }}</span></div>
+                    <div class="songAlbum"
+                        @click="router.push({ name: 'AlbumDetail', params: { albummid: item.album.mid } })">
+                        <span :title="item.albumname">{{ item.albumname }}</span>
+                    </div>
                     <div class="play" @click="playSong(item.songmid)">
                         <div class="middle">
                             <div class="continue"></div>
@@ -26,26 +30,27 @@
                     </div>
                 </div>
                 <div class="item" v-else>
-                    <div class="songName" @click="router.push({ name: 'SongDetail', params: { songmid: item.songmid } })" v-if="!NotClick">
+                    <div class="songName" @click="router.push({ name: 'SongDetail', params: { songmid: item.songmid } })"
+                        v-if="!NotClick">
                         <span :title="item.songname || item.title">{{ item.songname || item.title }}</span>
                     </div>
                     <div class="songName" v-else>
                         <span :title="item.songname || item.title">{{ item.songname || item.title }}</span>
                     </div>
-                    <div class="songArtist" v-if="!NotClick">
+                    <div class="songArtist" v-if="!NotClick" :title="allSinger(item.singer)">
                         <span v-for="(childItem, childIndex) in item.singer" :key="childIndex"
                             @click="router.push({ name: 'SingerDetail', params: { singermid: childItem.mid } })">
                             {{ childIndex != 0 ? '/' : '' }}{{ childItem.name }}
                         </span>
                     </div>
-                    <div class="songArtist" v-else>
+                    <div class="songArtist" v-else :title="allSinger(item.singer)">
                         <span v-for="(childItem, childIndex) in item.singer" :key="childIndex">
                             {{ childIndex != 0 ? '/' : '' }}{{ childItem.name }}
                         </span>
                     </div>
                     <div class="songTime"><span>{{ timeFormat(item.interval) }}</span></div>
                     <div class="songAlbum" v-if="!NotClick"
-                        @click="router.push({ name: 'AlbumDetail', params: { albummid: item.albumid } })">
+                        @click="router.push({ name: 'AlbumDetail', params: { albummid: item.album.mid } })">
                         <span :title="item.albumname">{{ item.albumname }}</span>
                     </div>
                     <div class="songAlbum" v-else>
@@ -107,6 +112,13 @@ const timeFormat = (time) => {
         return `${formattedHours}:${formattedMins}:${formattedSecs}`;
     }
     return `${formattedMins}:${formattedSecs}`;
+}
+
+// 创建一个方法，整合歌手
+const allSinger = (array) => {
+    const newArray = array.map((item) => item.name)
+    const result = newArray.join('/')
+    return result
 }
 
 // 返回歌手图片地址
@@ -177,6 +189,8 @@ li {
         .songArtist {
             flex: 1;
             max-width: 200px;
+            height: 15px;
+            overflow: hidden;
 
             span {
                 @extend %ellipsis-style;
@@ -257,6 +271,7 @@ li {
             img {
                 // border-radius:10px;
                 height: 100%;
+                cursor: pointer;
             }
         }
 

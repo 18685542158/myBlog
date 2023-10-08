@@ -148,12 +148,12 @@ const loadMoreData = debounce((e) => {
         } else if (selItem.value == 2) {
             num.value = 10
             getSingerAlbum(singermid.value, num.value, page).then((data) => {
-                albumData.value = [...albumData, ...data.list]
+                albumData.value = [...albumData.value, ...data.list]
             })
         } else if (selItem.value == 3) {
             num.value = 20
             getSingerMv(singermid.value, num.value, page).then((data) => {
-                mvData.value = [...mvData, ...data.list]
+                mvData.value = [...mvData.value, ...data.list]
             })
         }
     }

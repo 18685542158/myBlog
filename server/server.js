@@ -1,4 +1,4 @@
-import express from 'express';      // 引入express
+import express, { json } from 'express';      // 引入express
 import qqMusic from 'qq-music-api'; // 引入qq音乐第三方接口
 import fs from 'fs';           // 读写文件
 import cors from 'cors';            // CORS设置,允许跨域
@@ -119,6 +119,19 @@ app.get('/singer/album', (req, res) => {
         })
 })
 
+// 获取某专辑内的歌曲
+app.get('/album/songs', (req, res) => {
+    qqMusic.api('/album/songs', {
+        albummid: req.query.albummid
+    }).then((result) => {
+        console.log('获取了专辑歌曲');
+        res.json(result)
+    }).catch(err => {
+        console.log(err);
+        res.status(500).json({ error: '获取专辑歌曲失败' })
+    })
+})
+
 // 获取歌手mv
 app.get('/singer/mv', (req, res) => {
     qqMusic.api('/singer/mv', {
@@ -230,7 +243,7 @@ app.get('/mv', (req, res) => {
         console.log('获取mv信息成功');
         res.json(result)
     }).catch((err) => {
-        res.status(500).json({ err: '获取mv信息失败' })
+        res.status(500).json({ error: '获取mv信息失败' })
         console.log(err);
     })
 })
@@ -244,7 +257,7 @@ app.get('/album', (req, res) => {
         res.json(result)
     }).catch(err => {
         console.log(err);
-        res.status(500).json({ err: '获取专辑详情失败' })
+        res.status(500).json({ error: '获取专辑详情失败' })
     })
 })
 
