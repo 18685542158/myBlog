@@ -69,7 +69,6 @@ watch(route, (to, from) => {
             loading.value = false
         }).catch(err => {
             console.log(err);
-            console.log('跳转歌手获取歌曲详情报错了');
         })
     }
 }, { immediate: true })

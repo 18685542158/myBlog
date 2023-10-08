@@ -248,6 +248,19 @@ app.get('/mv', (req, res) => {
     })
 })
 
+// 获取mv的播放链接
+app.get('/mv/url', (req, res) => {
+    qqMusic.api('/mv/url', {
+        id: req.query.id
+    }).then(result => {
+        console.log('获取mv链接成功');
+        res.json(result)
+    }).catch(err => {
+        console.log(err);
+        res.status(500).json({ error: '获取mv链接失败' })
+    })
+})
+
 // 获取专辑详情
 app.get('/album', (req, res) => {
     qqMusic.api('/album', {

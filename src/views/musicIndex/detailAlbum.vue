@@ -113,10 +113,13 @@ watch(route, (to, from) => {
         getAlbumInfo(albummid.value).then((data) => {
             AlbumData.value = data
             loading.value = false
+        }).catch(err => {
+            console.log(err);
         })
         getAlbumSongs(albummid.value).then((data) => {
             albumSongData.value = data.list
-
+        }).catch(err => {
+            console.log(err);
         })
     }
 }, { immediate: true })

@@ -2,7 +2,7 @@
     <div class="box">
         <ul>
             <li v-for="(item, index) in mvData" :key="index">
-                <div class="item">
+                <div class="item" @click="router.push({ name: 'MvDetail', params: { id: item.v_id } })">
                     <div class="img">
                         <img :src="item.mv_pic_url || item.pic" alt="">
                         <div class="cover">
@@ -28,6 +28,8 @@
 </template>
     
 <script setup>
+import { useRouter } from 'vue-router';
+const router = useRouter()
 import { ref, reactive, toRefs, defineProps } from 'vue';
 const props = defineProps({
     mvData: {
@@ -74,7 +76,7 @@ const { mvData } = toRefs(props)
                     position: relative;
                     border-radius: 5px;
                     overflow: hidden;
-                    background-color: #9e9e9e;
+                    background-color: #000000;
 
                     img {
                         width: 100%;

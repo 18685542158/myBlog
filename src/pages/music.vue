@@ -207,7 +207,7 @@ import index from '../components/Mindex.vue';
 import detail from '../components/Detail.vue';
 import HisList from '../components/HisList.vue';
 import HisSearch from '../components/HisSearch.vue';
-import { musicPlayer } from '../music/musicPlayer';
+import { musicPlayer } from '../media/musicPlayer';
 
 import {
     getUserDetail,                  // 获取我的主页详情                                                    uin

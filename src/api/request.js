@@ -112,6 +112,15 @@ export function getMvInfo(id) {
     })
 }
 
+// 获取mv链接
+export function getMvUrl(id) {
+    return axios.get('/mv/url', {
+        params: {
+            id
+        }
+    })
+}
+
 
 
 // 新建歌单
