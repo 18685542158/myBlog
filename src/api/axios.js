@@ -31,9 +31,9 @@ instance.interceptors.response.use(
     },
     error => {
         // 处理响应错误
-        if(error.response.status==500){
-            console.log('报错：code==500');
-        }
+        // if(error.response.status==500){
+        //     console.log('报错：code==500');
+        // }
         console.error(error);
         return Promise.reject(error);
     }

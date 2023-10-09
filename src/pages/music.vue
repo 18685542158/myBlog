@@ -443,13 +443,14 @@ const toQQmusic = () => {
 // 测试
 const fanhui = () => {
     // router.push('/home')
-    console.log(hisSearch.value);
-    console.log(songURL.value);
-    console.log(useMusic.music.songPlayList);
-    console.log(hisList);
-    console.log('hisIndex:' + hisIndex);
+    // console.log(hisSearch.value);
+    // console.log(songURL.value);
+    // console.log(useMusic.music.songPlayList);
+    // console.log(hisList);
+    // console.log('hisIndex:' + hisIndex);
+    console.log(songmid.value);
     console.log(nextSongmid.value);
-    console.log(thedissid.value);
+    // console.log(thedissid.value);
     console.log('=============');
 }
 
@@ -550,7 +551,23 @@ const loadSong = async (songmid) => {
         musicPlayer.audio.addEventListener('timeupdate', onTimeUpdate.bind(this));
         musicPlayer.audio.addEventListener('ended', songEnded.bind(this));
     }).catch(err => {
+        console.log(err);
         console.log('歌曲加载失败');
+        // 二次获取
+        getSong(songmid).then((data) => {
+            songData.url = data[songmid]
+            console.log('再次网络');
+            musicPlayer.loadSong(songData).then(() => {
+                console.log('歌曲加载完成');
+                duration.value = musicPlayer.getDuration()
+                musicPlayer.audio.addEventListener('timeupdate', onTimeUpdate.bind(this));
+                musicPlayer.audio.addEventListener('ended', songEnded.bind(this));
+            }).catch(err => {
+                console.log(err);
+            })
+        }).catch(err => {
+            console.log('该考虑是不是断网或者cookie过期了');
+        })
     })
     await getSongDataInfo(songmid)
     // 添加一个歌曲到播放列表
@@ -569,10 +586,16 @@ const lastSong = debounce(async () => {
     // 更新hisIndex
     hisIndex = hisList.findIndex(item => item == songmid.value)
     let lastSongmid = ''
+    console.log(hisIndex);
     if (hisIndex == 0) {
         // 处理历史播放的上一曲，假如列表里面没有上一曲，就需要随机一首歌单里面的歌曲=========
         if (playModel.value == 'loop') {
-            lastSongmid = songListData.value[songListData.value.length - 1].songmid
+            const hhisIndex = songListData.value.findIndex(item => item.songmid == songmid.value)
+            if (hhisIndex == 0) {
+                lastSongmid = songListData.value[songListData.value.length - 1].songmid
+            } else {
+                lastSongmid = songListData.value[hhisIndex - 1].songmid
+            }
         } else {
             lastSongmid = nextSongmid.value
         }

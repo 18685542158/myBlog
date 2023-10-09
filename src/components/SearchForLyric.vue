@@ -166,6 +166,7 @@ const lyricFormat = (content) => {
                 transition: 0.5s;
                 // height: auto;
                 max-height: 3000px;
+                padding-bottom: 10px;
             }
         }
     }

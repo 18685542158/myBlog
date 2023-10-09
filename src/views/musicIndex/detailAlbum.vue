@@ -16,19 +16,19 @@
                             <span>{{ item.name }} ：</span>
                             <span style="line-height: 22px;margin-left: 10px;">{{ item.role }}</span>
                         </li>
-                        <li>
+                        <li v-if="AlbumData.language">
                             <span>语言 ：</span>
                             <span style="line-height: 22px;margin-left: 10px;">{{ AlbumData.language }}</span>
                         </li>
-                        <li>
+                        <li v-if="AlbumData.albumType">
                             <span>专辑类型 ：</span>
                             <span style="line-height: 22px;margin-left: 10px;">{{ AlbumData.albumType }}</span>
                         </li>
-                        <li>
+                        <li v-if="AlbumData.genre">
                             <span>专辑风格 ：</span>
                             <span style="line-height: 22px;margin-left: 10px;">{{ AlbumData.genre }}</span>
                         </li>
-                        <li>
+                        <li v-if="AlbumData.publishTime">
                             <span>发布时间 ：</span>
                             <span style="line-height: 22px;margin-left: 10px;">{{ AlbumData.publishTime }}</span>
                         </li>
