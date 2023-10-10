@@ -50,7 +50,12 @@
 <script setup>
 import { ref, reactive, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import { videoPlayer } from '../../media/videoPlayer';
+// import { videoPlayer } from '../../media/videoPlayer';
+import useStore from '../../store/index';
+const useMusic = useStore();
+// 解构pinia里的方法
+const { addMV } = useMusic.music
+
 
 import {
     // 获取MV详情
@@ -206,7 +211,9 @@ watch(route, (to, from) => {
         id.value = to.params.id
         // console.log('触发了跳转MV');
         getMvInfo(id.value).then((data) => {
+            console.log(data);
             mvData.value = data
+            addMV(data.info)
             getMvUrl(id.value).then((urlData) => {
                 // console.log('获取播放链接成功');
                 // console.log(urlData);

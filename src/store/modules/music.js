@@ -13,7 +13,8 @@ export default defineStore('music', {
             songURL: [],                  // 还是得缓存歌曲的url等信息，不然每次打开页面都是从网上获取，太慢了
             searchSong: '',
             hisSearch: [],                  // 搜索记录
-            inputValue: ''                  // 还是决定将搜索的值放进store，会比较方便一点
+            inputValue: '',                  // 还是决定将搜索的值放进store，会比较方便一点
+            mvURL: [],                      // 存入mv的播放记录
         };
     },
     getters: {
@@ -42,8 +43,6 @@ export default defineStore('music', {
                 this.songmid = JSON.parse(data)
             }
         },
-
-
 
 
 
@@ -141,8 +140,52 @@ export default defineStore('music', {
         // 从本地获取搜索记录
         getHisSearch() {
             const data = JSON.parse(localStorage.getItem('hisSearch'))
+            if(!data)return
             this.hisSearch = data
         },
 
+        // 添加mv播放记录
+        addMV(obj) {
+            console.log(obj);
+            console.log(this.mvURL);
+            const index = this.mvURL.findIndex(item => item.vid == obj.vid)
+            if (index == -1) {
+                this.mvURL.push(obj)
+            } else {
+                this.mvURL.splice(index, 1)
+                this.mvURL.push(obj)
+            }
+            this.setMV()
+            console.log(this.mvURL);
+        },
+        // 将mv播放记录存入本地
+        setMV() {
+            const data = JSON.stringify(this.mvURL)
+            localStorage.setItem('mvURL', data)
+        },
+        // 从本地获取mv播放记录
+        getMV() {
+            const data = JSON.parse(localStorage.getItem('mvURL'))
+            if(!data)return
+            this.mvURL = data
+        },
+
+
+
+
+
+        // 网页初始化获取本地数据（主要慢慢发现要存的本地数据有点多了，干脆整合一下）
+        getInitData() {
+            // 刚打开时，从本地获取需要播放的歌曲songmid
+            this.getSongData()
+            // 从local获取播放列表
+            this.getSongPlayList()
+            // 对应上面，将保存在浏览器里面的歌曲url取出来
+            this.getSongURL()
+            // 从本地获取搜索记录
+            this.getHisSearch()
+            // 从本地获取mv播放记录
+            this.getMV()
+        }
     }
 });

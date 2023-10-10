@@ -356,6 +356,21 @@ app.get('/getSongColist', (req, res) => {
 
 
 // 以下是关于官方的推荐歌曲===========================================
+
+// 热门搜索
+app.get('/search/hot', (req, res) => {
+    qqMusic.api('/search/hot')
+        .then((result => {
+            console.log('获取热搜词成功');
+            res.json(result)
+        }))
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({ error: '获取热搜词失败' })
+        })
+})
+
+
 // 获取歌单分类
 app.get('/getSongList/Category', (req, res) => {
     qqMusic.api('songlist/category')
@@ -370,7 +385,7 @@ app.get('/getSongList/Category', (req, res) => {
 })
 
 // 根据歌单分类获取歌单
-app.get('/getSongList/list', (req, res) => {
+app.get('songlist/list', (req, res) => {
     qqMusic.api('songlist/list', { id: req.query.id })
         .then((result) => {
             console.log('根据歌单分类获取歌单成功：');
@@ -382,22 +397,35 @@ app.get('/getSongList/list', (req, res) => {
         })
 })
 
-// 获取日推
-app.get('/getRecommond', (req, res) => {
+// 获取推荐歌单
+app.get('/recommend/playlist/u', (req, res) => {
     qqMusic.api('/recommend/playlist/u')
         .then((result) => {
-            console.log('日推');
+            console.log('推荐');
             res.json(result)
         })
         .catch(err => {
-            res.status(500).json({ error: '日推歌单失败' })
+            res.status(500).json({ error: '推荐歌单失败' })
             console.log(err);
         })
 })
 
-// 获取轮播图，虽然我不知道qq音乐哪来什么轮播图
-app.get('/getBanner', (req, res) => {
-    qqMusic.api('recommend/banner')
+// 日推歌单
+app.get('/recommend/daily', (req, res) => {
+    qqMusic.api('/recommend/daily')
+        .then((data) => {
+            console.log('获取日推成功');
+            res.json(data)
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({ error: '获取日推失败' })
+        })
+})
+
+// 获取轮播图
+app.get('/recommend/banner', (req, res) => {
+    qqMusic.api('/recommend/banner')
         .then((result) => {
             console.log('获取轮播图成功：');
             res.json(result)
@@ -409,8 +437,10 @@ app.get('/getBanner', (req, res) => {
 })
 
 // 新歌推荐
-app.get('/getNewSong', (req, res) => {
-    qqMusic.api('/new/songs', req.query.type)
+app.get('/new/songs', (req, res) => {
+    qqMusic.api('/new/songs', {
+        type: req.query.type
+    })
         .then((result) => {
             console.log('获取最新歌曲');
             res.json(result)
@@ -423,8 +453,10 @@ app.get('/getNewSong', (req, res) => {
 })
 
 // 新专辑推荐
-app.get('/getNewAlbum', (req, res) => {
-    qqMusic.api('/new/album', req.query.type)
+app.get('/new/album', (req, res) => {
+    qqMusic.api('/new/album', {
+        type: req.query.type
+    })
         .then((result) => {
             console.log('获取最新专辑');
             res.json(result)
@@ -437,8 +469,10 @@ app.get('/getNewAlbum', (req, res) => {
 })
 
 // 新MV推荐
-app.get('/getNewMV', (req, res) => {
-    qqMusic.api('/new/mv', req.query.type)
+app.get('/new/mv', (req, res) => {
+    qqMusic.api('/new/mv', {
+        type: req.query.type
+    })
         .then((result) => {
             console.log('获取最新MV');
             res.json(result)
@@ -446,7 +480,87 @@ app.get('/getNewMV', (req, res) => {
         .catch((err) => {
             res.status(500).json({ error: '获取最新MV失败' })
             console.log(err);
+        })
+})
 
+// 获取mv分类
+app.get('/mv/category', (req, res) => {
+    qqMusic.api('/mv/category')
+        .then((result) => {
+            console.log('获取mv分类');
+            res.json(result)
+        })
+        .catch((err) => {
+            res.status(500).json({ error: '获取MV分类失败' })
+            console.log(err);
+        })
+})
+
+// 根据分类获取mv
+app.get('/mv/list', (req, res) => {
+    qqMusic.api('/mv/list', {
+        // 默认 1
+        pageNo: req.query.pageNo,
+        // 默认 20
+        pageSize: req.query.pageSize,
+        // 地区，默认 15 全部，具体数值从上面分类接口获取
+        area: req.query.area,
+        // MV 类型，默认 7 全部，具体数值从上面分类接口获取
+        version: req.query.version,
+    })
+        .then((result) => {
+            console.log('根据分类获取mv成功');
+            res.json(result)
+        })
+        .catch((err) => {
+            res.status(500).json({ error: '根据分类获取mv失败' })
+            console.log(err);
+        })
+})
+
+
+// 获取榜单列表 showDetail是否显示前三歌曲简单信息和榜单介绍，0，不显示，1 显示，默认 0
+app.get('/top/category', (req, res) => {
+    qqMusic.api('/top/category', {
+        showDetail: req.query.showDetail,
+    })
+        .then((result) => {
+            console.log('获取榜单列表成功');
+            res.json(result)
+        })
+        .catch((err) => {
+            res.status(500).json({ error: '获取榜单列表失败' })
+            console.log(err);
+        })
+})
+
+// 获取榜单详情
+app.get('/top', (req, res) => {
+    qqMusic.api('/top', {
+        // 默认 4，从上面的列表中取值
+        id: req.query.id,
+        // 默认 100 // 部分接口不支持这个字段，所以这里默认选择100
+        pageSize: req.query.pageSize,
+        // 榜单的时间，从上面的列表中取值，非必填
+        period: req.query.period,
+        // 默认当前时间，如果有 period，则当前榜单的发布时间，可能是天，也可能是周
+        time: req.query.time,
+        // 当前榜单的时间格式 YYYY_W 或 YYYY-MM-DD
+        timeType: req.query.timeType,
+        // 在榜单的排名
+        rank: req.query.rank,
+        // 1 上升，2 减少，3 持平，4 新歌，6 上升百分比
+        rankType: req.query.rankType,
+        // 排名改变值
+        rankValue: req.query.rankValue,
+    })
+        .then((result) => {
+            console.log('获取榜单详情成功');
+            res.json(result)
+        })
+        .catch((err) => {
+            res.status(500).json({ error: '获取榜单详情失败' })
+            console.log(err);
         })
 })
 

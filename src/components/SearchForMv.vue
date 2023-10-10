@@ -2,9 +2,9 @@
     <div class="box">
         <ul>
             <li v-for="(item, index) in mvData" :key="index">
-                <div class="item" @click="router.push({ name: 'MvDetail', params: { id: item.v_id } })">
+                <div class="item" @click="router.push({ name: 'MvDetail', params: { id: item.v_id || item.vid } })">
                     <div class="img">
-                        <img :src="item.mv_pic_url || item.pic" alt="">
+                        <img :src="item.mv_pic_url || item.pic || item.cover_pic" alt="">
                         <div class="cover">
                             <div class="btn">
                                 <div class="middle">
@@ -14,9 +14,9 @@
                         </div>
                     </div>
                     <div class="info">
-                        <span>{{ item.mv_name || item.title }}</span>
+                        <span>{{ item.mv_name || item.title || item.name }}</span>
                         <div class="singArr">
-                            <span v-for="(childItem, childIndex) in item.singer_list" :key="childIndex">
+                            <span v-for="(childItem, childIndex) in item.singer_list || item.singers" :key="childIndex">
                                 {{ childIndex != 0 ? '/' : '' }}{{ childItem.name }}
                             </span>
                         </div>

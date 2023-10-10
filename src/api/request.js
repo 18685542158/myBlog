@@ -193,10 +193,14 @@ export function getSongListDel(id) {
 
 
 // 关于官方推荐===============================
+//  推荐歌单
+export function getRecommondPlaylist() {
+    return axios.get('/recommend/playlist/u')
+}
 
-// 获取日推，,暂且不知道这个日推该放哪里
-export function getRecommond() {
-    return axios.get('/getRecommond')
+// 获取日推歌单
+export function getDayRecommondPlaylist() {
+    return axios.get('/recommend/daily')
 }
 
 // 获取歌单分类
@@ -206,7 +210,7 @@ export function getCategory() {
 
 // 根据分类获取歌单
 export function getReSongList(id) {
-    return axios.get('/getSongList/list', {
+    return axios.get('songlist/list', {
         params: {
             id
         }
@@ -215,12 +219,12 @@ export function getReSongList(id) {
 
 // 轮播图           估计会删除
 export function getBanner() {
-    return axios.get('/getBanner')
+    return axios.get('/recommend/banner')
 }
 
 // 获取最新歌曲
 export function getNewSong(type) {
-    return axios.get('getNewSong', {
+    return axios.get('/new/songs', {
         params: {
             type
         }
@@ -229,7 +233,7 @@ export function getNewSong(type) {
 
 // 获取最新专辑
 export function getNewAlbum(type) {
-    return axios.get('getNewAlbum', {
+    return axios.get('/new/album', {
         params: {
             type
         }
@@ -238,7 +242,7 @@ export function getNewAlbum(type) {
 
 // 获取最新MV
 export function getNewMV(type) {
-    return axios.get('getNewMV', {
+    return axios.get('/new/mv', {
         params: {
             type
         }

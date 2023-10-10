@@ -220,7 +220,7 @@ import {
     getSongDetail,                  // 获取单个歌曲详情                                                    songmid
     getSongColist,                  // 获取我收藏的歌单                                                    uin
     createSongList,                 // 创建歌单                                                           name
-    getRecommond,                   // 日推                                                               无
+    getRecommondPlaylist,                   // 日推                                                               无
     getCategory,                    // 获取歌单分类                                                        无
     getReSongList,                  // 根据分类获取歌单                                                    id
     getBanner,                      // 轮播图           目测没什么用，可能会删除                            无
@@ -243,7 +243,7 @@ const useMusic = useStore()
 const router = useRouter()
 const route = useRoute()
 // 解构pinia里的方法
-const { changeSettingCookie, getSongData, setSongmid, addSongList, getSongPlayList, addHisSearch, getHisSearch } = useMusic.music
+const { changeSettingCookie, setSongmid, addSongList, addHisSearch,getInitData } = useMusic.music
 const { changePlay, changePlayModel } = useMusic.musicPlay
 // 响应式解构pinia里面的参数
 const { num, playModel, isplay, toNext } = storeToRefs(useMusic.musicPlay)
@@ -315,21 +315,20 @@ const defNavData = ref([
                 icon: 'woxihuan',
                 path: '/music/fevorite'
             },
-
+            // {
+            //     cid: 5,
+            //     title: '本地和下载',
+            //     icon: 'bendi',
+            //     path: '/music/download'
+            // },
             {
                 cid: 5,
-                title: '本地和下载',
-                icon: 'bendi',
-                path: '/music/download'
-            },
-            {
-                cid: 6,
                 title: '播放列表',
                 icon: 'liebiao',
                 path: '/music/playlist'
             },
             {
-                cid: 7,
+                cid: 6,
                 title: '最近播放',
                 icon: 'zuijin',
                 path: '/music/recently'
@@ -814,7 +813,7 @@ const SongList = async (uin) => {
     // 获取的是我收藏的歌单
     const resSongColist = await getSongColist(uin)
     // 左侧我的菜单的唯一标识id
-    let cid = 8
+    let cid = 7
     for (let i = 0; i < resSongList.mydiss.list.length; i++) {
         if ((i + 1) > resSongList.mydiss.list.length) {
             // if ((i + 4) > resSongList.mydiss.list.length) {
@@ -899,14 +898,11 @@ onMounted(async () => {
         hasCookie.value = false
         console.log(err);
     })
-    // 获取本地歌曲
-    getSongData()
+    // 获取本地的所存入数据
+    getInitData()
     // 获取播放器近10条播放记录
-    getSongPlayList()
     hisList = [...useMusic.music.songPlayList]
     hisIndex = hisList.findIndex(item => item == songmid.value)
-    // 获取搜索记录
-    getHisSearch()
     // 加载当前播放器的歌曲
     loadSong(songmid.value)
     // 获取我的歌单

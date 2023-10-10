@@ -21,7 +21,7 @@
             </div>
         </div>
         <div class="body">
-            <list :songData="songData" :dissid:="String(id)"></list>
+            <list :songData="songData" :dissid="String(id)"></list>
         </div>
     </div>
 </template>
@@ -31,7 +31,6 @@ import { ref, reactive, onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import useStore from '../../store/index';
 import { storeToRefs } from "pinia"
-import ColorThief from "colorthief";
 const useMusic = useStore()
 const { uin, songmid, nextSongmid, thedissid } = storeToRefs(useMusic.music)
 const { isplay, toNext } = storeToRefs(useMusic.musicPlay)

@@ -1,17 +1,28 @@
 <template>
     <div class="box">
-        <div style="width:100%;height:100%;position:absolute;">
-            <loading></loading>
-        </div>
-        <div class="other" style="width:100px;height:100px;background-color:#000">
-            我是其他
-        </div>
+        <h1>音乐馆应该是包含新歌曲，专辑，MV等，</h1>
     </div>
 </template>
 
 <script setup>
 import loading from '../../components/Loading.vue';
 import { ref, reactive } from 'vue';
+import {
+    // 单纯的获取推荐歌单
+    getRecommondPlaylist,
+    // 获取歌单分类
+    getCategory,
+    // 根据分类获取歌单
+    getReSongList,
+
+    
+    // 新mv
+    getNewMV,
+    // 新歌
+    getNewSong,
+    // 新专辑
+    getNewAlbum,
+} from '../../api/request';
 
 </script>
 
@@ -20,5 +31,8 @@ import { ref, reactive } from 'vue';
     position: relative;
     width: 100%;
     height: 100%;
+    backdrop-filter: blur(6px);
+    background-color: #2e294e25;
+    overflow-y: scroll;
 }
 </style>
