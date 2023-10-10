@@ -507,8 +507,7 @@ app.get('/mv/list', (req, res) => {
         area: req.query.area,
         // MV 类型，默认 7 全部，具体数值从上面分类接口获取
         version: req.query.version,
-    })
-        .then((result) => {
+    }).then((result) => {
             console.log('根据分类获取mv成功');
             res.json(result)
         })
@@ -545,14 +544,6 @@ app.get('/top', (req, res) => {
         period: req.query.period,
         // 默认当前时间，如果有 period，则当前榜单的发布时间，可能是天，也可能是周
         time: req.query.time,
-        // 当前榜单的时间格式 YYYY_W 或 YYYY-MM-DD
-        timeType: req.query.timeType,
-        // 在榜单的排名
-        rank: req.query.rank,
-        // 1 上升，2 减少，3 持平，4 新歌，6 上升百分比
-        rankType: req.query.rankType,
-        // 排名改变值
-        rankValue: req.query.rankValue,
     })
         .then((result) => {
             console.log('获取榜单详情成功');

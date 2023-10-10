@@ -249,7 +249,52 @@ export function getNewMV(type) {
     })
 }
 
+// 获取mv分类
+export function getMvCategory() {
+    return axios.get('/mv/category')
+}
 
+// 根据分类获取mv
+export function getMV(obj) {
+    return axios.get('/mv/list', {
+        params: {
+            // 默认 1
+            pageNo: obj.pageNo,
+            // 默认 20
+            pageSize: obj.pageSize,
+            // 地区，默认 15 全部，具体数值从上面分类接口获取
+            area: obj.area,
+            // MV 类型，默认 7 全部，具体数值从上面分类接口获取
+            version: obj.version,
+        }
+    })
+}
+
+// 获取榜单列表 showDetail是否显示前三歌曲简单信息和榜单介绍，0，不显示，1 显示，默认 0
+export function getTop() {
+    return axios.get('/top/category')
+}
+
+// 获取榜单详情
+// 返回说明
+// 当前榜单的时间格式 YYYY_W 或 YYYY-MM-DD
+// timeType
+// 在榜单的排名
+// rank
+// 1 上升，2 减少，3 持平，4 新歌，6 上升百分比
+// rankType
+// 排名改变值
+// rankValue
+export function getTopDetail(obj) {
+    return axios.get('/top', {
+        params: {
+            id: obj.id,
+            pageSize: obj.pageSize,
+            period: obj.period,
+            time: obj.time
+        }
+    })
+}
 
 
 

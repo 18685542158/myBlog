@@ -1,7 +1,7 @@
 <template>
     <div class="box">
         <div class="head">
-            推荐的话，包含的应该是推荐你听什么，看什么，不用纠结是新的还是旧的
+            <h1>推荐</h1>
         </div>
     </div>
 </template>
@@ -25,5 +25,18 @@ import {
     backdrop-filter: blur(6px);
     background-color: #2e294e25;
     overflow-y: scroll;
+
+    .head {
+        width: 100%;
+        height: 120px;
+        border-bottom: 1px solid #ffffff81;
+        padding: 40px;
+        box-sizing: border-box;
+
+        h1 {
+            font-size: 40px;
+        }
+    }
+
 }
 </style>
