@@ -243,11 +243,11 @@ const useMusic = useStore()
 const router = useRouter()
 const route = useRoute()
 // 解构pinia里的方法
-const { changeSettingCookie, setSongmid, addSongList, addHisSearch,getInitData } = useMusic.music
+const { changeSettingCookie, setSongmid, addSongList, addHisSearch, getInitData } = useMusic.music
 const { changePlay, changePlayModel } = useMusic.musicPlay
 // 响应式解构pinia里面的参数
 const { num, playModel, isplay, toNext } = storeToRefs(useMusic.musicPlay)
-const { uin, songmid, nextSongmid, thedissid, songURL, searchSong, hasCookie, hisSearch, inputValue } = storeToRefs(useMusic.music)
+const { uin, songmid, nextSongmid, thedissid, songURL, searchSong, hasCookie, hisSearch, inputValue, songPlayList } = storeToRefs(useMusic.music)
 
 // 被选中的菜单
 let isActiveNav = ref(1)
@@ -901,7 +901,7 @@ onMounted(async () => {
     // 获取本地的所存入数据
     getInitData()
     // 获取播放器近10条播放记录
-    hisList = [...useMusic.music.songPlayList]
+    hisList = [...songPlayList.value]
     hisIndex = hisList.findIndex(item => item == songmid.value)
     // 加载当前播放器的歌曲
     loadSong(songmid.value)
@@ -960,6 +960,7 @@ onUnmounted(() => {
     align-items: center;
 
     .box {
+        display: flex;
 
         .left {
             border-right: 1px solid rgb(176, 173, 173);
@@ -1077,6 +1078,7 @@ onUnmounted(() => {
         }
 
         .right {
+            flex: 1;
             font-family: 'myfont';
 
             .head {

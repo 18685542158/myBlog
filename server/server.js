@@ -87,6 +87,36 @@ app.get('/singer/desc', (req, res) => {
         })
 })
 
+// 获取歌手分类
+app.get('/singer/category', (req, res) => {
+    qqMusic.api('/singer/category').then((result) => {
+        console.log('获取了歌手分类');
+        res.json(result)
+    }).catch(err => {
+        console.log(err);
+        res.status(500).json({ error: '获取歌手分类错误' })
+    })
+})
+
+// 根据分类获取歌手列表
+app.get('/singer/list', (req, res) => {
+    qqMusic.api('/singer/list', {
+        area: req.query.area,
+        genre: req.query.genre,
+        index: req.query.index,
+        sex: req.query.sex,
+        pageNo: req.query.pageNo
+    }).then((result) => {
+        console.log('获取歌手列表成功');
+        res.json(result)
+    }).catch(err => {
+        console.log(err);
+        res.status(500).json({ error: '获取歌手列表失败' })
+
+    })
+})
+
+
 // 获取歌手歌曲
 app.get('/singer/songs', (req, res) => {
     qqMusic.api('/singer/songs', {
@@ -372,8 +402,8 @@ app.get('/search/hot', (req, res) => {
 
 
 // 获取歌单分类
-app.get('/getSongList/Category', (req, res) => {
-    qqMusic.api('songlist/category')
+app.get('/songlist/category', (req, res) => {
+    qqMusic.api('/songlist/category')
         .then((result) => {
             console.log('获取歌单分类成功：');
             res.json(result)
@@ -464,7 +494,6 @@ app.get('/new/album', (req, res) => {
         .catch((err) => {
             res.status(500).json({ error: '获取最新专辑失败' })
             console.log(err);
-
         })
 })
 
@@ -482,6 +511,35 @@ app.get('/new/mv', (req, res) => {
             console.log(err);
         })
 })
+
+// 获取所有新mv,虽然看着有点白痴，但是没办法
+app.get('/new/mv/all', (req, res) => {
+    const array = []
+    qqMusic.api('/new/mv', { type: 0 }).then((data) => {
+        array.push(data)
+        qqMusic.api('/new/mv', { type: 1 }).then((fdata) => {
+            array.push(fdata)
+            qqMusic.api('/new/mv', { type: 2 }).then((sdata) => {
+                array.push(sdata)
+                qqMusic.api('/new/mv', { type: 3 }).then((tdata) => {
+                    array.push(tdata)
+                    qqMusic.api('/new/mv', { type: 4 }).then((ffdata) => {
+                        array.push(ffdata)
+                        qqMusic.api('/new/mv', { type: 5 }).then((fffdata) => {
+                            array.push(fffdata)
+                            res.json(array)
+                        })
+                    })
+                })
+            })
+        })
+    })
+        .catch((err) => {
+            res.status(500).json({ error: '获取最新MV失败' })
+            console.log(err);
+        })
+})
+
 
 // 获取mv分类
 app.get('/mv/category', (req, res) => {
@@ -508,9 +566,9 @@ app.get('/mv/list', (req, res) => {
         // MV 类型，默认 7 全部，具体数值从上面分类接口获取
         version: req.query.version,
     }).then((result) => {
-            console.log('根据分类获取mv成功');
-            res.json(result)
-        })
+        console.log('根据分类获取mv成功');
+        res.json(result)
+    })
         .catch((err) => {
             res.status(500).json({ error: '根据分类获取mv失败' })
             console.log(err);

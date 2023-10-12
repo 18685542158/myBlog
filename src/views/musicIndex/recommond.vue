@@ -13,6 +13,14 @@ import {
     getDayRecommondPlaylist,
     // 专辑轮播图
     getBanner,
+
+
+    // 单纯的获取推荐歌单
+    getRecommondPlaylist,
+    // 获取歌单分类
+    getCategory,
+    // 根据分类获取歌单
+    getReSongList,
 } from '../../api/request';
 
 </script>

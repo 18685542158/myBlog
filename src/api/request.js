@@ -34,6 +34,22 @@ export function getSingerInfo(singermid) {
     })
 }
 
+// 获取歌手分类
+export function getSingerCategory() {
+    return axios.get('/songlist/category')
+}
+
+// 根据歌手分类获取歌手列表
+export function getSinger(obj) {
+    return axios.get('/singer/list', {
+        area: obj.area,
+        genre: obj.genre,
+        index: obj.index,
+        sex: obj.sex,
+        pageNo: obj.pageNo,
+    })
+}
+
 // 获取歌手歌曲
 export function getSingerSong(singermid, num, page) {
     return axios.get('/singer/songs', {
@@ -205,7 +221,7 @@ export function getDayRecommondPlaylist() {
 
 // 获取歌单分类
 export function getCategory() {
-    return axios.get('/getSongList/Category')
+    return axios.get('/songlist/category')
 }
 
 // 根据分类获取歌单
@@ -249,6 +265,11 @@ export function getNewMV(type) {
     })
 }
 
+// 获取全部的最新mv
+export function getAllMv() {
+    return axios.get('/new/mv/all')
+}
+
 // 获取mv分类
 export function getMvCategory() {
     return axios.get('/mv/category')
@@ -277,14 +298,10 @@ export function getTop() {
 
 // 获取榜单详情
 // 返回说明
-// 当前榜单的时间格式 YYYY_W 或 YYYY-MM-DD
-// timeType
-// 在榜单的排名
-// rank
-// 1 上升，2 减少，3 持平，4 新歌，6 上升百分比
-// rankType
-// 排名改变值
-// rankValue
+// timeType 当前榜单的时间格式 YYYY_W 或 YYYY-MM-DD
+// rank 在榜单的排名
+// rankType 1 上升，2 减少，3 持平，4 新歌，6 上升百分比
+// rankValue    排名改变值
 export function getTopDetail(obj) {
     return axios.get('/top', {
         params: {

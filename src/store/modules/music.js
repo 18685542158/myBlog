@@ -180,8 +180,6 @@ export default defineStore('music', {
             this.getSongData()
             // 从local获取播放列表
             this.getSongPlayList()
-            // 对应上面，将保存在浏览器里面的歌曲url取出来
-            this.getSongURL()
             // 从本地获取搜索记录
             this.getHisSearch()
             // 从本地获取mv播放记录

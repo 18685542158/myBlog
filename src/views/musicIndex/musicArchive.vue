@@ -10,15 +10,17 @@
 import loading from '../../components/Loading.vue';
 import { ref, reactive } from 'vue';
 import {
-    // 单纯的获取推荐歌单
-    getRecommondPlaylist,
-    // 获取歌单分类
-    getCategory,
-    // 根据分类获取歌单
-    getReSongList,
+
+
+
+    // 获取歌手分类
+    getSingerCategory,
+    // 根据歌手分类获取歌手列表
+    getSinger,
+
 
     // 下面这两个可以结合起来做一个排行榜
-    // 获取榜单的名称
+    // 获取榜单的名称   showDetail
     getTop,
     // 获取榜单详情
     getTopDetail,
