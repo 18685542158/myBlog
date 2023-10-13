@@ -50,7 +50,7 @@
                     </div>
                     <div class="songTime"><span>{{ timeFormat(item.interval) }}</span></div>
                     <div class="songAlbum" v-if="!NotClick"
-                        @click="router.push({ name: 'AlbumDetail', params: { albummid: item.album.mid } })">
+                        @click="router.push({ name: 'AlbumDetail', params: { albummid: item.albummid || item.album.mid } })">
                         <span :title="item.albumname">{{ item.albumname }}</span>
                     </div>
                     <div class="songAlbum" v-else>
@@ -135,6 +135,7 @@ const getSingerImg = (item) => {
 
 // 播放
 const playSong = debounce(async (item) => {
+    console.log(songData.value);
     if (isplay.value) {
         // 先把之前那个歌曲的暂停咯
         isplay.value = false

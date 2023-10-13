@@ -1,5 +1,5 @@
 <template>
-    <div class="box">
+    <div class="box searchPage" @scroll="loadMoreData">
         <div class="head">
             <div class="item" v-for="(value, key, index) in categoryData" :key="index">
                 <div class="row" v-for="(item, Cindex) in value" :key="Cindex" @click="selClick(key, Cindex)"
@@ -16,6 +16,8 @@
 
 <script setup>
 import { ref, reactive, toRefs, watch } from 'vue';
+import { debounce } from 'lodash';          // 防抖
+
 import {
     getMV
 } from '../api/request'
@@ -24,8 +26,12 @@ import searchformv from './SearchForMv.vue';
 const props = defineProps({
     categoryData: {
         type: Object
+    },
+    loading: {
+        type: Boolean
     }
 })
+const emit = defineEmits(['update:loading'])
 const { categoryData } = toRefs(props)
 
 
@@ -40,6 +46,21 @@ const query = ref({
 })
 // 创建一个mv数据，用于展示
 const mvData = ref([])
+
+//获取更多数据
+const loadMoreData = debounce((e) => {
+    const page = document.querySelector('.searchPage')
+    if (Math.floor(page.scrollHeight - page.scrollTop) <= page.clientHeight) {
+        // isLoading.value = true
+        // emit('update:loading', true)
+        query.value.pageNo += 1
+        getMV(query.value).then((data) => {
+            console.log(data);
+            console.log(mvData.value);
+            mvData.value = [...mvData.value, ...data.list]
+        })
+    }
+}, 300)
 
 // 创建一个方法，用于切换菜单
 const selClick = (key, index) => {

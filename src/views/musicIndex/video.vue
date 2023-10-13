@@ -23,7 +23,7 @@
         </div>
         <div class="MvHub" v-else-if="selItem == 1 && !loading">
             <!-- 获取的分类数据传过去 -->
-            <mvHub :categoryData="categoryData"></mvHub>
+            <mvHub :categoryData="categoryData" :loading="loading" @update:loading="loading = $event"></mvHub>
         </div>
     </div>
 </template>
@@ -60,6 +60,8 @@ const selectArr = reactive([
         name: '视频库',
     }
 ])
+
+
 
 onMounted(() => {
     getAllMv().then((data) => {
@@ -147,7 +149,17 @@ onMounted(() => {
     }
 
     .newMv {
-        flex: 1;
+        // height: calc(100% - 160px);
+        overflow-y: scroll;
+        // flex: 1;
+    }
+
+    .MvHub {
+        height: calc(100% - 180px);
+        padding-right: 2px;
+        overflow-x: hidden;
+        overflow-y: scroll;
+        // flex: 1;
     }
 
 }

@@ -1,18 +1,19 @@
 <template>
     <div class="box" @mousemove="moveProgress" @mouseup="leaveProgress" @mouseleave="leaveProgress">
-        <div class="head">
-            <video class="video" :src="urlsData[urlsData.length - 1]" @timeupdate="handleTimeUpdate" controls autoplay
-                @loadedmetadata="handleMetadataLoad" :currentTime="newCurrentTime">
-            </video>
-        </div>
-        <div class="controls">
-            <div class="progress" style="user-select: none;">
-                <div class="progressBox" @mousedown="downProgress" @mouseenter="openControl" @mouseleave="closeControl">
-                    <div class="progressBar" :style="`width: ${num}%;`"></div>
-                </div>
+        <div class="mainLeft">
+            <div class="head">
+                <video class="video" :src="urlsData[urlsData.length - 1]" @timeupdate="handleTimeUpdate" controls autoplay
+                    @loadedmetadata="handleMetadataLoad" :currentTime="newCurrentTime">
+                </video>
             </div>
-            <div class="info" v-if="!loading">
-                <!-- <div class="control" :class="{ 'active': isControl }">
+            <div class="controls">
+                <div class="progress" style="user-select: none;">
+                    <div class="progressBox" @mousedown="downProgress" @mouseenter="openControl" @mouseleave="closeControl">
+                        <div class="progressBar" :style="`width: ${num}%;`"></div>
+                    </div>
+                </div>
+                <div class="info" v-if="!loading">
+                    <!-- <div class="control" :class="{ 'active': isControl }">
                     <div class="conRight">
                         <div class="middle" @click="changePlay">
                             <div class="stop" v-if="isPlay">
@@ -29,19 +30,24 @@
 
                     </div>
                 </div> -->
-                <div class="right">
-                    <h1>{{ mvData.info.name }}</h1>
-                    <div class="singers">
-                        <span v-for="(item, index) in mvData.info.singers"
-                            @click="router.push({ name: 'SingerDetail', params: { singermid: item.mid } })">
-                            {{ index == 0 ? '演唱者：' : '' }}{{ index != 0 ? '/' : '' }}{{ item.name }}
-                        </span>
-                    </div>
+
+
                 </div>
-                <div class="left">
-                    <span>{{ format(mvData.info.playcnt) }}万次播放</span>
-                    <span>{{ formatTime(mvData.info.pubdate) }}</span>
+            </div>
+        </div>
+        <div class="mainRight">
+            <div class="right">
+                <h1>{{ mvData.info.name }}</h1>
+                <div class="singers">
+                    <span v-for="(item, index) in mvData.info.singers"
+                        @click="router.push({ name: 'SingerDetail', params: { singermid: item.mid } })">
+                        {{ index == 0 ? '演唱者：' : '' }}{{ index != 0 ? '/' : '' }}{{ item.name }}
+                    </span>
                 </div>
+            </div>
+            <div class="left">
+                <span>{{ format(mvData.info.playcnt) }}万次播放</span>
+                <span>{{ formatTime(mvData.info.pubdate) }}</span>
             </div>
         </div>
     </div>
@@ -237,171 +243,188 @@ watch(route, (to, from) => {
     height: 100%;
     backdrop-filter: blur(6px);
     background-color: #2e294e25;
-    // display: flex;
+    display: flex;
     // flex-direction: column;
     overflow-y: scroll;
 
-    .head {
-        width: 100%;
-        height: 90%;
-        background-color: #000000;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+    .mainLeft {
+        width: 70%;
 
-        .video {
-            height: 100%;
-        }
-    }
-
-    .controls {
-        width: 100%;
-        height: 10%;
-        min-height: 50px;
-        display: flex;
-        flex-direction: column;
-
-        .progress {
+        .head {
             width: 100%;
-            height: 8px;
+            height: 80%;
+            background-color: #000000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex: 1;
 
-            .progressBox {
+            .video {
                 width: 100%;
-                height: 8px;
-                background-color: #ffffff25;
-                cursor: pointer;
-
-                .progressBar {
-                    transition: 0.3s;
-                    height: 8px;
-                    background-color: #cdbfe976;
-                }
+                height: 100%;
             }
         }
 
-        .info {
-            flex: 1;
+        .controls {
+            width: 100%;
+            height: 10%;
+            min-height: 50px;
             display: flex;
-            position: relative;
+            flex-direction: column;
 
-            .control {
-                transition: 0.3s;
+            .progress {
                 width: 100%;
-                height: 0%;
-                position: absolute;
-                background-color: #927171;
-                backdrop-filter: blur(100px);
+                height: 8px;
+
+                .progressBox {
+                    width: 100%;
+                    height: 8px;
+                    background-color: #ffffff25;
+                    cursor: pointer;
+
+                    .progressBar {
+                        transition: 0.3s;
+                        height: 8px;
+                        background-color: #cdbfe976;
+                    }
+                }
+            }
+
+            .info {
+                flex: 1;
                 display: flex;
+                position: relative;
 
-                .conRight {
-                    flex: 1;
+                .control {
+                    transition: 0.3s;
+                    width: 100%;
+                    height: 0%;
+                    position: absolute;
+                    background-color: #927171;
+                    backdrop-filter: blur(100px);
                     display: flex;
-                    align-items: center;
 
-                    .middle {
-                        width: 26px;
-                        height: 26px;
-                        cursor: pointer;
-                        box-shadow: 0px 0px 2px 1px #ffffff;
-                        border-radius: 50%;
+                    .conRight {
+                        flex: 1;
                         display: flex;
-                        justify-content: center;
                         align-items: center;
-                        margin: 0 20px;
 
-                        .stop {
+                        .middle {
+                            width: 26px;
+                            height: 26px;
+                            cursor: pointer;
+                            box-shadow: 0px 0px 2px 1px #ffffff;
+                            border-radius: 50%;
                             display: flex;
                             justify-content: center;
                             align-items: center;
+                            margin: 0 20px;
 
-                            .line1 {
-                                transition-duration: 0.3s;
-                                width: 4px;
-                                height: 14px;
-                                background-color: #ffffffc7;
-                                border-radius: 4px;
+                            .stop {
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+
+                                .line1 {
+                                    transition-duration: 0.3s;
+                                    width: 4px;
+                                    height: 14px;
+                                    background-color: #ffffffc7;
+                                    border-radius: 4px;
+                                }
+
+                                .line2 {
+                                    transition-duration: 0.3s;
+                                    margin-left: 3px;
+                                    width: 4px;
+                                    height: 14px;
+                                    background-color: #ffffffc7;
+                                    border-radius: 4px;
+                                }
                             }
 
-                            .line2 {
-                                transition-duration: 0.3s;
-                                margin-left: 3px;
-                                width: 4px;
-                                height: 14px;
-                                background-color: #ffffffc7;
-                                border-radius: 4px;
-                            }
-                        }
+                            &:hover {
+                                .line1 {
+                                    transition-duration: 0.3s;
+                                    background-color: #ffffff;
+                                }
 
-                        &:hover {
-                            .line1 {
-                                transition-duration: 0.3s;
-                                background-color: #ffffff;
-                            }
+                                .line2 {
+                                    transition-duration: 0.3s;
+                                    background-color: #ffffff;
+                                }
 
-                            .line2 {
-                                transition-duration: 0.3s;
-                                background-color: #ffffff;
+                                .continue {
+                                    transition-duration: 0.2s;
+                                }
                             }
 
                             .continue {
-                                transition-duration: 0.2s;
+                                transition-duration: 0.3s;
+                                width: 0;
+                                height: 0;
+                                border-top: 8px solid transparent;
+                                border-bottom: 8px solid transparent;
+                                border-left: 13px solid #ffffffc7;
+                                display: inline-block;
+                                margin-left: 3px;
                             }
                         }
+                    }
 
-                        .continue {
-                            transition-duration: 0.3s;
-                            width: 0;
-                            height: 0;
-                            border-top: 8px solid transparent;
-                            border-bottom: 8px solid transparent;
-                            border-left: 13px solid #ffffffc7;
-                            display: inline-block;
-                            margin-left: 3px;
-                        }
+                    .conLeft {
+                        flex: 1;
                     }
                 }
 
-                .conLeft {
-                    flex: 1;
-                }
-            }
-
-            .active {
-                height: 100%;
-            }
-
-            .right {
-                flex: 1;
-                display: flex;
-                flex-direction: column;
-                justify-content: space-evenly;
-
-                h1 {
-                    font-size: 18px;
-                    margin-left: 2%;
-                    cursor: pointer;
+                .active {
+                    height: 100%;
                 }
 
-                .singers {
-                    margin-left: 2%;
 
-                    span {
-                        cursor: pointer;
-                    }
-                }
+            }
+        }
+    }
+
+    .mainRight {
+        width: 30%;
+        background-color: #ffffff35;
+
+        .right {
+            width: 100%;
+            aspect-ratio: 2/1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.496);
+
+            h1 {
+                font-size: 30px;
+                margin-left: 2%;
+                cursor: pointer;
             }
 
-            .left {
-                flex: 1;
-                display: flex;
-                flex-direction: column;
-                align-items: end;
-                justify-content: space-evenly;
+            .singers {
+                margin-left: 2%;
 
                 span {
-                    margin-right: 2%;
+                    font-size: 18px;
                     cursor: pointer;
                 }
+            }
+        }
+
+        .left {
+            padding: 2%;
+            flex: 1;
+            display: flex;
+            // flex-direction: column;
+            align-items: end;
+            justify-content: space-between;
+
+            span {
+                margin-right: 2%;
+                cursor: pointer;
             }
         }
     }

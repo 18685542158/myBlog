@@ -153,6 +153,7 @@ onMounted(() => {
 
                     li {
                         width: 28%;
+                        max-width: 50%;
                         margin: 0 2%;
                         flex-grow: 1;
 

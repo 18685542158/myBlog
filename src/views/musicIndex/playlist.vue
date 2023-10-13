@@ -66,6 +66,8 @@ onUnmounted(() => {
     backdrop-filter: blur(6px);
     background-color: #2e294e25;
     overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
 
     .loading {
         position: absolute;

@@ -75,10 +75,10 @@ const format = (num) => {
         align-items: flex-start;
 
         li {
-            min-width: 200px;
+            min-width: 27%;
             flex-grow: 1;
-            margin: 20px;
-            max-width: 300px;
+            margin: 2%;
+            max-width: 270px;
 
             .item {
                 width: 100%;
