@@ -214,11 +214,6 @@ export function getRecommondPlaylist() {
     return axios.get('/recommend/playlist/u')
 }
 
-// 获取日推歌单
-export function getDayRecommondPlaylist() {
-    return axios.get('/recommend/daily')
-}
-
 // 获取歌单分类
 export function getCategory() {
     return axios.get('/songlist/category')
@@ -330,6 +325,28 @@ export function getuin() {
 export function getCookie() {
     return axios.get('/getCookie')
 }
+
+
+
+
+
+// 特殊
+//获取的都是歌单
+export function getRecommondSongList(obj) {
+    return axios.get('/recommend/playlist', {
+        params: {
+            pageNo: obj.pageNo,
+            pageSize: obj.pageSize,
+            id: obj.id
+        }
+    })
+}
+
+//这次获取的应该都是歌曲
+export function getRecommondSong() {
+    return axios.get('/recommend/daily')
+}
+
 
 
 

@@ -1,6 +1,11 @@
 <template>
     <div class="box" v-show="isColLoading">
-        <div class="head">
+        <transition name="loading" mode="out-in">
+            <div class="loading" v-show="!loading">
+                <lloading></lloading>
+            </div>
+        </transition>
+        <div class="head" v-if="isColLoading">
             <div class="bgcImg">
                 <img :src="songColist.songColistCover" alt="">
             </div>
@@ -20,7 +25,7 @@
                 <img id="cover" :src="songColist.songColistCover" alt="">
             </div>
         </div>
-        <div class="body">
+        <div class="body" v-if="isColLoading">
             <list :songData="songData" :dissid="String(id)"></list>
         </div>
     </div>
@@ -44,10 +49,13 @@ import {
 } from '../../api/request';
 
 import list from '../../components/List.vue';
+import lloading from '../../components/Loading.vue';
+
 
 const route = useRoute()
 // 页面是否加载完毕
 const isColLoading = ref(false)
+const loading = ref(false)
 // 获取歌单唯一标识
 const id = ref(0)
 // 新建一个头部数据对象
@@ -79,7 +87,7 @@ onMounted(async () => {
     id.value = route.params.dissid
     getData()
     isColLoading.value = true
-
+    loading.value = true
 })
 
 // 监听路由的参数，随时更新这个页面
@@ -110,6 +118,16 @@ watch(route, async (to, from) => {
     flex-direction: column;
     overflow-x: hidden;
     overflow-y: scroll;
+
+    .loading {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        // background-color: #7f9dff00;
+        // backdrop-filter: opacity(1);
+        // backdrop-filter: blur(1000px);
+        // z-index: 100;
+    }
 
     .head {
         box-sizing: border-box;

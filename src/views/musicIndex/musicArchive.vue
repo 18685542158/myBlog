@@ -8,7 +8,7 @@
 
 <script setup>
 import loading from '../../components/Loading.vue';
-import { ref, reactive } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
 import {
 
 
@@ -26,6 +26,12 @@ import {
     getTopDetail,
 
 
+    // 获取歌单分类
+    getCategory,
+    // 根据分类获取歌单
+    getReSongList,
+
+
     // 新mv
     getNewMV,
     // 新歌
@@ -41,6 +47,10 @@ const longQuery = reactive({
     pageSize: '20',
     period: '2023-05-10',
     time: ''
+})
+
+onMounted(() => {
+
 })
 
 </script>

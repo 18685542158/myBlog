@@ -618,6 +618,24 @@ app.get('/top', (req, res) => {
 
 
 
+
+// 以下是文档没有的，尝试通过其他接口获取需要的数据
+app.get('/recommend/playlist', (req, res) => {
+    qqMusic.api('/recommend/playlist', {
+        pageNo: req.query.pageNo,
+        pageSize: req.query.pageSize,
+        // 3317: 官方歌单，59：经典，71：情歌，3056：网络歌曲，64：KTV热歌
+        id: req.query.id
+    }).then(data => {
+        console.log('获取推荐歌曲成功');
+        res.json(data)
+    }).catch(err => {
+        console.log(err);
+        res.status(500).json({ error: '获取推荐歌曲失败' })
+    })
+})
+
+
 // 以下是关于后端对文件的操作=======================================
 
 // 创建一个 POST 路由来处理添加数据的请求

@@ -1,8 +1,13 @@
 <template>
     <div class="box" v-show="isLoading">
+        <transition name="loading" mode="out-in">
+            <div class="loading" v-show="!loading">
+                <lloading></lloading>
+            </div>
+        </transition>
         <div class="head">
             <div class="imgbox">
-                <img :src="songList.songListCover" alt="" @click="console.log(document.scrollTop)">
+                <img :src="songList.songListCover" alt="" @click="console.log(document.scrollTop)" @load="loading = true">
             </div>
             <div class="bgcImg">
                 <img :src="songList.songListCover" alt="">
@@ -44,10 +49,12 @@ import {
 } from '../../api/request';
 
 import list from '../../components/List.vue';
+import lloading from '../../components/Loading.vue';
 
 const route = useRoute()
 // 页面是否加载完毕
 const isLoading = ref(false)
+const loading = ref(false)
 // 获取歌单唯一标识
 const id = ref(0)
 // 新建作者数据
@@ -108,6 +115,16 @@ watch(route, async (to, from) => {
     flex-direction: column;
     overflow-x: hidden;
     overflow-y: scroll;
+
+    .loading {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        // background-color: #7f9dff00;
+        // backdrop-filter: opacity(1);
+        // backdrop-filter: blur(1000px);
+        // z-index: 100;
+    }
 
     .head {
         box-sizing: border-box;

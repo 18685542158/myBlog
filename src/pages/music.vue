@@ -569,6 +569,7 @@ const loadSong = async (songmid) => {
         })
     })
     await getSongDataInfo(songmid)
+    musicPlayer.setVolume(volume.value / 100)
     // 添加一个歌曲到播放列表
     addSongList(songData.name, songData.artist, songData.url, songData.cover, songData.lyc, songmid)
 }
@@ -793,7 +794,7 @@ const getvolume = (e) => {
 }
 const downSoundProgress = (e) => {
     const newTime = getvolume(e)
-    console.log(newTime);
+    // console.log(newTime);
     volume.value = newTime
     isVolumeMove.value = true
 }
@@ -874,8 +875,8 @@ watch(thedissid, async () => {
 
 // 监听音量的变化
 watch(volume, (newValue) => {
-    console.log('设置音量');
-    console.log(newValue);
+    // console.log('设置音量');
+    // console.log(newValue);
     musicPlayer.setVolume(newValue / 100)
 }, { immediate: true })
 
@@ -886,7 +887,6 @@ onMounted(async () => {
     router.push('/music')
     // 验证一下是否是登录状态
     getCookie().then((data) => {
-        console.log(data);
         if (Object.keys(data).length == 0) {
             console.log('啦啦啦，请输入cookie');
             hasCookie.value = false
