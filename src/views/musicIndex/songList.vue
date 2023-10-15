@@ -116,16 +116,6 @@ watch(route, async (to, from) => {
     overflow-x: hidden;
     overflow-y: scroll;
 
-    .loading {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        // background-color: #7f9dff00;
-        // backdrop-filter: opacity(1);
-        // backdrop-filter: blur(1000px);
-        // z-index: 100;
-    }
-
     .head {
         box-sizing: border-box;
         width: 98%;

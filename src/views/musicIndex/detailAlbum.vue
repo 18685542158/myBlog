@@ -1,5 +1,10 @@
 <template>
     <div class="box">
+        <transition name="loading" mode="out-in">
+            <div class="loading" v-show="loading">
+                <lloading></lloading>
+            </div>
+        </transition>
         <div class="head">
             <div class="img">
                 <img v-if="errImg" src="https://y.gtimg.cn/music/photo_new/T001R800x800M000002knSQ01Ts1vS_0.jpg" alt="">
@@ -58,6 +63,9 @@
         <div class="song" v-else-if="!loading && selItem == 1">
             <!-- <div style="width: 100%;height: 100%;overflow-y: scroll;" class="searchPage" @scroll="loadMoreData"> -->
             <list :songData="albumSongData" :NotClick="true"></list>
+            <div class="noData" v-if="albumSongData.length == 0">
+                <span>没有数据啊=-=</span>
+            </div>
             <!-- </div> -->
         </div>
     </div>
@@ -67,6 +75,7 @@
 import { ref, reactive, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
+import lloading from '../../components/Loading.vue';
 import list from '../../components/List.vue';
 
 import {
@@ -101,6 +110,14 @@ const getCover = () => {
     return str
 }
 
+const getSong = () => {
+    getAlbumSongs(AlbumData.value.mid).then((data) => {
+        albumSongData.value = data.list
+    }).catch(err => {
+        console.log(err);
+    })
+}
+
 // 创建一个方法，接收歌词内容，将歌词里面的\n转换为可渲染内容
 const lyricFormat = (content) => {
     const newContent = content.replace(/\n/g, '<br>')
@@ -109,15 +126,12 @@ const lyricFormat = (content) => {
 
 watch(route, (to, from) => {
     if (to.name == 'AlbumDetail') {
+        loading.value = true
         albummid.value = to.params.albummid
         getAlbumInfo(albummid.value).then((data) => {
             AlbumData.value = data
             loading.value = false
-        }).catch(err => {
-            console.log(err);
-        })
-        getAlbumSongs(albummid.value).then((data) => {
-            albumSongData.value = data.list
+            getSong()
         }).catch(err => {
             console.log(err);
         })
@@ -259,6 +273,18 @@ watch(route, (to, from) => {
     .song {
         width: 100%;
         height: 90%;
+
+        .noData {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            span {
+                font-size: 23px;
+            }
+        }
     }
 }
 </style>

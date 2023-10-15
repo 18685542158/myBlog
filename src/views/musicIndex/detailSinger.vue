@@ -1,5 +1,10 @@
 <template>
     <div class="box">
+        <transition name="loading" mode="out-in">
+            <div class="loading" v-show="loading">
+                <lloading></lloading>
+            </div>
+        </transition>
         <div class="head">
             <div class="img">
                 <img v-if="errImg" src="https://y.gtimg.cn/music/photo_new/T001R800x800M000002knSQ01Ts1vS_0.jpg" alt="">
@@ -62,7 +67,7 @@ import { debounce } from 'lodash';          // 防抖
 import list from '../../components/List.vue';
 import searchforalbum from '../../components/SearchForAlbum.vue';
 import searchformv from '../../components/SearchForMv.vue';
-// import lloading from '../../components/Loading.vue';
+import lloading from '../../components/Loading.vue';
 
 
 import {
@@ -174,6 +179,7 @@ const lyricFormat = (content) => {
 
 watch(route, (to, from) => {
     if (to.name == 'SingerDetail') {
+        loading.value = true
         singermid.value = to.params.singermid
         console.log('触发了跳转歌手');
         getSingerInfo(singermid.value).then((data) => {

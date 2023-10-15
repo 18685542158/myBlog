@@ -1,5 +1,10 @@
 <template>
     <div class="box" @mousemove="moveProgress" @mouseup="leaveProgress" @mouseleave="leaveProgress">
+        <transition name="loading" mode="out-in">
+            <div class="loading" v-show="loading">
+                <lloading></lloading>
+            </div>
+        </transition>
         <div class="mainLeft">
             <div class="head">
                 <video class="video" :src="urlsData[urlsData.length - 1]" @timeupdate="handleTimeUpdate" controls autoplay
@@ -58,6 +63,9 @@ import { ref, reactive, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 // import { videoPlayer } from '../../media/videoPlayer';
 import useStore from '../../store/index';
+
+import lloading from '../../components/Loading.vue';
+
 const useMusic = useStore();
 // 解构pinia里的方法
 const { addMV } = useMusic.music
@@ -214,6 +222,7 @@ const leaveProgress = () => {
 
 watch(route, (to, from) => {
     if (to.name == 'MvDetail') {
+        loading.value = true
         id.value = to.params.id
         // console.log('触发了跳转MV');
         getMvInfo(id.value).then((data) => {

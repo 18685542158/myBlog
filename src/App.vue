@@ -149,4 +149,14 @@
 .loading-leave-to {
   opacity: 0;
 }
+
+.loading {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  /* background-color: #7f9dff00;
+  backdrop-filter: opacity(1);
+  backdrop-filter: blur(1000px);
+  z-index: 100; */
+}
 </style>

@@ -1,5 +1,10 @@
 <template>
     <div class="box">
+        <transition name="loading" mode="out-in">
+            <div class="loading" v-show="loading">
+                <lloading></lloading>
+            </div>
+        </transition>
         <div class="head">
             <div class="img">
                 <img v-if="errImg" src="https://y.gtimg.cn/music/photo_new/T001R800x800M000002knSQ01Ts1vS_0.jpg" alt="">
@@ -84,6 +89,8 @@
 <script setup>
 import { ref, reactive, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
+import lloading from '../../components/Loading.vue';
+
 import {
     // 获取歌曲详情
     getSongDetail,
@@ -127,11 +134,24 @@ const selectArr = reactive([
 const editsel = (data) => {
     selectArr[2].mark = true
     selectArr[1].mark = true
+    selectArr[0].mark = true
     if (data.track_info.mv.id == 0) {
         selectArr[2].mark = false
+    } else {
+        getMvInfo(data.track_info.mv.vid).then((mdata) => {
+            mvData.value = mdata
+        }).catch(err => {
+            console.log(err);
+        })
     }
     if (data.track_info.album.id == 0) {
         selectArr[1].mark = false
+    } else {
+        getAlbumInfo(data.track_info.album.mid).then((adata) => {
+            albumData.value = adata
+        }).catch(err => {
+            console.log(err);
+        })
     }
 }
 const getImg = (mid) => {
@@ -162,19 +182,8 @@ watch(route, (to, from) => {
         getSongDetail(songmid.value).then((data) => {
             songData.value = data
             cover.value = getCover()
+            loading.value = false
             editsel(data)
-            getAlbumInfo(data.track_info.album.mid).then((adata) => {
-                albumData.value = adata
-            }).catch(err => {
-                console.log(err);
-            })
-
-            getMvInfo(data.track_info.mv.vid).then((mdata) => {
-                mvData.value = mdata
-                loading.value = false
-            }).catch(err => {
-                console.log(err);
-            })
         }).catch(err => {
             console.log(err);
             loading.value = false
