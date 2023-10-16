@@ -485,7 +485,8 @@ app.get('/new/songs', (req, res) => {
 // 新专辑推荐
 app.get('/new/album', (req, res) => {
     qqMusic.api('/new/album', {
-        type: req.query.type
+        type: req.query.type,
+        num: req.query.num,
     })
         .then((result) => {
             console.log('获取最新专辑');

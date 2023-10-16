@@ -246,7 +246,8 @@ export function getNewSong(type) {
 export function getNewAlbum(type) {
     return axios.get('/new/album', {
         params: {
-            type
+            type,
+            num: 10
         }
     })
 }

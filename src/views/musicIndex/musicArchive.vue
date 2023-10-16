@@ -112,7 +112,7 @@ import {
     // 根据分类获取歌单
     getReSongList,
 
-
+    // 获取最新MV   0: 最新 1：内地，2：港台，3：欧美，4：韩国，5：日本     type
     // 新mv
     getNewMV,
     // 新歌
@@ -166,6 +166,10 @@ onMounted(() => {
         console.log(data);
         bannerData.value = data
         loading.value = false
+    })
+
+    getNewAlbum(0).then((data) => {
+        console.log(data);
     })
 })
 
