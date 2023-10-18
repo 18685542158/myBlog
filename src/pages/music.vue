@@ -523,6 +523,7 @@ const getSongDataInfo = async (id) => {
 
 // 创建一个方法，作用是在页面刚加载的时候加载一首歌曲       ======================================
 const loadSong = async (songmid) => {
+    console.log(songmid);
     console.log('触发加载歌曲');
     // 如果出现本地缓存的歌曲，则使用缓存的歌曲信息
     const index = songURL.value.findIndex(item => item.songmid == songmid)
@@ -679,6 +680,7 @@ const nextSongSel = () => {
     console.log('触发下一首歌曲的选择');
     const index = songListData.value.findIndex(item => item.songmid == songmid.value)
     if (index == -1) {
+        console.log('这个search是什么');
         nextSongmid.value = searchSong.value
     } else {
         if (playModel.value == 'loop') {
@@ -869,8 +871,9 @@ watch(playModel, () => {
 // 监听目前播放歌单的变化
 watch(thedissid, async () => {
     console.log('触发歌单切换');
+    console.log(thedissid.value);
     await getData()
-    nextSongSel()
+    // nextSongSel()
 })
 
 // 监听音量的变化
@@ -909,8 +912,6 @@ onMounted(async () => {
     SongList(uin.value)
     // 获取当前播放器的所对应的歌单
     await getData()
-    // 根据播放模式决定下一首歌是什么
-    nextSongSel()
 })
 
 // 组件销毁的时候

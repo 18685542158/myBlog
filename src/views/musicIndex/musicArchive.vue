@@ -52,8 +52,8 @@
         </div>
 
         <div class="songList" v-else-if="selItem == 3">
-            <div class="ListBead">
-                
+            <div class="ListHead">
+
             </div>
             <div class="ListBody">
 
@@ -106,6 +106,9 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div class="info">
+                                            <span>{{ titem.name }}</span>
                                         </div>
                                     </div>
                                 </li>
@@ -248,6 +251,7 @@ const albumData = reactive({
 const getAlbumData = () => {
     getNewAlbum(1, 20).then((data) => {
         albumData.arr1 = data
+        console.log(data);
     })
     getNewAlbum(2, 20).then((data) => {
         albumData.arr2 = data
@@ -493,7 +497,15 @@ onMounted(async () => {
 
 
 
+    .songList{
+        .ListHead{
 
+        }
+
+        .ListBody{
+
+        }
+    }
 
     .album {
         .aaa {
@@ -519,8 +531,8 @@ onMounted(async () => {
             .songListBody {
                 margin-top: 2%;
                 width: 100%;
-                height: 300px;
-                padding-top: 2%;
+                // height: 300px;
+                padding: 2% 0;
                 overflow: hidden;
                 background-color: #ffffff63;
 
@@ -546,9 +558,9 @@ onMounted(async () => {
 
                             li {
                                 width: 20%;
-                                max-width: 50%;
+                                // max-width: 50%;
                                 margin: 0 2%;
-                                flex-grow: 1;
+                                // flex-grow: 1;
 
                                 .item {
                                     width: 100%;
@@ -557,6 +569,7 @@ onMounted(async () => {
                                     display: flex;
                                     padding: 2%;
                                     background-color: #958888;
+                                    flex-direction: column;
                                     // flex-direction: column;
 
                                     .img {
@@ -651,6 +664,15 @@ onMounted(async () => {
                                                     opacity: 0;
                                                 }
                                             }
+                                        }
+                                    }
+
+                                    .info{
+                                        margin-top: 2%;
+                                        span{
+                                            font-size: 17px;
+                                            line-height: 20px;
+                                            cursor: pointer;
                                         }
                                     }
 

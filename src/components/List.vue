@@ -23,7 +23,7 @@
                         @click="router.push({ name: 'AlbumDetail', params: { albummid: item.album.mid } })">
                         <span :title="item.albumname">{{ item.albumname }}</span>
                     </div>
-                    <div class="play" @click="playSong(item.songmid)">
+                    <div class="play" @click="playSong(item.songmid || item.mid)">
                         <div class="middle">
                             <div class="continue"></div>
                         </div>
@@ -56,7 +56,7 @@
                     <div class="songAlbum" v-else>
                         <span :title="item.albumname">{{ item.album.name }}</span>
                     </div>
-                    <div class="play" @click="playSong(item.songmid)">
+                    <div class="play" @click="playSong(item.songmid || item.mid)">
                         <div class="middle">
                             <div class="continue"></div>
                         </div>
@@ -128,25 +128,21 @@ const getSingerImg = (item) => {
 }
 
 
-// const playSong = (item) => {
-//     // 父组件方法的使用
-//     emits('play', item)
-// }
-
 // 播放
 const playSong = debounce(async (item) => {
-    console.log(songData.value);
+    // console.log(songData.value);
     if (isplay.value) {
         // 先把之前那个歌曲的暂停咯
         isplay.value = false
     }
     if (dissid.value != '' && thedissid.value != dissid.value) {
         console.log('变化歌单');
+        nextSongmid.value = item
         thedissid.value = dissid.value
     } else {
         searchSong.value = nextSongmid.value
+        nextSongmid.value = item
     }
-    nextSongmid.value = item
     toNext.value = true
 }, 500)
 
