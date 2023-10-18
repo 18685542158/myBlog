@@ -220,10 +220,13 @@ export function getCategory() {
 }
 
 // 根据分类获取歌单
-export function getReSongList(id) {
-    return axios.get('songlist/list', {
+export function getReSongList(obj) {
+    return axios.get('/songlist/list', {
         params: {
-            id
+            pageSize: obj.pageSize,
+            pageNo: obj.pageNo,
+            sort: obj.sort,
+            category: obj.category,
         }
     });
 }
@@ -243,11 +246,11 @@ export function getNewSong(type) {
 }
 
 // 获取最新专辑
-export function getNewAlbum(type) {
+export function getNewAlbum(type, num) {
     return axios.get('/new/album', {
         params: {
             type,
-            num: 10
+            num: num ? num : 10
         }
     })
 }
@@ -259,11 +262,6 @@ export function getNewMV(type) {
             type
         }
     })
-}
-
-// 获取全部的最新mv
-export function getAllMv() {
-    return axios.get('/new/mv/all')
 }
 
 // 获取mv分类

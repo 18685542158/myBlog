@@ -47,7 +47,7 @@
         </div>
         <div class="select">
             <ul>
-                <li v-for="(item, index) in selectArr" @click="search">
+                <li v-for="(item, index) in selectArr">
                     <div class="selItem" @click="selItem = index" :class="selItem == index ? 'active' : ''">
                         <span>{{ item.name }}</span>
                     </div>

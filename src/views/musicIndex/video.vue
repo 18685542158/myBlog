@@ -19,7 +19,7 @@
             <div class="seek" :style="`transform: translateX(${40 + selItem * 140}px); `"></div>
         </div>
         <div class="newMv" v-if="selItem == 0 && !loading">
-            <mvBanner :mvData="mvData[index]" v-for="(item, index) in mvData" :key="index"></mvBanner>
+            <mvBanner :mvData="value" v-for="(value, key, index) in mvData" :key="index"></mvBanner>
         </div>
         <div class="MvHub" v-else-if="selItem == 1 && !loading">
             <!-- 获取的分类数据传过去 -->
@@ -37,7 +37,6 @@ import { ref, reactive, onMounted } from 'vue';
 import {
     // 获取最新MV   0: 最新 1：内地，2：港台，3：欧美，4：韩国，5：日本     type
     getNewMV,
-    getAllMv,
 
     // 以下这俩可以结合组一个视频库
     // 获取mv分类
@@ -48,7 +47,15 @@ import {
 
 // 获取mv分类的数据
 const categoryData = ref({})
-const mvData = ref([])
+// const mvData = ref({})
+const mvData = reactive({
+    arr1: {},
+    arr2: {},
+    arr3: {},
+    arr4: {},
+    arr5: {},
+    arr6: {},
+})
 
 const loading = ref(true)
 const selItem = ref(0)
@@ -62,18 +69,42 @@ const selectArr = reactive([
 ])
 
 
+const getAllMvData = () => {
+    getNewMV(0).then(data => {
+        mvData.arr1 = data
+    })
+    getNewMV(1).then(data => {
+        mvData.arr2 = data
+    })
+    getNewMV(2).then(data => {
+        mvData.arr3 = data
+    })
+    getNewMV(3).then(data => {
+        mvData.arr4 = data
+    })
+    getNewMV(4).then(data => {
+        mvData.arr5 = data
+    })
+    getNewMV(5).then(data => {
+        mvData.arr6 = data
+    })
+}
+
 
 onMounted(() => {
-    getAllMv().then((data) => {
-        mvData.value = data
-        getMvCategory().then(d => {
-            categoryData.value = d
-        })
-        loading.value = false
-    }).catch(err => {
-        console.log(err);
+    getAllMvData()
+    getMvCategory().then(d => {
+        categoryData.value = d
         loading.value = false
     })
+    // getAllMv().then((data) => {
+    //     mvData.value = data
+    //     loading.value = false
+    //     console.log(mvData.value);
+    // }).catch(err => {
+    //     console.log(err);
+    //     loading.value = false
+    // })
 })
 
 </script>

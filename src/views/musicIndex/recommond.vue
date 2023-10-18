@@ -42,9 +42,10 @@
             <div class="body">
                 <div class="content"
                     :style="`width:${groupCount2}00%;transform: translateX(-${pageNo2 * (100 / groupCount2)}%);`">
-                    <div class="page" :style="`width:${100 / groupCount2}00%;`" v-for="(item, index) in groupedArray2 ">
+                    <div class="page" :style="`width:${100 / groupCount2}00%;`" v-for="(item, index) in groupedArray2 "
+                        :key="index">
                         <ul>
-                            <li v-for="(childItem, index) in item" :key="index">
+                            <li v-for="(childItem, cindex) in item" :key="cindex">
                                 <div class="item"
                                     @click="router.push({ name: 'SongColist', params: { dissid: childItem.content_id } })">
                                     <div class="img">
@@ -88,9 +89,10 @@
                 <div class="content"
                     :style="`width:${groupCount}00%;transform: translateX(-${pageNo * (100 / groupCount)}%);`">
                     <!-- 每页 -->
-                    <div class="page" :style="`width:${100 / groupCount}00%;`" v-for="(item, index) in groupedArray ">
+                    <div class="page" :style="`width:${100 / groupCount}00%;`" v-for="(item, index) in groupedArray "
+                        :key="index">
                         <ul>
-                            <li v-for="(childItem, index) in item" :key="index">
+                            <li v-for="(childItem, cindex) in item" :key="cindex">
                                 <div class="item"
                                     @click="router.push({ name: 'SongColist', params: { dissid: childItem.tid } })">
                                     <div class="img">
