@@ -382,6 +382,7 @@ const closeDetailShow = () => {
 // 聚焦时，搜索框占位文字消失
 const focusSearch = () => {
     isSearchKuang = true
+    QSearch()
     placeholder.value = ''
 }
 // 失去焦点时，搜索框占位文字出现

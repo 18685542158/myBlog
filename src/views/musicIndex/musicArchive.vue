@@ -11,7 +11,7 @@
         <div class="select">
             <ul>
                 <li v-for="(item, index) in selectArr">
-                    <div class="selItem" @click="selItem = index" :class="selItem == index ? 'active' : ''">
+                    <div class="selItem" :class="selItem == index ? 'active' : ''" @click="openSongListSel(index)">
                         <span>{{ item.name }}</span>
                     </div>
                 </li>
@@ -52,11 +52,42 @@
         </div>
 
         <div class="songList" v-else-if="selItem == 3">
-            <div class="ListHead">
-
+            <div class="sel" :class="{ 'openSel': openSel }">
+                <div class="item1" v-for="(item, index) in songListcategoryData" :key="index"
+                    :class="categoryDataSel == index ? 'categoryDataActive' : ''" @click="clickCategory(index)">
+                    <div class="outer">
+                        <span> {{ item.type }} </span>
+                    </div>
+                </div>
             </div>
-            <div class="ListBody">
-
+            <div class="ListHead">
+                <div class="level1">
+                    <div class="item2" v-for="(item, index) in songListcategoryData[categoryDataSel].list" :key="index"
+                        @click="selcategory(item)" :class="item.id == songListId ? 'active' : ''">
+                        <span> {{ item.name }} </span>
+                    </div>
+                </div>
+            </div>
+            <div class="ListBody searchPage" @scroll="getMoreData">
+                <ul>
+                    <li v-for="(item, index) in songListData" :key="index">
+                        <div class="item" @click="router.push({ name: 'SongColist', params: { dissid: item.dissid } })">
+                            <div class="img">
+                                <img :src="item.imgurl" alt="">
+                                <div class="cover">
+                                    <div class="btn">
+                                        <div class="middle">
+                                            <div class="continue"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="info">
+                                <span>{{ item.dissname }}</span>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
             </div>
         </div>
 
@@ -135,6 +166,7 @@
 import lloading from '../../components/Loading.vue';
 import { ref, reactive, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+import { debounce } from 'lodash';          // 防抖
 const router = useRouter()
 import {
     // 专辑轮播图
@@ -210,18 +242,76 @@ const pageNo = ref(0)
 
 
 
+
+
+
+
+
+
+
 // 以下是歌单区域
 // 获取歌单分类
+// 默认选择的第一个类
+const categoryDataSel = ref(0)
+const openSel = ref(true)
 const songListcategoryData = ref([])
+const songListData = ref([])
+const songListId = ref('10000000')
+const songListNum = ref(1)
 const songListcategoryDataQuery = reactive({
     pageSize: 20,
-    pageNo: 1,
+    pageNo: songListNum,
     sort: 5,         // 5是推荐，2是最新
-    category: '10000000',   // 默认10000000是全部
+    category: songListId,   // 默认10000000是全部
 })
+const clickCategory = (index) => {
+    categoryDataSel.value = index
+    setTimeout(() => {
+        openSel.value = false
+    }, 300)
+}
+const openSongListSel = (index) => {
+    selItem.value = index
+    if (index == 3) {
+        if (openSel.value == false) {
+            openSel.value = true
+        } else {
+            openSel.value = false
+        }
+    } else {
+        openSel.value = true
+    }
+}
+const selcategory = (item) => {
+    console.log(item);
+    songListId.value = item.id
+    songListNum.value = 1
+    const page = document.querySelector('.searchPage')
+    page.scrollTop = 0
+    // 还要获取数据
+    getReSongList(songListcategoryDataQuery).then(d => {
+        console.log(d);
+        songListData.value = d.list
+    })
+}
 
-
-
+// 获取更多数据
+//获取更多数据
+const getMoreData = debounce((e) => {
+    console.log('滑动');
+    const page = document.querySelector('.searchPage')
+    if (Math.floor(page.scrollHeight - page.scrollTop) <= page.clientHeight + 1) {
+        loading.value = true
+        console.log('到底');
+        songListNum.value++
+        console.log('21321321');
+        getReSongList(songListcategoryDataQuery).then(d => {
+            console.log(d);
+            songListData.value = [...songListData.value, ...d.list]
+            loading.value = false
+        })
+    }
+}, 300)
 
 
 // 以下是专辑区域
@@ -287,18 +377,26 @@ const cutAlbumData = (array) => {
 }
 
 onMounted(async () => {
+    // 获取专辑轮播图
     getBanner().then((data) => {
         // console.log(data);
         bannerData.value = data
         loading.value = false
     })
+    // 获取专辑的六个分类
     getAlbumData()
+    // 获取歌单的分类
     getCategory().then(data => {
-        console.log(data);
+        songListcategoryData.value = data
     })
+    // 根据歌单分类获取歌单
     getReSongList(songListcategoryDataQuery).then(d => {
-        console.log(d);
+        songListData.value = d.list
     })
+
+
+
+
 })
 
 </script>
@@ -465,6 +563,7 @@ onMounted(async () => {
 
                     span {
                         font-size: 19px;
+                        user-select: none;
                     }
                 }
 
@@ -493,17 +592,265 @@ onMounted(async () => {
         }
     }
 
+    .songList {
+        width: 100%;
 
+        .sel {
+            position: absolute;
+            transition: 0.3s;
+            width: 65%;
+            height: 0%;
+            z-index: 0;
+            background-color: #fff;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-radius: 0 0 5px 0;
+            box-shadow: 1px 1px 2px 1px rgba(0, 0, 0, 0.538);
+            box-sizing: border-box;
 
+            .item1 {
+                transition: 0.3s;
+                opacity: 0;
+                flex: 1;
+                height: 80%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                cursor: pointer;
+                box-sizing: border-box;
 
+                &:not(:last-child) {
+                    border-right: 2px solid #333;
+                }
 
-    .songList{
-        .ListHead{
+                &:hover {
+                    .outer {
+                        box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.43);
+                    }
+                }
+
+                .outer {
+                    transition: 0.4s;
+                    width: 70%;
+                    height: 80%;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    border-radius: 5px;
+
+                    span {
+                        font-size: 19px;
+                    }
+                }
+            }
+
+            .categoryDataActive {
+                .outer {
+                    background-color: #bdbbff6e;
+                    box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.43);
+                }
+            }
+        }
+
+        .openSel {
+            width: 65%;
+            height: 60px;
+            z-index: 99;
+
+            .item1 {
+                opacity: 1;
+            }
+        }
+
+        .ListHead {
+            width: 100%;
+            position: relative;
+
+            .level1 {
+                z-index: -1;
+                width: 100%;
+                height: 20%;
+                background-color: #ffffff71;
+                display: flex;
+                box-sizing: border-box;
+                flex-wrap: wrap;
+                overflow-y: scroll;
+
+                .item2 {
+                    width: 7%;
+                    aspect-ratio: 3/1;
+                    background-color: #ffffff86;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    margin: 1%;
+                    box-sizing: border-box;
+                    cursor: pointer;
+                    box-shadow: 1px 1px 2px 1px rgba(0, 0, 0, 0.329);
+                    border-radius: 5px;
+
+                    &:active {
+                        transform: translateX(2px);
+                        transform: translateY(1px);
+                    }
+
+                    span {
+                        font-size: 1.19rem;
+                    }
+                }
+
+                .active {}
+            }
+
 
         }
 
-        .ListBody{
+        .ListBody {
+            width: 100%;
+            height: 50vh;
+            overflow-y: scroll;
 
+            ul {
+                margin-top: 2%;
+                width: 100%;
+                height: 100%;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: flex-start;
+                align-items: flex-start;
+
+                li {
+                    width: 20%;
+                    max-width: 50%;
+                    margin: 0 2%;
+                    flex-grow: 1;
+
+                    .item {
+                        width: 100%;
+                        aspect-ratio: 7/8;
+                        box-sizing: border-box;
+                        display: flex;
+                        padding: 4%;
+                        background-color: #95888862;
+                        flex-direction: column;
+
+                        .img {
+                            width: 100%;
+                            height: auto;
+                            position: relative;
+                            border-radius: 5px;
+                            // overflow: hidden;
+                            // background-color: #000000;
+
+                            img {
+                                transition: 0.3s;
+                                width: 100%;
+                            }
+
+                            .cover {
+                                transition: 0.3s;
+                                position: absolute;
+                                width: 100%;
+                                height: 100%;
+                                top: 0;
+                                z-index: 99;
+                                cursor: pointer;
+
+                                .btn {
+                                    transition: 0.3s;
+                                    position: inherit;
+                                    cursor: pointer;
+                                    right: 20px;
+                                    bottom: 10px;
+                                    opacity: 0;
+
+                                    .middle {
+                                        width: 40px;
+                                        height: 40px;
+                                        box-shadow: inset 0px 0px 2px 2px #c1c1c1;
+                                        border-radius: 50%;
+                                        display: flex;
+                                        justify-content: center;
+                                        align-items: center;
+
+                                        .continue {
+                                            transition-duration: 0.3s;
+                                            width: 0;
+                                            height: 0;
+                                            border-top: 12px solid transparent;
+                                            border-bottom: 12px solid transparent;
+                                            border-left: 20px solid #cecece;
+                                            display: inline-block;
+                                            margin-left: 5px;
+                                        }
+
+                                        &:hover {
+                                            box-shadow: inset 0px 0px 2px 2px #ffffff;
+
+                                            .continue {
+                                                transition: 0s;
+                                                border-left: 20px solid #ffffff;
+
+                                            }
+                                        }
+                                    }
+                                }
+
+                                .playCount {
+                                    transition: 0.3s;
+                                    padding: 0 20px;
+                                    // width: 100px;
+                                    height: 20px;
+                                    background-color: #bdcdfdc0;
+                                    position: inherit;
+                                    cursor: pointer;
+                                    border-radius: 0 0 5px 0;
+                                    display: flex;
+                                    justify-content: center;
+                                    align-items: center;
+
+                                    span {
+                                        color: #ffffff
+                                    }
+                                }
+
+                                &:hover {
+                                    transition: 0.3s;
+                                    background-color: #271e1e85;
+
+                                    .btn {
+                                        opacity: 1;
+                                    }
+
+                                    .playCount {
+                                        opacity: 0;
+                                    }
+                                }
+                            }
+                        }
+
+                        .info {
+                            margin-top: 2%;
+                            flex: 1;
+                            cursor: pointer;
+                        }
+
+                        &:hover {
+
+                            .img {
+                                img {
+                                    transform: translateY(-10px);
+                                }
+
+                                .cover {
+                                    transform: translateY(-10px);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -667,9 +1014,10 @@ onMounted(async () => {
                                         }
                                     }
 
-                                    .info{
+                                    .info {
                                         margin-top: 2%;
-                                        span{
+
+                                        span {
                                             font-size: 17px;
                                             line-height: 20px;
                                             cursor: pointer;

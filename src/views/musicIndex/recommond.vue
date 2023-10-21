@@ -566,6 +566,7 @@ onMounted(() => {
                                 .info {
                                     margin-top: 2%;
                                     flex: 1;
+                                    cursor: pointer;
                                 }
 
                                 &:hover {

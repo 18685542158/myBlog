@@ -143,7 +143,7 @@ const getData = async () => {
 //获取更多数据
 const loadMoreData = debounce((e) => {
     const page = document.querySelector('.searchPage')
-    if (Math.floor(page.scrollHeight - page.scrollTop) <= page.clientHeight) {
+    if (Math.floor(page.scrollHeight - page.scrollTop) <= page.clientHeight + 1) {
         isLoading.value = true
         console.log('到底');
         pageNum.value++
