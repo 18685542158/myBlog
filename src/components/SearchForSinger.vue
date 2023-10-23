@@ -21,7 +21,7 @@
         <div class="body" v-if="!loading">
             <ul>
                 <li v-for="(item, index) in singerData" :key="index">
-                    <div class="item" v-if="index != 0">
+                    <div class="item">
                         <div class="img">
                             <img :src="item.singerPic" alt="">
                         </div>
@@ -148,25 +148,25 @@ watch(singerData, (newValue) => {
         // flex: 1;
 
         ul {
-            display: flex;
-            flex-wrap: wrap;
-
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 
             .item {
-                margin: 20px;
-                width: 170px;
-                height: 200px;
+                margin: 8%;
+                // width: 170px;
+                aspect-ratio: 6/7;
                 display: flex;
                 flex-direction: column;
                 justify-content: space-evenly;
                 align-items: center;
                 background-color: #ffffff48;
                 box-sizing: border-box;
-                // .img{
-                //     img{
-
-                //     }
-                // }
+                .img{
+                    width: 90%;
+                    img{
+                        width: 100%;
+                    }
+                }
 
                 .info {
                     span {

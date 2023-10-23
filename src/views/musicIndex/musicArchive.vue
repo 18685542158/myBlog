@@ -48,7 +48,33 @@
         </div>
 
         <div class="singer" v-else-if="selItem == 2">
-            3
+            <div class="open" @click="singerOpen = !singerOpen">
+                <span v-if="singerOpen">展开</span>
+                <span v-else>关闭</span>
+            </div>
+            <div class="singerHead" :class="{ 'active': singerOpen }">
+                <div class="item" v-for="(value, key, index) in singerCategoryData" :key="index">
+                    <div class="row" v-for="(item, Cindex) in value" :key="Cindex" @click="selSingerClick(key, Cindex)"
+                        :class="selObj[key] == Cindex ? 'active' : ''">
+                        <span>{{ item.name }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="singerBody" @scroll="getMoreSingerData">
+                <ul>
+                    <li v-for="(item, index) in singerData" :key="index">
+                        <div class="item">
+                            <div class="img">
+                                <img :src="item.singer_pic" alt="">
+                            </div>
+                            <div class="info"
+                                @click="router.push({ name: 'SingerDetail', params: { singermid: item.singer_mid } })">
+                                <span>{{ item.singer_name }}</span>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
         </div>
 
         <div class="songList" v-else-if="selItem == 3">
@@ -164,7 +190,7 @@
 
 <script setup>
 import lloading from '../../components/Loading.vue';
-import { ref, reactive, onMounted } from 'vue';
+import { ref, reactive, onMounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { debounce } from 'lodash';          // 防抖
 const router = useRouter()
@@ -237,6 +263,7 @@ const pageNo = ref(0)
 
 
 
+// 以下是排行榜区域
 
 
 
@@ -244,6 +271,62 @@ const pageNo = ref(0)
 
 
 
+
+
+// 以下是歌手区域
+// 创建一个歌手数组
+const singerCategoryData = ref([])
+// 创建一个对象，用于保存上方选择项的selItem
+const selObj = ref({})
+// 创建一个展开按钮
+const singerOpen = ref(false)
+// 创建一个对象，用于存储歌手数据
+const singerData = ref([])
+
+// 创建一个对象，用于保存搜索的数据
+const singerQuery = ref({
+    area: -100,
+    genre: -100,
+    index: -100,
+    sex: -100,
+    pageNo: 1
+})
+// 创建一个方法，用于切换菜单
+const selSingerClick = (key, index) => {
+    selObj.value[key] = index
+    singerQuery.value[key] = singerCategoryData.value[key][index].id
+    singerQuery.value.pageNo = 1
+    const page = document.querySelector('.singerBody')
+    page.scrollTop = 0
+    // 估计顺便执行一下方法
+    getSinger(singerQuery.value).then((data) => {
+        singerData.value = data.list
+    })
+}
+// 创建一个方法，获取更多歌手
+const getMoreSingerData = debounce((e) => {
+    const page = document.querySelector('.singerBody')
+    if (Math.floor(page.scrollHeight - page.scrollTop) <= page.clientHeight + 1) {
+        loading.value = true
+        singerQuery.value.pageNo++
+        getSinger(singerQuery.value).then(data => {
+            singerData.value = [...singerData.value, ...data.list]
+            loading.value = false
+        })
+    }
+}, 300)
+
+watch(singerCategoryData, () => {
+    for (let key in singerCategoryData.value) {
+        if (singerCategoryData.value.hasOwnProperty(key)) {
+            selObj.value[key] = 0;
+            singerQuery.value[key] = singerCategoryData.value[key][0].id
+        }
+    }
+    getSinger(singerQuery.value).then((data) => {
+        singerData.value = data.list
+    })
+}, { immediate: true })
 
 
 
@@ -298,15 +381,11 @@ const selcategory = (item) => {
 // 获取更多数据
 //获取更多数据
 const getMoreData = debounce((e) => {
-    console.log('滑动');
     const page = document.querySelector('.searchPage')
     if (Math.floor(page.scrollHeight - page.scrollTop) <= page.clientHeight + 1) {
         loading.value = true
-        console.log('到底');
         songListNum.value++
-        console.log('21321321');
         getReSongList(songListcategoryDataQuery).then(d => {
-            console.log(d);
             songListData.value = [...songListData.value, ...d.list]
             loading.value = false
         })
@@ -341,7 +420,6 @@ const albumData = reactive({
 const getAlbumData = () => {
     getNewAlbum(1, 20).then((data) => {
         albumData.arr1 = data
-        console.log(data);
     })
     getNewAlbum(2, 20).then((data) => {
         albumData.arr2 = data
@@ -394,6 +472,20 @@ onMounted(async () => {
         songListData.value = d.list
     })
 
+    // 获取歌手分类
+    getSingerCategory().then((data) => {
+        singerCategoryData.value = data
+    })
+
+
+    // 获取排行榜编号
+    getTop().then((data) => {
+        console.log(data);
+    })
+
+    // getTopDetail().then((data)=>{
+    //     console.log(data);
+    // })
 
 
 
@@ -592,8 +684,145 @@ onMounted(async () => {
         }
     }
 
+    .rank {
+        width: 100%;
+        flex: 1;
+        overflow: scroll;
+    }
+
+
+
+    .singer {
+        width: 100%;
+        position: relative;
+        // flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow-y: scroll;
+
+        .open {
+            position: absolute;
+            right: 5%;
+            top: 2%;
+            z-index: 99;
+
+            span {
+                cursor: pointer;
+                color: #ffffffb4;
+
+                &:hover {
+                    color: #fff;
+                }
+            }
+        }
+
+        .singerHead {
+            position: relative;
+            transition: 0.3s;
+            width: 100%;
+            overflow: hidden;
+            padding-bottom: 1%;
+            // height: auto;
+
+            .item {
+                width: 100%;
+                display: flex;
+                flex-wrap: wrap;
+
+                .row {
+                    transition: 0.1s;
+                    width: 60px;
+                    height: 30px;
+                    background-color: #9999994f;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    border-radius: 30px;
+                    margin-left: 2%;
+                    cursor: pointer;
+                    color: antiquewhite;
+                    margin-top: 2%;
+
+                    &:hover {
+                        background-color: #9999998b;
+                        color: #ffffff;
+                    }
+                }
+
+                .active {
+                    background-color: #ffffffe7;
+                    color: #333;
+
+                    &:hover {
+                        background-color: #ffffffe7;
+                        color: #333;
+                    }
+                }
+
+            }
+
+        }
+
+        .active {
+            transition: 0.3s;
+            height: 10%;
+        }
+
+        .singerBody {
+            width: 100%;
+            flex: 1;
+            height: calc(100vh - 120px);
+            overflow-y: scroll;
+
+            ul {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+
+                .item {
+                    margin: 8%;
+                    // width: 170px;
+                    aspect-ratio: 3/4;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-evenly;
+                    align-items: center;
+                    background-color: #ffffff48;
+                    box-sizing: border-box;
+
+                    .img {
+                        margin-top: 4%;
+                        width: 90%;
+                        cursor: pointer;
+
+                        img {
+                            width: 100%;
+                        }
+                    }
+
+                    .info {
+                        margin: 3%;
+
+                        span {
+                            // display: inline-block;
+                            max-width: 100%;
+                            // text-overflow: ellipsis;
+                            // white-space: nowrap;
+                            // overflow: hidden;
+                            cursor: pointer;
+                            text-align: center;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+
+
     .songList {
         width: 100%;
+        flex: 1;
 
         .sel {
             position: absolute;
@@ -855,6 +1084,10 @@ onMounted(async () => {
     }
 
     .album {
+        flex: 1;
+        overflow-y: scroll;
+        overflow-x: hidden;
+
         .aaa {
             @extend %albumBanner-style
         }

@@ -36,17 +36,19 @@ export function getSingerInfo(singermid) {
 
 // 获取歌手分类
 export function getSingerCategory() {
-    return axios.get('/songlist/category')
+    return axios.get('/singer/category')
 }
 
 // 根据歌手分类获取歌手列表
 export function getSinger(obj) {
     return axios.get('/singer/list', {
-        area: obj.area,
-        genre: obj.genre,
-        index: obj.index,
-        sex: obj.sex,
-        pageNo: obj.pageNo,
+        params: {
+            area: obj.area,
+            genre: obj.genre,
+            index: obj.index,
+            sex: obj.sex,
+            pageNo: obj.pageNo,
+        }
     })
 }
 

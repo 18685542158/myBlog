@@ -126,7 +126,7 @@ const search = () => {
         num.value = 10
         page.value = 1
         getSingerAlbum(singermid.value, num.value, page).then((data) => {
-            console.log(data);
+            // console.log(data);
             albumData.value = data.list
         })
     } else if (selItem.value == 3) {
@@ -183,7 +183,7 @@ watch(route, (to, from) => {
         singermid.value = to.params.singermid
         console.log('触发了跳转歌手');
         getSingerInfo(singermid.value).then((data) => {
-            console.log(data);
+            // console.log(data);
             singerData.value = data
             loading.value = false
         }).catch(err => {
