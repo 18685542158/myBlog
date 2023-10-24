@@ -44,7 +44,34 @@
         </div>
 
         <div class="rank" v-else-if="selItem == 1">
-            2
+            <!-- <div class="content"> -->
+            <div class="outer" v-for="(item, index) in topData" :key="index">
+                <!-- <div class="item"> -->
+                <div class="head">
+                    <span>{{ item.title }}</span>
+                </div>
+                <div class="body">
+                    <div class="inner" v-for="(childItem, childIndex) in item.list" :key="childIndex">
+                        <div class="img">
+                            <img :src="childItem.picUrl" alt="">
+                        </div>
+                        <div class="info">
+                            <div class="top">
+                                <span>{{ childItem.label }}</span>
+                            </div>
+                            <div class="bottom">
+                                <div class="songInfo" v-for="(thrItem, thrIndex) in childItem.song" :key="thrIndex">
+                                    <span>
+                                        {{ thrItem.rank }}-{{ thrItem.title }}-{{ thrItem.singerName }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- </div> -->
+            </div>
+            <!-- </div> -->
         </div>
 
         <div class="singer" v-else-if="selItem == 2">
@@ -224,14 +251,7 @@ import {
     getNewAlbum,
 } from '../../api/request';
 
-// 大概是进行排行榜的搜索
-// 下面参数的来源是getTop
-const longQuery = reactive({
-    id: '4',
-    pageSize: '20',
-    period: '2023-05-10',
-    time: ''
-})
+
 
 
 const loading = ref(false)
@@ -264,7 +284,16 @@ const pageNo = ref(0)
 
 
 // 以下是排行榜区域
-
+// 大概是进行排行榜的搜索
+// 下面参数的来源是getTop
+const longQuery = reactive({
+    id: '62',
+    pageSize: '20',
+    period: '',
+    time: ''
+})
+// 创建一个排行信息数据
+const topData = ref([])
 
 
 
@@ -279,7 +308,7 @@ const singerCategoryData = ref([])
 // 创建一个对象，用于保存上方选择项的selItem
 const selObj = ref({})
 // 创建一个展开按钮
-const singerOpen = ref(false)
+const singerOpen = ref(true)
 // 创建一个对象，用于存储歌手数据
 const singerData = ref([])
 
@@ -479,13 +508,14 @@ onMounted(async () => {
 
 
     // 获取排行榜编号
-    getTop().then((data) => {
+    getTop(1).then((data) => {
         console.log(data);
+        topData.value = data
     })
 
-    // getTopDetail().then((data)=>{
-    //     console.log(data);
-    // })
+    getTopDetail(longQuery).then((data) => {
+        console.log(data);
+    })
 
 
 
@@ -500,6 +530,7 @@ onMounted(async () => {
     width: 100%;
     display: flex;
     justify-content: space-between;
+    height: 80%;
 
     .left {
         flex: 1;
@@ -687,7 +718,56 @@ onMounted(async () => {
     .rank {
         width: 100%;
         flex: 1;
-        overflow: scroll;
+        overflow-y: scroll;
+
+        .outer {
+            width: 100%;
+            margin-bottom: 5%;
+            display: flex;
+            flex-direction: column;
+
+            .head {
+                width: 100%;
+
+                span {
+                    font-size: 30px;
+                }
+            }
+
+            .body {
+                width: 100%;
+                // aspect-ratio: 1/1;
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 30px;
+                grid-template-rows: repeat();
+                padding: 2%;
+                box-sizing: border-box;
+
+                .inner {
+                    width: 100%;
+                    background-color: #fff;
+                    aspect-ratio: 2/1;
+                    display: flex;
+                    .img {
+                        width: 50%;
+                        height: 100%;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        overflow: hidden;
+                        img{
+                            width: 100%;
+                        }
+                    }
+                }
+                .info{
+                    span{
+                        display: none;
+                    }
+                }
+            }
+        }
     }
 
 
@@ -816,9 +896,6 @@ onMounted(async () => {
             }
         }
     }
-
-
-
 
     .songList {
         width: 100%;
@@ -952,7 +1029,7 @@ onMounted(async () => {
                 li {
                     width: 20%;
                     max-width: 50%;
-                    margin: 0 2%;
+                    margin: 2%;
                     flex-grow: 1;
 
                     .item {

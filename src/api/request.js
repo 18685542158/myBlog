@@ -288,8 +288,12 @@ export function getMV(obj) {
 }
 
 // 获取榜单列表 showDetail是否显示前三歌曲简单信息和榜单介绍，0，不显示，1 显示，默认 0
-export function getTop() {
-    return axios.get('/top/category')
+export function getTop(showDetail) {
+    return axios.get('/top/category',{
+        params:{
+            showDetail
+        }
+    })
 }
 
 // 获取榜单详情
