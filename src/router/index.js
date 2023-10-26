@@ -136,6 +136,11 @@ const router = createRouter({
                     path: 'mvDetail/:id',
                     name: 'MvDetail',
                     component: () => import('../views/musicIndex/detailMv.vue')
+                },
+                {
+                    path: 'rankList/:id',
+                    name: 'RankList',
+                    component: () => import('../views/musicIndex/rankList.vue')
                 }
             ]
         }

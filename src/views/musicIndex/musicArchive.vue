@@ -52,7 +52,7 @@
                 </div>
                 <div class="body">
                     <div class="inner" v-for="(childItem, childIndex) in item.list" :key="childIndex">
-                        <div class="img">
+                        <div class="img" @click="router.push({ name: 'RankList', params: { id: childItem.topId } })">
                             <img :src="childItem.picUrl" alt="">
                         </div>
                         <div class="info">
@@ -62,7 +62,7 @@
                             <div class="bottom">
                                 <div class="songInfo" v-for="(thrItem, thrIndex) in childItem.song" :key="thrIndex">
                                     <span>
-                                        {{ thrItem.rank }}-{{ thrItem.title }}-{{ thrItem.singerName }}
+                                        {{ thrItem.rank }} {{ thrItem.title }} {{ thrItem.singerName }}
                                     </span>
                                 </div>
                             </div>
@@ -746,9 +746,9 @@ onMounted(async () => {
 
                 .inner {
                     width: 100%;
-                    background-color: #fff;
                     aspect-ratio: 2/1;
                     display: flex;
+
                     .img {
                         width: 50%;
                         height: 100%;
@@ -756,14 +756,70 @@ onMounted(async () => {
                         justify-content: center;
                         align-items: center;
                         overflow: hidden;
-                        img{
+                        cursor: pointer;
+
+                        img {
                             width: 100%;
                         }
                     }
-                }
-                .info{
-                    span{
-                        display: none;
+
+                    .info {
+                        flex: 1;
+                        background-color: #ffffff72;
+                        margin-left: 0;
+
+                        .top {
+                            width: 100%;
+                            height: 30%;
+                            display: flex;
+                            align-items: center;
+                            border-bottom: 1px solid black;
+                            padding: 2%;
+                            box-sizing: border-box;
+                            position: relative;
+
+                            span {
+                                font-size: 24px;
+                                cursor: pointer;
+                                position: absolute;
+                                cursor: pointer;
+                                white-space: nowrap;
+                                /*保证内容在一行显示*/
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                                max-width: 100%;
+                                display: inline-block;
+                            }
+                        }
+
+                        .bottom {
+                            width: 100%;
+                            height: 70%;
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: space-evenly;
+                            margin-left: 2%;
+
+                            .songInfo {
+                                width: 100%;
+                                position: relative;
+                                padding: 2%;
+                                box-sizing: border-box;
+
+                                span {
+                                    position: absolute;
+                                    cursor: pointer;
+                                    white-space: nowrap;
+                                    /*保证内容在一行显示*/
+                                    overflow: hidden;
+                                    text-overflow: ellipsis;
+                                    max-width: 90%;
+                                    display: inline-block;
+                                    font-size: 14px;
+                                }
+                            }
+
+                        }
                     }
                 }
             }
@@ -819,6 +875,7 @@ onMounted(async () => {
                     align-items: center;
                     border-radius: 30px;
                     margin-left: 2%;
+                    font-size: 14px;
                     cursor: pointer;
                     color: antiquewhite;
                     margin-top: 2%;
