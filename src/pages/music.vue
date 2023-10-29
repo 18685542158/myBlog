@@ -1,15 +1,6 @@
 <template>
     <!-- 背景 -->
     <Snow id="snow"></Snow>
-    <div class="btn" style="width: 50px;
-    height: 20px; background-color: #e28686;border-radius: 0 0 10px 0;cursor: pointer;position: fixed;top:30px;"
-        @click="fanhui">返回</div>
-    <div class="btn" style="width: 50px;
-    height: 20px; background-color: #e28686;border-radius: 0 0 10px 0;cursor: pointer;position: fixed;top:60px;"
-        @click="text1">测试一</div>
-    <div class="btn" style="width: 50px;
-    height: 20px; background-color: #e28686;border-radius: 0 0 10px 0;cursor: pointer;position: fixed;top:90px;"
-        @click="text2">测试二</div>
 
     <!-- 设置cookie -->
     <transition name="fade" mode="out-in">
@@ -439,54 +430,6 @@ const hidden = () => {
 const toQQmusic = () => {
     // window.location.href('https://y.qq.com/')
     window.open('https://y.qq.com/', '_blank');
-}
-// 测试
-const fanhui = () => {
-    // router.push('/home')
-    // console.log(hisSearch.value);
-    // console.log(songURL.value);
-    // console.log(useMusic.music.songPlayList);
-    // console.log(hisList);
-    // console.log('hisIndex:' + hisIndex);
-    console.log(songmid.value);
-    console.log(nextSongmid.value);
-    // console.log(thedissid.value);
-    console.log('=============');
-}
-
-const text1 = () => {
-    console.log('我点了');
-}
-
-const text2 = async () => {
-    // 日推
-    // const li = await getRecommond()
-    // 获取歌单分类
-    // const li=await getCategory()
-    // 根据分类获取歌单
-    // const li=await getReSongList(39)
-    // 轮播图           目测没什么用，可能会删除
-    // const li=await getBanner()
-    // 获取我创建的歌单
-    const li = await getSongList(1538518479)
-    // 获取我歌单里面的歌曲（不包括我收藏的歌单）
-    // const li=await getSongMap(14)
-    // 根据歌单里面的dissid来查询歌单
-    // const li=await getSongListDel(2624033848)
-    // 获取最新歌曲
-    // const li=await getNewSong(0)
-    // 获取最新专辑
-    // const li=await getNewAlbum(0)
-    // 获取最新MV
-    // const li=await getNewMV(0)
-
-    // 搜索（大概率用不了）
-    // const li = await search('夜空中最亮的星')
-    // 查看用户cookie
-    // const li = await getCookie()
-    // const li = await getUserDetail(1538518479)
-    console.log('结束');
-    console.log(li);
 }
 
 // 之前的音乐播放器控制逻辑

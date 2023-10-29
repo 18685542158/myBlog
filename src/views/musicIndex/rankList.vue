@@ -23,21 +23,30 @@
             <div class="item" v-for="(item, index) in songData" :key="index">
                 <div class="rank">
                     <span>{{ index + 1 }}</span>
-                    <span>{{ mapRank(item.rankType) }}</span>
+                    <span v-if="item.rankValue">{{ mapRank(item.rankType) }}：{{ item.rankValue }}</span>
                 </div>
-                <div class="img">
+                <div class="img" @click="router.push({ name: 'SongDetail', params: { songmid: item.mid } })">
                     <img :src="getCover(item)" alt="">
                 </div>
-                <div class="songName">
+                <div class="songName" @click="router.push({ name: 'SongDetail', params: { songmid: item.mid } })">
                     <span>{{ item.name }}</span>
                 </div>
-                <div class="singerName">
+                <!-- <div class="singerName" @click="router.push({ name: 'SingerDetail', params: { singermid: item.mid } })">
                     <span>{{ item.singerName }}</span>
+                </div> -->
+                <div class="singerName">
+                    <span v-for="(childItem, childIndex) in item.singer" :key="childIndex"
+                        @click="router.push({ name: 'SingerDetail', params: { singermid: childItem.mid } })">
+                        {{ childIndex != 0 ? '/' : '' }}{{ childItem.name }}
+                    </span>
                 </div>
                 <div class="time">
                     <span>{{ timeFormat(item.interval) }}</span>
                 </div>
             </div>
+        </div>
+        <div class="noData" v-if="noData">
+            <h1 style="cursor: pointer;margin-left: 2%;font-size: 24px;">没有数据啊！！！</h1>
         </div>
     </div>
 </template>
@@ -47,6 +56,8 @@ import { ref, reactive, onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import useStore from '../../store/index';
 import { storeToRefs } from "pinia"
+import { useRouter } from 'vue-router';
+const router = useRouter()
 const useMusic = useStore()
 const { uin, songmid, nextSongmid, thedissid } = storeToRefs(useMusic.music)
 const { isplay, toNext } = storeToRefs(useMusic.musicPlay)
@@ -63,7 +74,8 @@ import {
 
 import lloading from '../../components/Loading.vue';
 
-
+// 是否有数据
+const noData = ref(false)
 const route = useRoute()
 // 页面是否加载完毕
 const isColLoading = ref(false)
@@ -126,22 +138,34 @@ const timeFormat = (time) => {
 
 // 创建一个搜索
 const longQuery = reactive({
-    id: '62',
+    id,
     pageSize: '20',
     period: '',
     time: ''
 })
 
 // 创建一个方法用于判断排名
-const mapRank=(type)=>{
-    return type
+const mapRank = (type) => {
+    const obj = {
+        '0': '',
+        '1': '上升',
+        '2': '减少',
+        '3': '持平',
+        '4': '新歌',
+        '6': '上升百分比',
+    }
+    return obj[type]
 }
 
 
 // 这个歌单页面刚开始加载会需要onMOunted，挂载完毕之后，后面的页面更新靠的就是下面的watch了
 onMounted(async () => {
     id.value = route.params.id
-    getData()
+    if (id.value == '201') {
+        noData.value = true
+    } else {
+        getData()
+    }
     isColLoading.value = true
     loading.value = true
 })
@@ -150,8 +174,12 @@ onMounted(async () => {
 watch(route, async (to, from) => {
     if (to.name == 'RankList') {
         isColLoading.value = false
-        id.value = to.params.dissid || id.value
-        await getData()
+        id.value = to.params.id || id.value
+        if (id.value == '201') {
+            noData.value = true
+        } else {
+            await getData()
+        }
         isColLoading.value = true
     }
 })
@@ -164,6 +192,10 @@ watch(route, async (to, from) => {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+}
+
+span {
+    cursor: pointer;
 }
 
 .box {
@@ -262,6 +294,10 @@ watch(route, async (to, from) => {
             display: flex;
             justify-content: space-evenly;
             align-items: center;
+            // background-color: #ffffff37;
+            margin-bottom: 2%;
+            padding-bottom: 2%;
+            border-bottom: 1px solid #ffffff80;
 
             .img {
                 flex: 1;
@@ -269,11 +305,24 @@ watch(route, async (to, from) => {
 
                 img {
                     height: 100%;
+                    cursor: pointer;
                 }
             }
 
             .rank {
                 flex: 1;
+                margin-left: 2%;
+
+                span {
+                    &:nth-child(1) {
+                        font-size: 1.82rem;
+                    }
+
+                    &:nth-child(2) {
+                        font-size: 1.12rem;
+                        margin-left: 10%;
+                    }
+                }
             }
 
             .songName {

@@ -41,6 +41,48 @@
                     </div>
                 </div>
             </div>
+            <div class="bbb" v-if="mainSongListLoading">
+                <div class="title">
+                    <span>歌单</span>
+                </div>
+                <div class="body">
+                    <div class="content"
+                        :style="`width:${groupCount2}00%;transform: translateX(-${pageNo2 * (100 / groupCount2)}%);`">
+                        <div class="page" :style="`width:${100 / groupCount2}00%;`" v-for="(item, index) in groupedArray2 "
+                            :key="index">
+                            <ul>
+                                <li v-for="(childItem, cindex) in item" :key="cindex">
+                                    <div class="item"
+                                        @click="router.push({ name: 'SongColist', params: { dissid: childItem.content_id } })">
+                                        <div class="img">
+                                            <img :src="childItem.imgurl" alt="">
+                                            <div class="cover">
+                                                <div class="btn">
+                                                    <div class="middle">
+                                                        <div class="continue"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="info">
+                                            <span>{{ childItem.dissname }}</span>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="foot">
+                    <ul>
+                        <li v-for="(item, index) in groupCount2">
+                            <div class="item" @click="pageNo2 = index">
+                                <div class="circle" :class="pageNo2 == index ? 'active' : ''"></div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
 
         <div class="rank" v-else-if="selItem == 1">
@@ -56,10 +98,10 @@
                             <img :src="childItem.picUrl" alt="">
                         </div>
                         <div class="info">
-                            <div class="top">
+                            <div class="top" @click="router.push({ name: 'RankList', params: { id: childItem.topId } })">
                                 <span>{{ childItem.label }}</span>
                             </div>
-                            <div class="bottom">
+                            <div class="bottom" @click="router.push({ name: 'RankList', params: { id: childItem.topId } })">
                                 <div class="songInfo" v-for="(thrItem, thrIndex) in childItem.song" :key="thrIndex">
                                     <span>
                                         {{ thrItem.rank }} {{ thrItem.title }} {{ thrItem.singerName }}
@@ -235,8 +277,6 @@ import {
     // 下面这两个可以结合起来做一个排行榜
     // 获取榜单的名称   showDetail
     getTop,
-    // 获取榜单详情
-    getTopDetail,
 
 
     // 获取歌单分类
@@ -283,15 +323,39 @@ const pageNo = ref(0)
 
 
 
+
+const mainSongListLoading = ref(false)
+const groupedArray2 = ref([])
+// 计算由多少组
+const groupCount2 = ref(0)
+// 第几页
+const pageNo2 = ref(0)
+// 创建一个方法，将传进来的SongListData，平均分为N个数组然后，每组6个
+const computedData2 = () => {
+    groupedArray2.value = ([])
+    // 每组数组长度
+    const groupLength = 4;
+    // 计算分组数量
+    groupCount2.value = Math.ceil(mainSongListData.value.length / groupLength);
+    // 分组过程
+    for (let i = 0; i < groupCount2.value; i++) {
+        // 以下两个index用于切割SongListData
+        const startIndex = i * groupLength;
+        const endIndex = startIndex + groupLength;
+        const group = mainSongListData.value.slice(startIndex, endIndex);
+        groupedArray2.value.push(group);
+    }
+    mainSongListLoading.value = true
+}
+
+
+
+
+
+
+
 // 以下是排行榜区域
 // 大概是进行排行榜的搜索
-// 下面参数的来源是getTop
-const longQuery = reactive({
-    id: '62',
-    pageSize: '20',
-    period: '',
-    time: ''
-})
 // 创建一个排行信息数据
 const topData = ref([])
 
@@ -367,6 +431,7 @@ watch(singerCategoryData, () => {
 const categoryDataSel = ref(0)
 const openSel = ref(true)
 const songListcategoryData = ref([])
+const mainSongListData = ref([])
 const songListData = ref([])
 const songListId = ref('10000000')
 const songListNum = ref(1)
@@ -499,6 +564,9 @@ onMounted(async () => {
     // 根据歌单分类获取歌单
     getReSongList(songListcategoryDataQuery).then(d => {
         songListData.value = d.list
+        mainSongListData.value = d.list
+        console.log(mainSongListData.value);
+        computedData2()
     })
 
     // 获取歌手分类
@@ -512,13 +580,6 @@ onMounted(async () => {
         console.log(data);
         topData.value = data
     })
-
-    getTopDetail(longQuery).then((data) => {
-        console.log(data);
-    })
-
-
-
 })
 
 </script>
@@ -530,7 +591,7 @@ onMounted(async () => {
     width: 100%;
     display: flex;
     justify-content: space-between;
-    height: 80%;
+    // height: 80%;
 
     .left {
         flex: 1;
@@ -646,6 +707,238 @@ onMounted(async () => {
     }
 }
 
+%album-style {
+    width: 100%;
+    margin-top: 2%;
+    padding: 2%;
+    padding-top: 5%;
+    box-sizing: border-box;
+    border-top: 1px solid #ffffff66;
+
+    .songListHead {
+        width: 100%;
+
+        span {
+            font-size: 24px;
+        }
+    }
+
+    .songListBody {
+        margin-top: 2%;
+        width: 100%;
+        // height: 300px;
+        padding: 2% 0;
+        overflow: hidden;
+        background-color: #ffffff63;
+
+        .content {
+            transition: 0.3s;
+            height: 100%;
+            // transform: translateX(-100%);
+            display: flex;
+
+
+            .page {
+                width: 100%;
+                height: 100%;
+                // box-sizing: border-box;
+
+                ul {
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    flex-wrap: wrap;
+                    justify-content: flex-start;
+                    align-items: flex-start;
+
+                    li {
+                        width: 20%;
+                        // max-width: 50%;
+                        margin: 0 2%;
+                        // flex-grow: 1;
+
+                        .item {
+                            width: 100%;
+                            // aspect-ratio: 4/3;
+                            box-sizing: border-box;
+                            display: flex;
+                            padding: 2%;
+                            background-color: #958888;
+                            flex-direction: column;
+                            // flex-direction: column;
+
+                            .img {
+                                width: 100%;
+                                height: auto;
+                                position: relative;
+                                border-radius: 5px;
+                                // overflow: hidden;
+                                // background-color: #000000;
+
+                                img {
+                                    transition: 0.3s;
+                                    width: 100%;
+                                }
+
+                                .cover {
+                                    transition: 0.3s;
+                                    position: absolute;
+                                    width: 100%;
+                                    height: 100%;
+                                    top: 0;
+                                    z-index: 99;
+                                    cursor: pointer;
+
+                                    .btn {
+                                        transition: 0.3s;
+                                        position: inherit;
+                                        cursor: pointer;
+                                        right: 20px;
+                                        bottom: 10px;
+                                        opacity: 0;
+
+                                        .middle {
+                                            width: 40px;
+                                            height: 40px;
+                                            box-shadow: inset 0px 0px 2px 2px #c1c1c1;
+                                            border-radius: 50%;
+                                            display: flex;
+                                            justify-content: center;
+                                            align-items: center;
+
+                                            .continue {
+                                                transition-duration: 0.3s;
+                                                width: 0;
+                                                height: 0;
+                                                border-top: 12px solid transparent;
+                                                border-bottom: 12px solid transparent;
+                                                border-left: 20px solid #cecece;
+                                                display: inline-block;
+                                                margin-left: 5px;
+                                            }
+
+                                            &:hover {
+                                                box-shadow: inset 0px 0px 2px 2px #ffffff;
+
+                                                .continue {
+                                                    transition: 0s;
+                                                    border-left: 20px solid #ffffff;
+
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    .playCount {
+                                        transition: 0.3s;
+                                        padding: 0 20px;
+                                        // width: 100px;
+                                        height: 20px;
+                                        background-color: #bdcdfdc0;
+                                        position: inherit;
+                                        cursor: pointer;
+                                        border-radius: 0 0 5px 0;
+                                        display: flex;
+                                        justify-content: center;
+                                        align-items: center;
+
+                                        span {
+                                            color: #ffffff
+                                        }
+                                    }
+
+                                    &:hover {
+                                        transition: 0.3s;
+                                        background-color: #271e1e85;
+
+                                        .btn {
+                                            opacity: 1;
+                                        }
+
+                                        .playCount {
+                                            opacity: 0;
+                                        }
+                                    }
+                                }
+                            }
+
+                            .info {
+                                margin-top: 2%;
+
+                                span {
+                                    font-size: 17px;
+                                    line-height: 20px;
+                                    cursor: pointer;
+                                }
+                            }
+
+                            &:hover {
+
+                                .img {
+                                    img {
+                                        transform: translateY(-10px);
+                                    }
+
+                                    .cover {
+                                        transform: translateY(-10px);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .songListFoot {
+        width: 100%;
+        aspect-ratio: 20/1;
+        // background-color: #fff;
+        padding: 0 2%;
+        box-sizing: border-box;
+        // border-bottom: 1px solid #818181;
+
+        ul {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            li {
+                .item {
+                    width: 30px;
+                    height: 30px;
+                    // background-color: #fff;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    cursor: pointer;
+
+                    .circle {
+                        transition: 0.3s;
+                        width: 10px;
+                        height: 10px;
+                        background-color: #b5b5b5;
+                        border-radius: 5px;
+                    }
+
+                    .active {
+                        background-color: #ffffff;
+                    }
+
+                    &:hover {
+                        .circle {
+                            background-color: #fff;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 .box {
     position: relative;
     width: 100%;
@@ -712,6 +1005,231 @@ onMounted(async () => {
 
         .aaa {
             @extend %albumBanner-style
+        }
+
+        .bbb {
+            width: 100%;
+            margin-top: 2%;
+            padding: 2%;
+            box-sizing: border-box;
+            border-top: 1px solid #ffffff66;
+
+            .title {
+                width: 100%;
+                margin-top: 2%;
+
+                span {
+                    font-size: 24px;
+                }
+            }
+
+            .body {
+                margin-top: 2%;
+                width: 100%;
+                height: auto;
+                padding-top: 2%;
+                overflow-x: hidden;
+
+                .content {
+                    transition: 0.3s;
+                    height: 100%;
+                    display: flex;
+
+
+                    .page {
+                        width: 100%;
+                        height: 100%;
+                        box-sizing: border-box;
+
+                        ul {
+                            width: 100%;
+                            height: 100%;
+                            display: flex;
+                            flex-wrap: wrap;
+                            justify-content: flex-start;
+                            align-items: flex-start;
+
+                            li {
+                                width: 20%;
+                                max-width: 50%;
+                                margin: 0 2%;
+                                flex-grow: 1;
+
+                                .item {
+                                    width: 100%;
+                                    aspect-ratio: 7/8;
+                                    box-sizing: border-box;
+                                    display: flex;
+                                    padding: 4%;
+                                    background-color: #95888862;
+                                    flex-direction: column;
+
+                                    .img {
+                                        width: 100%;
+                                        height: auto;
+                                        position: relative;
+                                        border-radius: 5px;
+                                        // overflow: hidden;
+                                        // background-color: #000000;
+
+                                        img {
+                                            transition: 0.3s;
+                                            width: 100%;
+                                        }
+
+                                        .cover {
+                                            transition: 0.3s;
+                                            position: absolute;
+                                            width: 100%;
+                                            height: 100%;
+                                            top: 0;
+                                            z-index: 99;
+                                            cursor: pointer;
+
+                                            .btn {
+                                                transition: 0.3s;
+                                                position: inherit;
+                                                cursor: pointer;
+                                                right: 20px;
+                                                bottom: 10px;
+                                                opacity: 0;
+
+                                                .middle {
+                                                    width: 40px;
+                                                    height: 40px;
+                                                    box-shadow: inset 0px 0px 2px 2px #c1c1c1;
+                                                    border-radius: 50%;
+                                                    display: flex;
+                                                    justify-content: center;
+                                                    align-items: center;
+
+                                                    .continue {
+                                                        transition-duration: 0.3s;
+                                                        width: 0;
+                                                        height: 0;
+                                                        border-top: 12px solid transparent;
+                                                        border-bottom: 12px solid transparent;
+                                                        border-left: 20px solid #cecece;
+                                                        display: inline-block;
+                                                        margin-left: 5px;
+                                                    }
+
+                                                    &:hover {
+                                                        box-shadow: inset 0px 0px 2px 2px #ffffff;
+
+                                                        .continue {
+                                                            transition: 0s;
+                                                            border-left: 20px solid #ffffff;
+
+                                                        }
+                                                    }
+                                                }
+                                            }
+
+                                            .playCount {
+                                                transition: 0.3s;
+                                                padding: 0 20px;
+                                                // width: 100px;
+                                                height: 20px;
+                                                background-color: #bdcdfdc0;
+                                                position: inherit;
+                                                cursor: pointer;
+                                                border-radius: 0 0 5px 0;
+                                                display: flex;
+                                                justify-content: center;
+                                                align-items: center;
+
+                                                span {
+                                                    color: #ffffff
+                                                }
+                                            }
+
+                                            &:hover {
+                                                transition: 0.3s;
+                                                background-color: #271e1e85;
+
+                                                .btn {
+                                                    opacity: 1;
+                                                }
+
+                                                .playCount {
+                                                    opacity: 0;
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    .info {
+                                        margin-top: 2%;
+                                        flex: 1;
+                                        cursor: pointer;
+                                    }
+
+                                    &:hover {
+
+                                        .img {
+                                            img {
+                                                transform: translateY(-10px);
+                                            }
+
+                                            .cover {
+                                                transform: translateY(-10px);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            .foot {
+                width: 100%;
+                aspect-ratio: 20/1;
+                // background-color: #fff;
+                padding: 0 2%;
+                box-sizing: border-box;
+                border-bottom: 1px solid #818181;
+
+                ul {
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+
+                    li {
+                        .item {
+                            width: 30px;
+                            height: 30px;
+                            // background-color: #fff;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            cursor: pointer;
+
+                            .circle {
+                                transition: 0.3s;
+                                width: 10px;
+                                height: 10px;
+                                background-color: #b5b5b5;
+                                border-radius: 5px;
+                            }
+
+                            .active {
+                                background-color: #ffffff;
+                            }
+
+                            &:hover {
+                                .circle {
+                                    background-color: #fff;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -1227,235 +1745,7 @@ onMounted(async () => {
         }
 
         .bbb {
-            width: 100%;
-            margin-top: 2%;
-            padding: 2%;
-            padding-top: 5%;
-            box-sizing: border-box;
-            border-top: 1px solid #ffffff66;
-
-            .songListHead {
-                width: 100%;
-
-                span {
-                    font-size: 24px;
-                }
-            }
-
-            .songListBody {
-                margin-top: 2%;
-                width: 100%;
-                // height: 300px;
-                padding: 2% 0;
-                overflow: hidden;
-                background-color: #ffffff63;
-
-                .content {
-                    transition: 0.3s;
-                    height: 100%;
-                    // transform: translateX(-100%);
-                    display: flex;
-
-
-                    .page {
-                        width: 100%;
-                        height: 100%;
-                        // box-sizing: border-box;
-
-                        ul {
-                            width: 100%;
-                            height: 100%;
-                            display: flex;
-                            flex-wrap: wrap;
-                            justify-content: flex-start;
-                            align-items: flex-start;
-
-                            li {
-                                width: 20%;
-                                // max-width: 50%;
-                                margin: 0 2%;
-                                // flex-grow: 1;
-
-                                .item {
-                                    width: 100%;
-                                    // aspect-ratio: 4/3;
-                                    box-sizing: border-box;
-                                    display: flex;
-                                    padding: 2%;
-                                    background-color: #958888;
-                                    flex-direction: column;
-                                    // flex-direction: column;
-
-                                    .img {
-                                        width: 100%;
-                                        height: auto;
-                                        position: relative;
-                                        border-radius: 5px;
-                                        // overflow: hidden;
-                                        // background-color: #000000;
-
-                                        img {
-                                            transition: 0.3s;
-                                            width: 100%;
-                                        }
-
-                                        .cover {
-                                            transition: 0.3s;
-                                            position: absolute;
-                                            width: 100%;
-                                            height: 100%;
-                                            top: 0;
-                                            z-index: 99;
-                                            cursor: pointer;
-
-                                            .btn {
-                                                transition: 0.3s;
-                                                position: inherit;
-                                                cursor: pointer;
-                                                right: 20px;
-                                                bottom: 10px;
-                                                opacity: 0;
-
-                                                .middle {
-                                                    width: 40px;
-                                                    height: 40px;
-                                                    box-shadow: inset 0px 0px 2px 2px #c1c1c1;
-                                                    border-radius: 50%;
-                                                    display: flex;
-                                                    justify-content: center;
-                                                    align-items: center;
-
-                                                    .continue {
-                                                        transition-duration: 0.3s;
-                                                        width: 0;
-                                                        height: 0;
-                                                        border-top: 12px solid transparent;
-                                                        border-bottom: 12px solid transparent;
-                                                        border-left: 20px solid #cecece;
-                                                        display: inline-block;
-                                                        margin-left: 5px;
-                                                    }
-
-                                                    &:hover {
-                                                        box-shadow: inset 0px 0px 2px 2px #ffffff;
-
-                                                        .continue {
-                                                            transition: 0s;
-                                                            border-left: 20px solid #ffffff;
-
-                                                        }
-                                                    }
-                                                }
-                                            }
-
-                                            .playCount {
-                                                transition: 0.3s;
-                                                padding: 0 20px;
-                                                // width: 100px;
-                                                height: 20px;
-                                                background-color: #bdcdfdc0;
-                                                position: inherit;
-                                                cursor: pointer;
-                                                border-radius: 0 0 5px 0;
-                                                display: flex;
-                                                justify-content: center;
-                                                align-items: center;
-
-                                                span {
-                                                    color: #ffffff
-                                                }
-                                            }
-
-                                            &:hover {
-                                                transition: 0.3s;
-                                                background-color: #271e1e85;
-
-                                                .btn {
-                                                    opacity: 1;
-                                                }
-
-                                                .playCount {
-                                                    opacity: 0;
-                                                }
-                                            }
-                                        }
-                                    }
-
-                                    .info {
-                                        margin-top: 2%;
-
-                                        span {
-                                            font-size: 17px;
-                                            line-height: 20px;
-                                            cursor: pointer;
-                                        }
-                                    }
-
-                                    &:hover {
-
-                                        .img {
-                                            img {
-                                                transform: translateY(-10px);
-                                            }
-
-                                            .cover {
-                                                transform: translateY(-10px);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            .songListFoot {
-                width: 100%;
-                aspect-ratio: 20/1;
-                // background-color: #fff;
-                padding: 0 2%;
-                box-sizing: border-box;
-                // border-bottom: 1px solid #818181;
-
-                ul {
-                    width: 100%;
-                    height: 100%;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-
-                    li {
-                        .item {
-                            width: 30px;
-                            height: 30px;
-                            // background-color: #fff;
-                            display: flex;
-                            justify-content: center;
-                            align-items: center;
-                            cursor: pointer;
-
-                            .circle {
-                                transition: 0.3s;
-                                width: 10px;
-                                height: 10px;
-                                background-color: #b5b5b5;
-                                border-radius: 5px;
-                            }
-
-                            .active {
-                                background-color: #ffffff;
-                            }
-
-                            &:hover {
-                                .circle {
-                                    background-color: #fff;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            @extend %album-style
         }
     }
 
