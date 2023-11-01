@@ -5,15 +5,16 @@
             <!-- 歌曲图片 -->
             <div class="singer">
                 <!-- 测试按钮------------------------- -->
-                <img :src="cover" alt="" @click="test">
+                <img :src="songData.cover" alt="">
             </div>
             <!-- 歌曲信息于歌手 -->
             <div class="songInfo">
                 <div class="title">
-                    <h2 id="title" :class="{ shouldMarquee: shouldMarquee }" :title="name">{{ name }}</h2>
+                    <h2 id="title" :class="{ shouldMarquee: shouldMarquee }" :title="songData.name">{{ songData.name }}</h2>
                 </div>
                 <div class="singName">
-                    <h2 id="singName" :class="{ shouldMarquee: artistshouldMarquee }" :title="artist">{{ artist }}</h2>
+                    <h2 id="singName" :class="{ shouldMarquee: artistshouldMarquee }" :title="songData.artist">{{
+                        songData.artist }}</h2>
                 </div>
             </div>
         </div>
@@ -21,7 +22,7 @@
         <div class="body">
             <div class="music">
                 <!-- 创建一个audio对象 -->
-                <audio ref="audioPlayer" :src="url" @timeupdate="updateProgress" @loadedmetadata="initAudio"
+                <audio ref="audioPlayer" :src="songData.url" @timeupdate="updateProgress" @loadedmetadata="initAudio"
                     @ended="end"></audio>
                 <!-- 给audio对象创建样式 -->
                 <div class="audioStyle">
@@ -40,7 +41,7 @@
 
                         <div class="control">
                             <!-- 单曲循环，顺序播放，随机播放 -->
-                            <div class="audioModel" @click="changePlayModel">
+                            <div class="audioModel">
                                 <span v-if="useMusic.musicPlay.playModel == 'loop'" class="iconfont icon-loop"
                                     title="顺序播放"></span>
                                 <span v-else-if="useMusic.musicPlay.playModel == 'random'" class="iconfont icon-random"
@@ -51,7 +52,7 @@
                             <!-- 音量控制 -->
                             <span class="iconfont icon-sound" title="音量"></span>
                             <!-- 播放列表 -->
-                            <span class="iconfont icon-MusicList" title="播放列表" @click="router.push('/music')"></span>
+                            <span class="iconfont icon-MusicList" title="播放列表" @click="toMusic"></span>
                         </div>
                     </div>
                 </div>
@@ -61,22 +62,23 @@
 </template>
 
 <script setup>
-import { ref, watch, computed, reactive, onMounted } from 'vue';
+import { ref, watch, computed, toRefs } from 'vue';
 import useStore from '../store/index';
-import { toRefs } from 'vue';
-import { useRouter } from 'vue-router';
-const router = useRouter()
 const useLight = useStore()
 const useMusic = useStore()
 // 关于pinia数据的处理
-const { changePlayModel } = useMusic.musicPlay
-let i = Number(JSON.parse(localStorage.getItem('nowSong'))) || 0
-const song = useMusic.musicPlay.audio[i]
-const { id, name, artist, url, cover, lyc } = toRefs(song)
-// 使用reactive创建一个可相应的对象
-const songData = reactive({
-    id, name, artist, url, cover, lyc
+// 响应式解构pinia里面的参数
+// const { changePlayModel } = useMusic.musicPlay
+// let i = Number(JSON.parse(localStorage.getItem('nowSong'))) || 0
+// const song = useMusic.musicPlay.audio[i]
+// const { id, name, artist, url, cover, lyc } = toRefs(song)
+
+const props = defineProps({
+    songData: Object,
 })
+// 解构父组件传过来的参数
+const { songData } = toRefs(props)
+
 // 暂停还是播放
 const isplay = computed(() => useMusic.musicPlay.isplay)
 // 创建一个audio对象
@@ -108,32 +110,16 @@ const updateProgress = () => {
 };
 
 
-
-// 测试---方法
-const test = () => {
-    loopNext()
-}
-
-
-
-
-
-
-// 测试---打印
-const log = () => {
-    if (model.value == 'loop') {
-        model.value == 'random'
-    }
-    if (model.value == 'random') {
-        model.value == 'singLoop'
-    }
-    if (model.value == 'singLoop') {
-        model.value == 'loop'
+// 跳转到音乐播放器
+const toMusic = () => {
+    // window.open('')
+    // 打开新窗口
+    const newWindow = window.open('', '_blank')
+    if (newWindow) {
+        // 跳转到第二个页面
+        newWindow.location.href = '/music'
     }
 }
-
-
-
 
 
 
@@ -266,7 +252,6 @@ const Gun = () => {
     artistshouldMarquee.value = isGun('#singName', '.singName')
 }
 // ===================================================
-
 </script>
 
 <style scoped lang="scss">

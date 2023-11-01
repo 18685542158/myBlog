@@ -37,8 +37,8 @@ const useLight = useStore()
 .box {
     position: fixed;
     transition: 0.8s;
-    width: 360px;
-    height: 576px;
+    width: 80%;
+    height: 80%;
     backdrop-filter: blur(3px);
     background-color: #2E294Ea0;
 
@@ -51,10 +51,11 @@ const useLight = useStore()
         /* overflow: hidden; */
         flex-wrap: wrap;
         border-bottom: 1px solid rgb(176, 173, 173);
+        box-sizing: border-box;
 
         .image {
-            width: 120px;
-            height: 120px;
+            width: 34%;
+            aspect-ratio: 1/1;
             overflow: hidden;
             margin: 20px;
             border-radius: 5px;
@@ -68,10 +69,10 @@ const useLight = useStore()
 
         .userInfo {
             flex: 1;
-            height: 60%;
+            height: 100%;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            justify-content: space-evenly;
 
             h1 {
                 font-size: 38px;
@@ -86,7 +87,7 @@ const useLight = useStore()
 
         .content1 {
             width: 100%;
-            height: 80px;
+            // height: 80px;
             border-bottom: 1px solid black;
 
             // background-color: #fff;
@@ -94,6 +95,7 @@ const useLight = useStore()
                 margin-bottom: 10px;
                 font-weight: 300;
                 text-indent: 2em;
+                line-height: 23px;
             }
         }
 

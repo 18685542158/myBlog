@@ -2,8 +2,8 @@
     <div class="box" @mouseleave="hidden">
         <div class="music">
             <div class="left">
-                <img class="cover" @mouseenter="show" :class="{ 'active': useMusic.musicPlay.isplay }"
-                    src="../assets//images/1.jpg" alt="">
+                <img class="cover" @mouseenter="show" :class="{ 'active': isplay }"
+                    :src="songData.cover" alt="">
             </div>
             <div class="right">
                 <div class="last">
@@ -11,7 +11,7 @@
                     <div class="inner"></div>
                 </div>
                 <div class="middle" @click="changePlay">
-                    <div class="stop" v-if="useMusic.musicPlay.isplay">
+                    <div class="stop" v-if="isplay">
                         <div class="line1"></div>
                         <div class="line2"></div>
                     </div>
@@ -24,24 +24,31 @@
             </div>
         </div>
         <div class="info" :class="{ issong: issong }">
-            <Song></Song> 
+            <Song  @mouseenter="show" :songData="songData"></Song>
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
 import useStore from '../store/index';
 import Song from './Song.vue';
+import { storeToRefs } from "pinia"
 const useMusic = useStore()
-
+const { getInitData } = useMusic.music
+// 响应式解构pinia里面的参数
+const { songURL } = storeToRefs(useMusic.music)
+const { isplay } = storeToRefs(useMusic.musicPlay)
 // 解构pinia中的方法
-const {changePlay} = useMusic.musicPlay
+const { changePlay } = useMusic.musicPlay
+
+const songData=ref({})
 
 let issong = ref(false)
 
 let timer
 const show = () => {
+    console.log("13312");
     clearTimeout(timer)
     issong.value = true
 
@@ -51,6 +58,14 @@ const hidden = () => {
         issong.value = false
     }, 1000)
 }
+
+onMounted(() => {
+    // 获取本地的所存入数据
+    getInitData()
+    songData.value = songURL.value[0]
+    console.log(songData.value);
+})
+
 
 </script>
 

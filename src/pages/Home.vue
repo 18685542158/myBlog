@@ -55,6 +55,7 @@ const handleMouseLeave = () => {
     box-sizing: border-box;
     display: flex;
     flex-wrap: wrap;
+    position: relative;
 
     .slide-enter-active,
     // 指的是鼠标进入目标区域后，导航栏由隐藏到下滑的过程
@@ -66,18 +67,17 @@ const handleMouseLeave = () => {
 
     // 左侧信息卡
     .userInfo {
-        width: 450px;
-        height: 720px;
+        width: 30vw;
+        height: calc(100vh - 70px);
         display: flex;
         justify-content: end;
         align-items: center;
-        // background-color: #fff;
     }
 
     // 右侧路由页
     .content {
+        // background-color: #fff;
         flex: 1;
-        height: 720px;
         display: flex;
         justify-content: center;
         align-items: center;
