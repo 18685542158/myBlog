@@ -2,11 +2,10 @@
     <div class="box" @mouseleave="hidden">
         <div class="music">
             <div class="left">
-                <img class="cover" @mouseenter="show" :class="{ 'active': isplay }"
-                    :src="songData.cover" alt="">
+                <img class="cover" @mouseenter="show" :class="{ 'active': isplay }" :src="songData.cover" alt="">
             </div>
             <div class="right">
-                <div class="last">
+                <div class="last" @click="lastSong">
                     <div class="leftline"></div>
                     <div class="inner"></div>
                 </div>
@@ -17,20 +16,20 @@
                     </div>
                     <div class="continue" v-else></div>
                 </div>
-                <div class="next">
+                <div class="next" @click="nextSong">
                     <div class="inner"></div>
                     <div class="leftline"></div>
                 </div>
             </div>
         </div>
         <div class="info" :class="{ issong: issong }">
-            <Song  @mouseenter="show" :songData="songData"></Song>
+            <Song @mouseenter="show" :songData="songData"></Song>
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue';
+import { ref, reactive, onMounted, provide } from 'vue';
 import useStore from '../store/index';
 import Song from './Song.vue';
 import { storeToRefs } from "pinia"
@@ -38,17 +37,16 @@ const useMusic = useStore()
 const { getInitData } = useMusic.music
 // 响应式解构pinia里面的参数
 const { songURL } = storeToRefs(useMusic.music)
-const { isplay } = storeToRefs(useMusic.musicPlay)
+const { isplay, playModel } = storeToRefs(useMusic.musicPlay)
 // 解构pinia中的方法
 const { changePlay } = useMusic.musicPlay
 
-const songData=ref({})
+const songData = ref({})
 
 let issong = ref(false)
 
 let timer
 const show = () => {
-    console.log("13312");
     clearTimeout(timer)
     issong.value = true
 
@@ -59,11 +57,67 @@ const hidden = () => {
     }, 1000)
 }
 
+const index = ref(0)
+provide('nextSong', () => {
+    nextSong()
+})
+
+const nextSong = () => {
+    isplay.value = false
+    console.log('出发了');
+    // 如果是顺序播放，那么
+    if (playModel.value === 'loop') {
+        // 执行顺序播放
+        console.log(songData.value);
+        index.value++;
+        if (index.value > songURL.value.length - 1) {
+            index.value = 0
+        }
+    }
+    // 如果是随机播放，那么
+    else if (playModel.value === 'random') {
+        index.value = Math.floor(Math.random(1) * songURL.value.length)
+    }
+    // 如果是单曲循环
+    else if (playModel.value === 'singLoop') {
+        index.value = index.value
+    }
+    songData.value = songURL.value[index.value]
+    setTimeout(() => {
+        changePlay()
+    }, 0);
+}
+
+const lastSong = () => {
+    isplay.value = false
+    console.log('出发了');
+    // 如果是顺序播放，那么
+    if (playModel.value === 'loop') {
+        // 执行顺序播放
+        console.log(songData.value);
+        index.value--;
+        if (index.value < 0) {
+            index.value = songURL.value.length - 1
+        }
+    }
+    // 如果是随机播放，那么
+    else if (playModel.value === 'random') {
+        index.value = Math.floor(Math.random(1) * songURL.value.length)
+    }
+    // 如果是单曲循环
+    else if (playModel.value === 'singLoop') {
+        index.value = index.value
+    }
+    songData.value = songURL.value[index.value]
+    setTimeout(() => {
+        changePlay()
+    }, 0);
+}
+
 onMounted(() => {
     // 获取本地的所存入数据
     getInitData()
     songData.value = songURL.value[0]
-    console.log(songData.value);
 })
 
 

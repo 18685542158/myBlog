@@ -1,6 +1,6 @@
 <template>
     <div class="box" @mousemove="moveProgress" @mouseup="leaveProgress" @mouseleave="leaveProgress"
-        :class="{ light: useLight.light.isLight }">
+        :class="{ light: isLight }">
         <div class="head">
             <!-- 歌曲图片 -->
             <div class="singer">
@@ -41,16 +41,21 @@
 
                         <div class="control">
                             <!-- 单曲循环，顺序播放，随机播放 -->
-                            <div class="audioModel">
-                                <span v-if="useMusic.musicPlay.playModel == 'loop'" class="iconfont icon-loop"
-                                    title="顺序播放"></span>
-                                <span v-else-if="useMusic.musicPlay.playModel == 'random'" class="iconfont icon-random"
-                                    title="随机播放"></span>
-                                <span v-else-if="useMusic.musicPlay.playModel == 'singLoop'" class="iconfont icon-singLoop"
+                            <div class="audioModel" @click="changePlayModel">
+                                <span v-if="playModel == 'loop'" class="iconfont icon-loop" title="顺序播放"></span>
+                                <span v-else-if="playModel == 'random'" class="iconfont icon-random" title="随机播放"></span>
+                                <span v-else-if="playModel == 'singLoop'" class="iconfont icon-singLoop"
                                     title="单曲循环"></span>
                             </div>
                             <!-- 音量控制 -->
-                            <span class="iconfont icon-sound" title="音量"></span>
+                            <div class="soundCtr">
+                                <span class="iconfont icon-sound" title="音量" @click="isVolume = !isVolume"></span>
+                                <div class="sound" :class="{ 'isVolume': isVolume }" @mouseleave="leaveSoundProgress">
+                                    <div class="sound-main" @mousedown="downSoundProgress">
+                                        <div class="sound-pro" :style="`width: ${volume}%;`"></div>
+                                    </div>
+                                </div>
+                            </div>
                             <!-- 播放列表 -->
                             <span class="iconfont icon-MusicList" title="播放列表" @click="toMusic"></span>
                         </div>
@@ -62,14 +67,17 @@
 </template>
 
 <script setup>
-import { ref, watch, computed, toRefs } from 'vue';
+import { ref, watch, computed, toRefs, inject } from 'vue';
 import useStore from '../store/index';
-const useLight = useStore()
+import { storeToRefs } from 'pinia';
 const useMusic = useStore()
+
+const { playModel } = storeToRefs(useMusic.musicPlay)
+const { isLight } = storeToRefs(useMusic.light)
 // 关于pinia数据的处理
 // 响应式解构pinia里面的参数
-// const { changePlayModel } = useMusic.musicPlay
-// let i = Number(JSON.parse(localStorage.getItem('nowSong'))) || 0
+const { changePlayModel } = useMusic.musicPlay
+
 // const song = useMusic.musicPlay.audio[i]
 // const { id, name, artist, url, cover, lyc } = toRefs(song)
 
@@ -88,6 +96,9 @@ let duration = ref(0)
 // 播放器加载完毕的操作
 const initAudio = () => {
     duration.value = audioPlayer.value.duration;
+    num.value = 0
+    // const audioPlayer = document.querySelector('audio');
+    audioPlayer.value.volume = 0.4
 };
 // 实时获取歌曲当前进度，进度条进度同样
 const currentTime = ref(0)
@@ -99,8 +110,48 @@ const isMove = ref(false)
 const shouldMarquee = ref(false)
 // 作者是否显示文字滑动
 const artistshouldMarquee = ref(false)
-// 歌曲当前是顺序播放
-let model = ref('loop')
+
+// 设置音量
+const volume = ref(40)
+// 是否调节音量
+const isVolume = ref(false)
+// 音量条是否可拖动
+const isVolumeMove = ref(false)
+// 音量条的拖动========================================
+const getvolume = (e) => {
+    const left = document.querySelector('.sound-main')
+    // 获取进度条宽度
+    const pwidth = left.getBoundingClientRect().right - left.getBoundingClientRect().left
+    const newTime = Math.floor((e.clientX - left.getBoundingClientRect().left) / pwidth * 100)
+    if (newTime > 100) {
+        return 100
+    } else if (newTime <= 0) {
+        return 0
+    } else {
+        return newTime
+    }
+}
+const downSoundProgress = (e) => {
+    const newTime = getvolume(e)
+    // console.log(newTime);
+    volume.value = newTime
+    isVolumeMove.value = true
+}
+const leaveSoundProgress = () => {
+    setTimeout(() => {
+        isVolume.value = false
+    }, 1000)
+}
+// 监听音量的变化
+watch(volume, (newValue) => {
+    // console.log('设置音量');
+    const audioPlayer = document.querySelector('audio');
+    audioPlayer.volume = newValue / 100
+})
+
+
+
+
 // 实时获取当前播放时间
 const updateProgress = () => {
     if (!isMove.value) {
@@ -155,12 +206,20 @@ const moveProgress = (e) => {
         const newTime = getPer(e)
         num.value = newTime
     }
+    if (isVolumeMove.value) {
+        const newTime = getvolume(e)
+        volume.value = newTime
+    }
 }
 // 鼠标松开后，进度条不可拖动
 const leaveProgress = () => {
     if (isMove.value) {
         audioPlayer.value.currentTime = num.value * duration.value / 100
         isMove.value = false
+    }
+    if (isVolumeMove.value) {
+        // musicPlayer.setCurrentTime(num.value * duration.value / 100)
+        isVolumeMove.value = false
     }
 }
 // 以上是拖动进度条的操作===================================================
@@ -175,46 +234,10 @@ const leaveProgress = () => {
 const end = () => {
     console.log('播放完毕');
     audioPlayer.value.currentTime = 0;
-
-    // 如果是顺序播放，那么
-    if (model.value === 'loop') {
-        // 执行顺序播放
-        loopNext()
-    }
-    // 如果是随机播放，那么
-    else if (model.value === 'random') {
-
-    }
-    // 如果是单曲循环
-    else if (model.value === 'singLoop') {
-
-    }
-}
-
-// 顺序播放时，i应该++
-const loopNext = () => {
-    const songList = useMusic.musicPlay.audio
-    console.log(songList);
-    const leng = songList.length
-    i++;
-    if (i == leng) i = 0
     nextSong()
 }
 
-// 下一首！
-const nextSong = () => {
-    let index = 0;
-    index = i;
-    const newSong = useMusic.musicPlay.audio[index];
-    console.log(newSong);
-    shouldMarquee.value = false;
-    artistshouldMarquee.value = false;
-    Object.assign(songData, newSong);
-    setTimeout(() => {
-        audioPlayer.value.play()
-        Gun()
-    }, 100)
-}
+const nextSong = inject('nextSong')
 
 // 使用watch监听歌曲数据变化
 watch(() => songData, (newValue) => {
@@ -456,6 +479,49 @@ const Gun = () => {
                             }
                         }
 
+                        .soundCtr {
+                            position: relative;
+                            display: flex;
+
+                            .sound {
+                                position: absolute;
+                                transition: 0.3s;
+                                overflow: hidden;
+                                position: fixed;
+                                bottom: 15%;
+                                right: 0%;
+                                // margin-left: 3%;
+                                // transform: translate(20%,-100%);
+                                width: 0px;
+                                height: 30px;
+                                border-radius: 0px 0px 0px 5px;
+                                background-color: #ffffff7d;
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+
+                                .sound-main {
+                                    width: 90%;
+                                    height: 5px;
+                                    background-color: #ffffff81;
+                                    cursor: pointer;
+                                    border-radius: 2px;
+                                    overflow: hidden;
+
+                                    .sound-pro {
+                                        height: 100%;
+                                        background-color: #333;
+                                    }
+                                }
+                            }
+
+                            .isVolume {
+                                transition: 0.3s;
+                                width: 150px;
+                                height: 30px;
+                            }
+                        }
+
                         .iconfont {
                             cursor: pointer;
                             color: #000;
@@ -474,7 +540,7 @@ const Gun = () => {
 }
 
 .light {
-    transition: 1s;
+    transition: 0.3s;
     backdrop-filter: blur(3px);
     background: linear-gradient(225deg, #eca07b 1%, #6e84c8 65%, #4dbaf5 99%);
 }

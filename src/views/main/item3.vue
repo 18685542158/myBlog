@@ -2,11 +2,14 @@
     <div class="box" :class="{ light: useLight.light.isLight }">
         <div class="info">
             <div class="title">
-                <h1>DaShan</h1>
+                <h1>Hobby</h1>
             </div>
             <div class="text">
-                <h2>Perhaps we can do things we truly enjoy, instead of constantly losing our true selves in pursuit of
-                    material needs. We have the ability to become the person we truly want to be.</h2>
+                <h2>我的兴趣偏向艺术方面吧，我对音乐，画画，跳舞都挺感兴趣的，在高中的时候一直有在弹吉他，唱歌也还不错啦，虽然没有学过画画，
+                    但是同学对我画画的技艺评价也还是蛮高的，我对审美的感知也挺不错的，然后呢，我也算是个二次元吧，很喜欢动漫里面天马行空的想象，
+                    也喜欢动漫所带来的故事，喜欢动漫里面的曲子，喜欢闭上眼睛感受它们的意境。我认为它们给我的生活带来了很多的乐趣，如果有机会的话，
+                    我也很有意愿能够往这方面发展
+                </h2>
             </div>
         </div>
         <div class="header">
@@ -35,11 +38,12 @@ const useLight = useStore()
     transition: 0.5s;
     width: 80%;
     height: 80%;
+    overflow-y: scroll;
 
     .info {
         width: 100%;
-        height: 30%;
-        border-bottom: 1px solid black;
+        margin-bottom: 4%;
+        // height: 30%;
 
         .title {
             padding: 0 10px;
@@ -48,11 +52,13 @@ const useLight = useStore()
             h1 {
                 font-size: 90px;
                 font-weight: 500;
+                
             }
         }
-
+        
         .text {
             padding: 0 10px;
+            border-bottom: 1px solid black;
 
             h2 {
                 font-weight: 300;

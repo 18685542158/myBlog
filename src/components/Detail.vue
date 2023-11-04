@@ -26,9 +26,9 @@
                 <ul ref="lyricUL" style="transition: 0.6s;transform:translateY(160px)" @wheel="handleMouseWheel" v-else>
                     <li v-for="(item, i) in lyricsObjArr" :style="{
                         color: lyricIndex === i ? 'skyblue' : '#ded9d9',
-                        fontSize: lyricIndex === i ? '24px' : '18px',
-                    }" :key="item.uid" :data-index='i' ref="lyric" @click="toLyc(item, i)" style="transition: 0.3s;">
-                        {{ item.lyric }}</li>
+                        fontSize: lyricIndex === i ? '30px' : '18px',
+                    }" :key="item.uid" :data-index='i' ref="lyric" @click="toLyc(item, i)" style="transition: 0.3s;" v-html="item.lyric">
+                        </li>
                 </ul>
             </div>
         </div>
