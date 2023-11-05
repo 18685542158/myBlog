@@ -42,7 +42,7 @@ const useLight = useStore()
 
     .info {
         width: 100%;
-        margin-bottom: 4%;
+        margin-bottom: 6%;
         // height: 30%;
 
         .title {
@@ -58,6 +58,7 @@ const useLight = useStore()
         
         .text {
             padding: 0 10px;
+            padding-bottom: 2%;
             border-bottom: 1px solid black;
 
             h2 {
@@ -75,7 +76,7 @@ const useLight = useStore()
         justify-content: left;
         align-items: center;
         flex-wrap: wrap;
-        border-bottom: 1px solid black;
+        // border-bottom: 1px solid black;
 
         .item {
             width: 70%;

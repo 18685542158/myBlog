@@ -42,11 +42,11 @@ const useLight = useStore()
     transition: 0.5s;
     width: 80%;
     height: 80%;
+    overflow-y: scroll;
 
     .info {
         width: 100%;
-        height: 30%;
-        border-bottom: 1px solid black;
+        // height: 30%;
 
         .title {
             padding: 0 10px;
@@ -60,6 +60,8 @@ const useLight = useStore()
 
         .text {
             padding: 0 10px;
+            padding-bottom: 2%;
+            border-bottom: 1px solid black;
 
             h2 {
                 font-weight: 300;
@@ -70,6 +72,7 @@ const useLight = useStore()
     }
 
     .content {
+        margin-top: 2%;
         width: 100%;
         height: 400px;
         padding: 0px;
