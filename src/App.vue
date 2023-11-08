@@ -11,6 +11,10 @@
   src: url('./assets/font/江城圆体 300W.ttf');
 }
 
+h2{
+  cursor: pointer;
+}
+
 /* WebKit 内核 (Chrome, Safari, Opera) */
 /* 定制滚动条的样式 */
 ::-webkit-scrollbar {
