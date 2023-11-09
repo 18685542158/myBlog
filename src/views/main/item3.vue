@@ -13,7 +13,7 @@
             </div>
         </div>
         <div class="header">
-            <div class="item" v-for="(item, index) in 3" :key="index">
+            <div class="item" v-for="(item, index) in data" :key="index">
                 <div class="desc">
                     <h1>在听的音乐：</h1>
                     <h2>Wonderful U</h2>
@@ -28,8 +28,37 @@
 </template>
     
 <script setup>
+import { reactive } from 'vue';
 import useStore from '../../store/index';
 const useLight = useStore()
+
+const data=reactive([
+    {
+        title:'最喜欢的音乐',
+        name:'夜空中最亮的星',
+        cover:'',
+        content:''
+    },
+    {
+        title:'最喜欢的动漫',
+        name:'进击的巨人',
+        cover:'',
+        content:''
+    },
+    {
+        title:'最喜欢的艺人',
+        name:'胡彦斌',
+        cover:'',
+        content:''
+    },
+    {
+        title:'我的目标是什么',
+        name:'',
+        cover:'',
+        content:''
+    },
+])
+
 
 </script>
     
@@ -71,19 +100,18 @@ const useLight = useStore()
 
     .header {
         width: 100%;
-        height: 500px;
-        display: flex;
-        justify-content: left;
-        align-items: center;
-        flex-wrap: wrap;
-        // border-bottom: 1px solid black;
+        height: 45vh;
+        display: grid;
+        grid-template-columns: repeat(2,1fr);
+        overflow-y: scroll;
 
         .item {
-            width: 70%;
-            height: 130px;
+            width: 90%;
+            height: 80%;
+            background-color: #fff;
             display: flex;
             margin: 10px 0;
-            border: 1px solid red;
+            margin-left: 2%;
 
 
             .desc {
