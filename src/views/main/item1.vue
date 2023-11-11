@@ -14,7 +14,8 @@
                 <div class="content1">
                     <div class="title">我的经历：</div>
                     <div class="text">
-                        <h2>我来自贵州遵义，是湖南城市学院的一名大四学生，目前居住在湖南益阳，性格内敛且稳重，目前的技术方向是前端开发，最终目标是一名全栈工程师，前端框架以Vue为主，目前的技术栈为Vue3+vite+JavaScript+Pinia，当然也有在学习TypeScript，不过目前做的项目的是个人向的小项目，所以Ts用的不多，移动端的项目也有了解过，比如微信小程序等，有了解过Uniapp相关的知识，可以写一点小程序代码</h2>
+                        <h2>我来自贵州遵义，是湖南城市学院的一名大四学生，目前居住在湖南益阳，性格内敛且稳重，目前的技术方向是前端开发，最终目标是一名全栈工程师，前端框架以Vue为主，目前的技术栈为Vue3+vite+JavaScript+Pinia，当然也有在学习TypeScript，不过目前做的项目的是个人向的小项目，所以Ts用的不多，移动端的项目也有了解过，比如微信小程序等，有了解过Uniapp相关的知识，可以写一点小程序代码
+                        </h2>
                     </div>
                 </div>
             </div>
@@ -166,6 +167,7 @@ const skillList = ref([
                     flex-direction: column;
 
                     .skill1 {
+                        transition: 0.3s;
                         cursor: pointer;
                         width: 100%;
                         height: 30px;
@@ -173,6 +175,10 @@ const skillList = ref([
                         display: flex;
                         flex-direction: column;
                         justify-content: space-between;
+
+                        &:hover {
+                            scale: 1.05;
+                        }
 
                         .desc {
                             display: flex;
@@ -203,26 +209,29 @@ const skillList = ref([
 }
 
 @media (max-width: 610px) {
-    .box{
-        .info{
+    .box {
+        .info {
             height: 40%;
         }
-        .content{
-            .box1{
+
+        .content {
+            .box1 {
                 width: 100%;
-                .content1{
+
+                .content1 {
                     border: none;
-                    .text{
-                        h2{
+
+                    .text {
+                        h2 {
                             padding-right: 0px;
                         }
                     }
                 }
             }
-            .box2{
+
+            .box2 {
                 display: none;
             }
         }
     }
-}
-</style>
+}</style>
