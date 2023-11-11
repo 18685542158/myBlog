@@ -36,7 +36,7 @@ import { storeToRefs } from "pinia"
 const useMusic = useStore()
 const { getInitData } = useMusic.music
 // 响应式解构pinia里面的参数
-const { songURL } = storeToRefs(useMusic.music)
+const { songURL, songLocalList } = storeToRefs(useMusic.music)
 const { isplay, playModel } = storeToRefs(useMusic.musicPlay)
 // 解构pinia中的方法
 const { changePlay } = useMusic.musicPlay
@@ -70,19 +70,19 @@ const nextSong = () => {
         // 执行顺序播放
         console.log(songData.value);
         index.value++;
-        if (index.value > songURL.value.length - 1) {
+        if (index.value > songLocalList.value.length - 1) {
             index.value = 0
         }
     }
     // 如果是随机播放，那么
     else if (playModel.value === 'random') {
-        index.value = Math.floor(Math.random(1) * songURL.value.length)
+        index.value = Math.floor(Math.random(1) * songLocalList.value.length)
     }
     // 如果是单曲循环
     else if (playModel.value === 'singLoop') {
         index.value = index.value
     }
-    songData.value = songURL.value[index.value]
+    songData.value = songLocalList.value[index.value]
     setTimeout(() => {
         changePlay()
     }, 0);
@@ -97,18 +97,18 @@ const lastSong = () => {
         console.log(songData.value);
         index.value--;
         if (index.value < 0) {
-            index.value = songURL.value.length - 1
+            index.value = songLocalList.value.length - 1
         }
     }
     // 如果是随机播放，那么
     else if (playModel.value === 'random') {
-        index.value = Math.floor(Math.random(1) * songURL.value.length)
+        index.value = Math.floor(Math.random(1) * songLocalList.value.length)
     }
     // 如果是单曲循环
     else if (playModel.value === 'singLoop') {
         index.value = index.value
     }
-    songData.value = songURL.value[index.value]
+    songData.value = songLocalList.value[index.value]
     setTimeout(() => {
         changePlay()
     }, 0);
@@ -117,7 +117,8 @@ const lastSong = () => {
 onMounted(() => {
     // 获取本地的所存入数据
     getInitData()
-    songData.value = songURL.value[0]
+    // songData.value = songURL.value[0]
+    songData.value = songLocalList.value[0]
 })
 
 

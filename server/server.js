@@ -15,7 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 // qqMusic.setCookie('RK=T5vMHQVkVy; ptcz=00f484463991751b7e23cb57c7b90e17a145b905278bbcc737ac1eeeb6a4e46b; pgv_pvid=935044804; fqm_pvqid=50ede925-dc80-4bec-bdbe-995094ac0d57; ts_refer=www.baidu.com/link; ts_uid=5513503523; tmeLoginType=2; euin=oK4iNe45NevlNv**; fqm_sessionid=60110412-9a15-431f-80b1-bb668ae39246; pgv_info=ssid=s2953369972; _qpsvr_localtk=0.3284149056385628; yqq_stat=0; ts_last=y.qq.com/n/ryqq/search; login_type=1; psrf_qqunionid=0E04C2456F7EC85660D2E0F5F7519779; qm_keyst=Q_H_L_5ttCwfsEoaHG4_B68Dn7jMKsSAfVbWPz7ip6P3uQ-GCNKcEDR22AEZg; wxrefresh_token=; psrf_qqopenid=24A2EC76DFE32EC30B8BD37FC32A8635; psrf_qqrefresh_token=B9F2EB3CAD61F91E0CA5A4467EFBB480; uin=1538518479; qqmusic_key=Q_H_L_5ttCwfsEoaHG4_B68Dn7jMKsSAfVbWPz7ip6P3uQ-GCNKcEDR22AEZg; psrf_access_token_expiresAt=1698819674; qm_keyst=Q_H_L_5ttCwfsEoaHG4_B68Dn7jMKsSAfVbWPz7ip6P3uQ-GCNKcEDR22AEZg; wxunionid=; psrf_qqaccess_token=AFAC7F97711F0B2015A5F8C08AD9F2F7; wxopenid=; psrf_musickey_createtime=1691043674');
 
 app.use(cors({
-    origin: ['http://localhost:5173', 'http://192.168.1.105']   // 允许http://localhost:5173这个域名来访问
+    origin: ['http://localhost:5173', 'http://192.168.1.105','https://dashan.online']   // 允许http://localhost:5173这个域名来访问
 }))
 // 定义路由和中间件
 // 创建成功

@@ -11,6 +11,62 @@ export default defineStore('music', {
             songPlayList: [],               // 播放列表，大概率要存进localStorage 
             thedissid: '3580408357',
             songURL: [],                  // 还是得缓存歌曲的url等信息，不然每次打开页面都是从网上获取，太慢了
+            songLocalList: [
+                {
+                    name: '沉醉于风中',
+                    artist: 'S.E.N.S(神思者)',
+                    cover: 'https://y.qq.com/music/photo_new/T002R300x300M000002AMtsQ2jW9pz_2.jpg?max_age=2592000',
+                    url: '/audios/沉醉于风中.mp3'
+                },
+                {
+                    name: '夜空中最亮的星',
+                    artist: '逃跑计划',
+                    cover: 'https://y.qq.com/music/photo_new/T002R300x300M000000wr4zc1gls3e_2.jpg?max_age=2592000',
+                    url: '/audios/夜空中最亮的星.mp3'
+                },
+                {
+                    name: 'The Name of Life/ Spirited Away',
+                    artist: '广桥真纪子 (ひろはしまきこ)',
+                    cover: 'https://y.qq.com/music/photo_new/T002R300x300M000004THcdR2s4O9V_1.jpg?max_age=2592000',
+                    url: '/audios/广桥真纪子 (ひろはしまきこ) - The Name of Life_ Spirited Away.ogg'
+                },
+                {
+                    name: '銀河ステーション (银河站)',
+                    artist: '加賀谷玲 (Kagaya Rei)',
+                    cover: 'https://y.qq.com/music/photo_new/T002R300x300M0000039Dv9a2Yi6HW_1.jpg?max_age=2592000',
+                    url: '/audios/加賀谷玲 (Kagaya Rei) - 銀河ステーション (银河站).ogg'
+                },
+                {
+                    name: '託された想い (Inst_)',
+                    artist: '増田俊郎 (ますだ としお)',
+                    cover: 'https://y.qq.com/music/photo_new/T002R300x300M000003o8heP3oPlSa_1.jpg?max_age=2592000',
+                    url: '/audios/増田俊郎 (ますだ としお) - 託された想い (Inst_).ogg'
+                },
+                {
+                    name: '祝!恋ばな成就! (祝！恋花结果！)',
+                    artist: '増田俊郎 (ますだ としお)',
+                    cover: 'https://y.qq.com/music/photo_new/T002R300x300M0000031ZRGW4TWfMp_1.jpg?max_age=2592000',
+                    url: '/audios/増田俊郎 (ますだ としお) - 祝!恋ばな成就! (祝！恋花结果！).ogg'
+                },
+                {
+                    name: "We've Never Met but Can We Have a Cup of Coffee or Something",
+                    artist: 'In Love With a Ghost',
+                    cover: 'https://y.qq.com/music/photo_new/T002R300x300M000002AMtsQ2jW9pz_2.jpg?max_age=2592000',
+                    url: "/audios/In Love With a Ghost - We've Never Met but Can We Have a Cup of Coffee or Something.ogg"
+                },
+                {
+                    name: 'I Miss You (想你)',
+                    artist: 'Lee Ayur (リー・アユール)',
+                    cover: 'https://y.qq.com/music/photo_new/T002R300x300M0000027MNhy1OdaD9_1.jpg?max_age=2592000',
+                    url: '/audios/Lee Ayur (リー・アユール) - I Miss You (想你).ogg'
+                },
+                {
+                    name: '未成年',
+                    artist: '本兮',
+                    cover: 'http://p1.music.126.net/-emsJTdmutfySav8wA-wGQ==/109951166890840827.jpg?param=130y130',
+                    url: '/audios/未成年 - 本兮.mp3'
+                },
+            ],                  // 本地最好存入歌曲
             searchSong: '',
             hisSearch: [],                  // 搜索记录
             inputValue: '',                  // 还是决定将搜索的值放进store，会比较方便一点
@@ -140,7 +196,7 @@ export default defineStore('music', {
         // 从本地获取搜索记录
         getHisSearch() {
             const data = JSON.parse(localStorage.getItem('hisSearch'))
-            if(!data)return
+            if (!data) return
             this.hisSearch = data
         },
 
@@ -166,7 +222,7 @@ export default defineStore('music', {
         // 从本地获取mv播放记录
         getMV() {
             const data = JSON.parse(localStorage.getItem('mvURL'))
-            if(!data)return
+            if (!data) return
             this.mvURL = data
         },
 
