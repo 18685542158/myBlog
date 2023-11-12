@@ -5,7 +5,7 @@
                 <lloading></lloading>
             </div>
         </transition>
-        <div class="head" v-if="isColLoading">
+        <div class="head">
             <div class="bgcImg">
                 <img :src="songColist.songColistCover" alt="">
             </div>
@@ -25,7 +25,7 @@
                 <img id="cover" :src="songColist.songColistCover" alt="">
             </div>
         </div>
-        <div class="body" v-if="isColLoading">
+        <div class="body">
             <list :songData="songData" :dissid="String(id)"></list>
         </div>
     </div>

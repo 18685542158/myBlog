@@ -52,7 +52,7 @@ import {
     addLogData,
     deleteLogData,
     updateLogData
-} from '../../api/request'
+} from '@/api/request'
 // 编辑栏是否打开
 const isopen=ref(false)
 

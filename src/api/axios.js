@@ -1,10 +1,8 @@
 import axios from 'axios';
 
-import useStore from '../store/index';
-const useMusic = useStore()
-
 const instance = axios.create({
-    baseURL: 'http://localhost:3000',        // 设置基本url
+    // baseURL: 'http://localhost:3000',        // 设置基本url
+    baseURL: 'http://server.dashan.online:3000',        // 设置基本url
     timeout: 5000,                           // 设置请求超时时间
     headers: {
         "Content-Type": 'application/json',   // 设置请求头

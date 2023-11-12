@@ -131,6 +131,10 @@ const router = createRouter({
                     component: () => import('../views/musicIndex/rankList.vue')
                 }
             ]
+        },
+        {
+            path: '/:pathMatch(.*)*',
+            redirect: '/home'
         }
     ],
     history: createWebHistory()
