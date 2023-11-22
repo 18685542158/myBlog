@@ -133,6 +133,11 @@ const router = createRouter({
             ]
         },
         {
+            path: '/hobbyDetail',
+            component: () => import('../pages/hobby.vue'),
+            name: 'HobbyDetail'
+        },
+        {
             path: '/:pathMatch(.*)*',
             redirect: '/home'
         }

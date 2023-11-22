@@ -11,7 +11,7 @@
 import { ref, reactive, onMounted } from 'vue';
 import router from '../router';
 onMounted(() => {
-    // router.push('/home')
+    router.push('/home')
 })
 </script>
 

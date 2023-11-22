@@ -22,7 +22,7 @@ onMounted(() => {
     canvas.width = w;
     canvas.height = h;
 
-    let num = 80;
+    let num = 70;
     let snows = [];
     for (let i = 0; i < num; i++) {
         snows.push({
@@ -97,6 +97,7 @@ onMounted(() => {
     }
 
     window.addEventListener("resize", debounce(handleResize, 200));
+    // window.addEventListener("resize", handleResize, 200);
 
     // 网页刚加载时绘制雪花
     draw();

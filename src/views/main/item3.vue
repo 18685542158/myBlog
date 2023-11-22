@@ -1,7 +1,7 @@
 <template>
     <div class="box" :class="{ light: useLight.light.isLight }">
         <div class="info">
-            <div class="title">
+            <div class="title" @click="toHobby">
                 <h1>Hobby</h1>
             </div>
             <div class="text">
@@ -16,7 +16,7 @@
             <div class="item" v-for="(item, index) in data" :key="index">
                 <div class="activeContent" v-if="item.title == '我的追求的是什么'">
                     <div class="desc">
-                        <h1>{{ item.title }}</h1>
+                        <h1>{{ item.title }}：</h1>
                         <h2>{{ item.content }}</h2>
                     </div>
                     <div class="image">
@@ -28,7 +28,7 @@
                         <img :src="`/images/${item.cover}.jpg`" alt="">
                     </div>
                     <div class="desc">
-                        <h1>{{ item.title }}</h1>
+                        <h1>{{ item.title }}：</h1>
                         <h2>{{ item.content }}</h2>
                     </div>
                 </div>
@@ -40,6 +40,8 @@
 <script setup>
 import { reactive } from 'vue';
 import useStore from '../../store/index';
+import { useRouter } from 'vue-router';
+const router = useRouter()
 const useLight = useStore()
 
 const data = reactive([
@@ -79,6 +81,17 @@ const data = reactive([
     },
 ])
 
+// 跳转到音乐播放器
+const toHobby = () => {
+    // window.open('')
+    // 打开新窗口
+    const newWindow = window.open('', '_blank')
+    if (newWindow) {
+        // 跳转到第二个页面
+        newWindow.location.href = '/HobbyDetail'
+    }
+}
+
 
 </script>
     
@@ -88,7 +101,8 @@ const data = reactive([
     width: 80%;
     height: 80%;
     overflow-y: scroll;
-    h1{
+
+    h1 {
         cursor: pointer;
     }
 
@@ -158,25 +172,38 @@ const data = reactive([
                     display: flex;
                     flex-direction: column;
                     justify-content: space-evenly;
-                    h1{
+                    overflow-y: hidden;
+
+                    h1 {
                         font-weight: 300;
                         font-size: 30px;
+                        display: inline-block;
+                        width: 100%;
+                        padding-bottom: 2%;
+                        border-bottom: 1px solid black;
+                        font-weight: 600;
                     }
-                    h2{
+
+                    h2 {
+                        display: inline-block;
+                        width: 100%;
+                        max-height: 70%;
                         font-weight: 300;
                         font-size: 16px;
                         line-height: 20px;
                         text-indent: 2em;
+                        overflow-y: scroll;
                     }
                 }
             }
 
-            .activeContent{
+            .activeContent {
                 position: relative;
                 width: 100%;
                 height: 100%;
                 margin: 10px 0;
                 margin-left: 2%;
+
                 // background-color: #ffffff2c;
                 .image {
                     width: 100%;
@@ -191,16 +218,24 @@ const data = reactive([
                 }
 
                 .desc {
+
                     // position: fixed;
                     // display: flex;
                     // flex-direction: column;
                     // justify-content: space-evenly;
                     // z-index: 99;
-                    h1{
+                    h1 {
                         font-weight: 300;
                         font-size: 30px;
+                        display: inline-block;
+                        width: 100%;
+                        padding-bottom: 2%;
+                        margin-bottom: 2%;
+                        border-bottom: 1px solid black;
+                        font-weight: 600;
                     }
-                    h2{
+
+                    h2 {
                         font-weight: 300;
                         font-size: 16px;
                         line-height: 20px;

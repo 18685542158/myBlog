@@ -76,7 +76,8 @@ const { playModel } = storeToRefs(useMusic.musicPlay)
 const { isLight } = storeToRefs(useMusic.light)
 // 关于pinia数据的处理
 // 响应式解构pinia里面的参数
-const { changePlayModel } = useMusic.musicPlay
+const { changePlayModel,changePlay } = useMusic.musicPlay
+
 
 // const song = useMusic.musicPlay.audio[i]
 // const { id, name, artist, url, cover, lyc } = toRefs(song)
@@ -99,6 +100,10 @@ const initAudio = () => {
     num.value = 0
     // const audioPlayer = document.querySelector('audio');
     audioPlayer.value.volume = 0.4
+    // audioPlayer.value.play()
+    // setTimeout(()=>{
+    //     changePlay()
+    // },3000)
 };
 // 实时获取歌曲当前进度，进度条进度同样
 const currentTime = ref(0)
