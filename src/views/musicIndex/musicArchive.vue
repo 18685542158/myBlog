@@ -53,7 +53,7 @@
                             <ul>
                                 <li v-for="(childItem, cindex) in item" :key="cindex">
                                     <div class="item"
-                                        @click="router.push({ name: 'SongColist', params: { dissid: childItem.content_id } })">
+                                        @click="router.push({ name: 'SongColist', params: { dissid: childItem.dissid } })">
                                         <div class="img">
                                             <img :src="childItem.imgurl" alt="">
                                             <div class="cover">
