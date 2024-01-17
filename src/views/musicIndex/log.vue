@@ -63,7 +63,8 @@ const comments = reactive({
 // 获取data.json里面的数据
 const fetchComments = async () => {
     try {
-        const response = await axios.get('/data/log_data.JSON'); // 使用axios发送GET请求来获取JSON数据
+        const response = await axios.get('/public/data/log_data.JSON'); // 使用axios发送GET请求来获取JSON数据
+        // const response = await axios.get('../../../data/log_data.json'); // 使用axios发送GET请求来获取JSON数据
         comments.list = response.data.log_List; // 将获取的JSON数据赋值给comments数组
     } catch (error) {
         console.error(error);

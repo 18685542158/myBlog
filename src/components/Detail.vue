@@ -16,8 +16,14 @@
         </div>
         <div class="right">
             <div class="head" @click="console.log(lyricsObjArr)">
-                <h1>{{ songData.name }}</h1>
-                <span>{{ songData.artist }}</span>
+                <h1 @click="toSong">{{ songData.name }}</h1>
+                <!-- <span>{{ songData.artist }}</span> -->
+                <div class="outer-artist">
+                    <span v-for="(childItem, childIndex) in songData.artist" :key="childIndex"
+                        @click="toSinger(childItem)">
+                        {{ childIndex != 0 ? '/' : '' }}{{ childItem.name }}
+                    </span>
+                </div>
             </div>
             <div class="body">
                 <ul v-if="lyricsObjArr.length == 0" style="transform: translateY(160px);">
@@ -41,6 +47,8 @@ import { toRefs, defineProps, watch, ref, onMounted, onUnmounted } from 'vue';
 // 记得添加防抖函数
 import { debounce } from 'lodash';
 import useStore from '../store/index';
+import { useRouter } from 'vue-router';
+const router = useRouter()
 const useMusic = useStore()
 const { changePlay } = useMusic.musicPlay
 
@@ -65,6 +73,17 @@ const MouseWheelDis = ref(0)
 // 存放歌词数据
 const lyricsObjArr = ref([])
 
+const toSong = ()=>{
+    // console.log(songData.value);
+    router.push({ name: 'SongDetail', params: { songmid: songData.value.songmid } })
+    close()
+}
+
+const toSinger = (childItem)=>{
+    // console.log(childItem);
+    router.push({ name: 'SingerDetail', params: { singermid: childItem.mid } })
+    close()
+}
 // 为了获取标签元素
 const lyricUL = ref([])
 const lyric = ref([])
@@ -284,7 +303,6 @@ watch(songmid, () => {
             span {
                 cursor: pointer;
                 color: #ffffff79;
-
             }
         }
 

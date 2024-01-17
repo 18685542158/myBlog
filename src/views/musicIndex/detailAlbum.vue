@@ -185,6 +185,7 @@ watch(route, (to, from) => {
                 h1 {
                     display: inline-block;
                     width: 100%;
+                    max-width: 900px;
                     font-size: 60px;
                     cursor: pointer;
                     text-overflow: ellipsis;

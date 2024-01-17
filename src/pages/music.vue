@@ -138,8 +138,14 @@
                                 <img :src="songData.cover" alt="">
                             </div>
                             <div class="f-info">
-                                <span class="name" :title="songData.name">{{ songData.name }}</span>
-                                <span class="artist" :title="songData.artist">{{ songData.artist }}</span>
+                                <span class="name" :title="songData.name" @click="router.push({ name: 'SongDetail', params: { songmid: songData.songmid } })">{{ songData.name }}</span>
+                                <!-- <span class="artist" :title="songData.artist">{{ songData.artist }}</span> -->
+                                <div class="outer-artist">
+                                    <span class="artist" v-for="(childItem, childIndex) in songData.artist" :key="childIndex"
+                                        @click="router.push({ name: 'SingerDetail', params: { singermid: childItem.mid } })">
+                                        {{ childIndex != 0 ? '/' : '' }}{{ childItem.name }}
+                                    </span>
+                                </div>
                             </div>
                         </div>
                         <div class="f-center">
@@ -436,11 +442,12 @@ const toQQmusic = () => {
 // 使用reactive创建一个可相应的对象
 const songData = reactive({
     name: '',
-    artist: '',
+    artist: [],
     url: '',
     cover: '',
     lyc: '',
     songmid: '',
+    singermid:'',
 })
 
 // 创建一个方法，可以将pinia里面的songmid转换成歌曲信息
@@ -461,8 +468,10 @@ const getSongDataInfo = async (id) => {
         cover = `https://y.qq.com/music/photo_new/T001R300x300M000${detail.track_info.singer[0].mid}.jpg?max_age=2592000`
     }
     songData.name = detail.extras.transname ? detail.extras.name + "(" + detail.extras.transname + ")" : detail.extras.name
-    songData.artist = detail.track_info.singer[0].title
+    songData.artist = detail.track_info.singer
     songData.cover = cover
+    songData.songmid = detail.track_info.mid
+    // console.log(detail.track_info);
 }
 
 // 创建一个方法，作用是在页面刚加载的时候加载一首歌曲       ======================================
@@ -477,6 +486,7 @@ const loadSong = async (songmid) => {
         songData.cover = songURL.value[index].cover
         songData.url = songURL.value[index].url
         songData.lyc = songURL.value[index].lyc
+        songData.songmid = songURL.value[index].songmid
         console.log('走的是缓存');
     } else {
         // 获取当前歌曲信息
@@ -1347,15 +1357,19 @@ onUnmounted(() => {
                                 text-overflow: ellipsis;
                                 white-space: nowrap;
                                 overflow: hidden;
+                                cursor: pointer;
                             }
 
-                            .artist {
+                            .outer-artist{
                                 margin-top: 7px;
-                                font-size: 14px;
-                                font-weight: 100;
-                                text-overflow: ellipsis;
-                                white-space: nowrap;
-                                overflow: hidden;
+                                .artist {
+                                    font-size: 14px;
+                                    font-weight: 100;
+                                    text-overflow: ellipsis;
+                                    white-space: nowrap;
+                                    overflow: hidden;
+                                    cursor: pointer;
+                                }
                             }
                         }
                     }

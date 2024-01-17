@@ -24,7 +24,11 @@
                             <span>{{ item.name }}</span>
                         </div>
                         <div class="singerName">
-                            <span>{{ item.artist }}</span>
+                            <!-- <span>{{ item.artist }}</span> -->
+                            <span v-for="(childItem, childIndex) in item.artist" :key="childIndex"
+                                @click="toSinger(childItem)">
+                                {{ childIndex != 0 ? '/' : '' }}{{ childItem.name }}
+                            </span>
                         </div>
                         <div class="play" @click="playSong(item.songmid)">
                             <div class="middle">

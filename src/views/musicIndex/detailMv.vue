@@ -40,7 +40,7 @@
                 </div>
             </div>
         </div>
-        <div class="mainRight">
+        <div class="mainRight" v-if="mvData.info.name">
             <div class="right">
                 <h1>{{ mvData.info.name }}</h1>
                 <div class="singers">

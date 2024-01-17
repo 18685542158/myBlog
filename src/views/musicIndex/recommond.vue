@@ -285,6 +285,10 @@ onMounted(() => {
     getRecommondSong().then(data => {
         dailyData.value = data
         loading.value = false
+    }).catch(err=>{
+        if(err){
+            router.push('/music/archive')
+        }
     })
 
     // 新mv
