@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<!-- <style>
+    .container {
+        border: 2px solid #000;
+        padding: 10px;
+    }
+
+    .floated {
+        float: left;
+        width: 100px;
+        height: 100px;
+        margin: 5px;
+        background: #0f0;
+    }
+
+    .after-float {
+        background: #ff0;
+        clear: both;
+    }
+</style> -->
+
+<style>
+    .container {
+        border: 2px solid #000;
+        padding: 10px;
+    }
+
+    .floated {
+        float: left;
+        width: 100px;
+        height: 100px;
+        margin: 5px;
+        background: #0f0;
+    }
+
+    .clearfix::after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+
+    .after-float {
+        background: #ff0;
+        clear: both;
+    }
+</style>
+
+<body>
+    <!-- <div class="container">
+        <div class="floated">浮动盒子</div>
+        <div class="floated">浮动盒子</div> -->
+        <!-- 未清除浮动，下面的div会和浮动元素交错 -->
+    <!-- </div> -->
+
+    <!-- 这个div由于未在.container中，因此不会跟浮动元素交错 -->
+    <!-- <div class="after-float">
+        跟随浮动的盒子
+    </div> -->
+
+
+    <div class="container clearfix">
+        <div class="floated">浮动盒子</div>
+        <div class="floated">浮动盒子</div>
+        <!-- 使用clearfix清除浮动，保证容器高度正常 -->
+    </div>
+
+    <div class="after-float">
+        跟随浮动的盒子
+    </div>
+
+
+</body>
+
+<script>
+
+
+    
+
+    const string="sasadasd"
+    string.unshift()
+
+
+
+
+
+    let f=0;
+    let n=0;
+    while(line = await readline()){
+        if(f==0){
+            f++
+        }else{
+            // line
+            const a = String(1 / line)
+            const str=a.slice(2)
+            if(str.length==1){
+                console.log(1)
+                
+            }
+            if(str[0]==str[1]){
+                console.log(1)
+                
+            }
+
+
+
+        }
+    }
+</script>
+
+</html>

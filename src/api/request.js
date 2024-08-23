@@ -2,6 +2,107 @@ import axios from './axios';
 
 
 
+// 获取评价列表
+export function getcomment(songmid) {
+    return axios.get('/comm/getcomment', {
+        params: {
+            songmid
+        }
+    })
+}
+
+// 获取回复列表
+export function getreply(comment_id) {
+    return axios.get('/comm/getreply', {
+        params: {
+            comment_id
+        }
+    })
+}
+
+// 获取喜欢列表
+export function getlike(target_id, target_type) {
+    return axios.get('/comm/getlike', {
+        params: {
+            target_id,
+            target_type
+        }
+    })
+}
+
+
+// 添加评价列表
+export function addcomment(data) {
+    return axios.post('/comm/addcomment', data)
+}
+
+// 添加回复列表
+export function addreply(data) {
+    return axios.post('/comm/addreply', data)
+}
+
+// 添加喜欢列表
+export function addlike(data) {
+    return axios.post('/comm/addlike', data)
+}
+
+
+
+
+// 获取收藏列表
+export function getCollectionVideo(user_id) {
+    return axios.get('/favoritevideos/user', {
+        params: {
+            user_id
+        }
+    })
+}
+
+
+// 获取收藏列表
+export function getCollection(user_id) {
+    console.log(user_id);
+    return axios.get('/favorites/user', {
+        params: {
+            user_id
+        }
+    })
+}
+
+// 当二维码出现时，获取验证二维码是否被扫描
+export function verify() {
+    return axios.get('/verify-qr', {
+        withCredentials: true,
+        timeout: 60000
+    })
+}
+
+// 登录
+export function login(loginForm) {
+    return axios.post('/login', {
+        username: loginForm.loginName,
+        password: loginForm.loginPassword
+    })
+}
+
+// 注册
+export function register(registerForm) {
+    return axios.post('/register', {
+        username: registerForm.registerName,
+        phone: registerForm.Tel,
+        password: registerForm.registerPassword
+    })
+}
+
+// 获取二维码
+// export function getQR() {
+//     return axios.get('/getQR')
+// }
+
+// 退出登录
+export function logout() {
+    return axios.post('/logout')
+}
 
 
 // 快速搜索，通过关键词返回少量关键信息
@@ -289,8 +390,8 @@ export function getMV(obj) {
 
 // 获取榜单列表 showDetail是否显示前三歌曲简单信息和榜单介绍，0，不显示，1 显示，默认 0
 export function getTop(showDetail) {
-    return axios.get('/top/category',{
-        params:{
+    return axios.get('/top/category', {
+        params: {
             showDetail
         }
     })

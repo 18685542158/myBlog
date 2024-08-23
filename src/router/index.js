@@ -44,6 +44,7 @@ const router = createRouter({
             path: '/music',
             component: () => import('../pages/music.vue'),
             name: 'Music',
+            meta: { requiresAuth: true },
             children: [
                 {
                     path: '',
@@ -58,7 +59,8 @@ const router = createRouter({
                 {
                     path: 'fevorite',
                     name: 'MyFevorite',
-                    component: () => import('../views/musicIndex/myFevorite.vue')
+                    component: () => import('../views/musicIndex/myFevorite.vue'),
+                    props: true,
                 },
                 {
                     path: 'download',
@@ -108,7 +110,8 @@ const router = createRouter({
                 {
                     path: 'songDetail/:songmid',
                     name: 'SongDetail',
-                    component: () => import('../views/musicIndex/detailSong.vue')
+                    component: () => import('../views/musicIndex/detailSong.vue'),
+                    props: true,
                 },
                 {
                     path: 'singerDetail/:singermid',

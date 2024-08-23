@@ -66,7 +66,8 @@ const toDetail = (item) => {
     router.push({
         name:'AlbumDetail',
         params: {
-            albummid: item.albumMID
+            // albummid: item.albumMID
+            albummid: item.album_mid
         }
     })
 }

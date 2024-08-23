@@ -2,7 +2,6 @@ import express, { json } from 'express';      // 引入express
 import qqMusic from 'qq-music-api'; // 引入qq音乐第三方接口
 import fs from 'fs';           // 读写文件
 import cors from 'cors';            // CORS设置,允许跨域
-import { log } from 'console';
 const app = express();              // express服务
 
 

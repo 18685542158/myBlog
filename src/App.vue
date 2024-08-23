@@ -2,7 +2,9 @@
 </script>
 
 <template>
-  <router-view></router-view>
+  <!-- <keep-alive> -->
+    <router-view></router-view>
+  <!-- </keep-alive> -->
 </template>
 
 <style>
@@ -11,7 +13,7 @@
   src: url('./assets/font/江城圆体 300W.ttf');
 }
 
-h2{
+h2 {
   cursor: pointer;
 }
 

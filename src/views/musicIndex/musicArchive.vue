@@ -565,7 +565,7 @@ onMounted(async () => {
     getReSongList(songListcategoryDataQuery).then(d => {
         songListData.value = d.list
         mainSongListData.value = d.list
-        console.log(mainSongListData.value);
+        // console.log(mainSongListData.value);
         computedData2()
     })
 
@@ -577,7 +577,7 @@ onMounted(async () => {
 
     // 获取排行榜编号
     getTop(1).then((data) => {
-        console.log(data);
+        // console.log(data);
         topData.value = data
     })
 })
@@ -944,7 +944,7 @@ onMounted(async () => {
     width: 100%;
     height: 100%;
     backdrop-filter: blur(6px);
-    background-color: #2e294e25;
+    background-color: #ffffff00;
     overflow-y: scroll;
     overflow-x: hidden;
     display: flex;
@@ -1061,7 +1061,7 @@ onMounted(async () => {
                                     box-sizing: border-box;
                                     display: flex;
                                     padding: 4%;
-                                    background-color: #95888862;
+                                    background-color: #ffffff62;
                                     flex-direction: column;
 
                                     .img {
@@ -1528,7 +1528,7 @@ onMounted(async () => {
 
             .categoryDataActive {
                 .outer {
-                    background-color: #bdbbff6e;
+                    background-color: #ffffff6e;
                     box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.43);
                 }
             }
@@ -1613,7 +1613,7 @@ onMounted(async () => {
                         box-sizing: border-box;
                         display: flex;
                         padding: 4%;
-                        background-color: #95888862;
+                        background-color: #ffffff3e;
                         flex-direction: column;
 
                         .img {
@@ -1698,7 +1698,7 @@ onMounted(async () => {
 
                                 &:hover {
                                     transition: 0.3s;
-                                    background-color: #271e1e85;
+                                    background-color: #271e1e4b;
 
                                     .btn {
                                         opacity: 1;

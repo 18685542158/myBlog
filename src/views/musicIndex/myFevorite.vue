@@ -59,7 +59,7 @@ onUnmounted(() => {
     width: 100%;
     height: 100%;
     backdrop-filter: blur(6px);
-    background-color: #2e294e25;
+    background-color: #ffffff00;
     overflow-y: scroll;
     display: flex;
     flex-direction: column;

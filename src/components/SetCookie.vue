@@ -139,7 +139,7 @@ const close=()=>{
 .box {
     width: 100%;
     height: 100%;
-    background-color: #8a696927;
+    background-color: #8a696900;
 
     .box-head {
         width: 100%;

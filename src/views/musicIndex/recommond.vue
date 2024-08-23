@@ -283,12 +283,12 @@ onMounted(() => {
     })
     // 我的每日30首
     getRecommondSong().then(data => {
-        dailyData.value = data
-        loading.value = false
-    }).catch(err=>{
-        if(err){
-            router.push('/music/archive')
+        if (data) {
+            dailyData.value = data
+            loading.value = false
         }
+    }).catch(err => {
+            router.push('/music/archive')
     })
 
     // 新mv
@@ -309,7 +309,7 @@ onMounted(() => {
     width: 100%;
     height: 100%;
     backdrop-filter: blur(6px);
-    background-color: #2e294e25;
+    background-color: #ffffff00;
     overflow-y: scroll;
     display: flex;
     flex-direction: column;
@@ -340,11 +340,11 @@ onMounted(() => {
 
                 .main {
                     width: 50%;
-                    background-color: #2e294e25;
+                    background-color: #ffffff00;
 
                     .img {
                         width: 100%;
-                        background-color: #958888;
+                        background-color: #5891abab;
                         ;
                         padding: 2%;
                         box-sizing: border-box;
@@ -469,7 +469,7 @@ onMounted(() => {
                                 box-sizing: border-box;
                                 display: flex;
                                 padding: 4%;
-                                background-color: #95888862;
+                                background-color: #b4b4b472;
                                 flex-direction: column;
 
                                 .img {
@@ -720,7 +720,7 @@ onMounted(() => {
                                 box-sizing: border-box;
                                 display: flex;
                                 padding: 2%;
-                                background-color: #958888;
+                                background-color: #b4b4b472;
                                 // flex-direction: column;
 
                                 .img {
@@ -790,7 +790,7 @@ onMounted(() => {
                                             padding: 0 20px;
                                             // width: 100px;
                                             height: 20px;
-                                            background-color: #bdcdfdc0;
+                                            background-color: #bdcdfd79;
                                             position: inherit;
                                             cursor: pointer;
                                             border-radius: 0 0 5px 0;
@@ -866,7 +866,7 @@ onMounted(() => {
                             transition: 0.3s;
                             width: 10px;
                             height: 10px;
-                            background-color: #b5b5b5;
+                            background-color: #b5b5b562;
                             border-radius: 5px;
                         }
 

@@ -183,7 +183,7 @@ watch(route, (to, from) => {
         singermid.value = to.params.singermid
         console.log('触发了跳转歌手');
         getSingerInfo(singermid.value).then((data) => {
-            // console.log(data);
+            console.log(data);
             singerData.value = data
             loading.value = false
         }).catch(err => {

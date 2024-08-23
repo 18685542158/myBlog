@@ -169,6 +169,7 @@ watch(route, async (to, from) => {
                 margin: 20px;
                 margin-bottom: 6px;
                 color: azure;
+                mix-blend-mode: difference;
             }
 
             .artistbox {

@@ -5,7 +5,7 @@ export default defineStore('music', {
         return {
             hasCookie: true,
             isSettingCookie: false,      // 这里指的是设置cookie的窗口是否展示
-            uin: 1538518479,
+            uin: '',
             songmid: '',
             nextSongmid: '002UJg1T3tbCsK',
             songPlayList: [],               // 播放列表，大概率要存进localStorage 
@@ -97,6 +97,17 @@ export default defineStore('music', {
                 this.setSongmid()
             } else {
                 this.songmid = JSON.parse(data)
+            }
+        },
+
+        // 刚打开时，从本地获取需要账号
+        getUinData() {
+            console.log('触发获取本地存储的账号');
+            const data = localStorage.getItem('uin')
+            if (!data || data == 'undefined' || data == 'null') {
+                this.uin = ''
+            } else {
+                this.uin = data
             }
         },
 
@@ -234,6 +245,8 @@ export default defineStore('music', {
         getInitData() {
             // 刚打开时，从本地获取需要播放的歌曲songmid
             this.getSongData()
+            // 刚打开时，从本地获取绑定的腾讯账号
+            this.getUinData()
             // 从local获取播放列表
             this.getSongPlayList()
             // 从本地获取搜索记录

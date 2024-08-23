@@ -3,7 +3,7 @@ import { defineStore } from 'pinia';
 export default defineStore('light', {
     state: () => {
         return {
-            isLight:false,
+            isLight:true,
         };
     },
     getters: {

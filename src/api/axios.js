@@ -1,17 +1,22 @@
 import axios from 'axios';
 
 const instance = axios.create({
-    // baseURL: 'http://localhost:3000',        // 设置基本url
+    baseURL: 'http://localhost:3000',        // 设置基本url
     // baseURL: 'http://server.dashan.online:3000',        // 设置基本url
-    baseURL: 'http://81.71.18.116:3000',        // 设置基本url
+    // baseURL: 'http://81.71.18.116:3000',        // 设置基本url
     timeout: 5000,                           // 设置请求超时时间
     headers: {
         "Content-Type": 'application/json',   // 设置请求头
+        'Cache-Control': 'max-age=3600' // 设置缓存时间为1小时
     }
 });
 
 instance.interceptors.request.use(
     config => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
         // 这里处理请求
         return config
     },
